@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+**Anaquelito** — plataforma B2B de mayoreo de dulces y botanas.
 
-## Getting Started
+📖 **Manual del proyecto:** ver [`docs/MANUAL.md`](docs/MANUAL.md) para la estrategia, el modelo de negocio, la arquitectura técnica y el estado de avance actualizado. Ese documento está escrito para que cualquiera de los dos socios lo entienda, no solo quien programa.
 
-First, run the development server:
+## Cómo levantar el proyecto en tu computadora
+
+1. Instalar las dependencias (solo la primera vez, o cuando cambien):
+
+```bash
+npm install
+```
+
+2. Levantar el servidor de desarrollo:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Abrir [http://localhost:3000](http://localhost:3000) en el navegador para ver la página.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Mientras el servidor está corriendo, cualquier cambio que se guarde en el código se refleja automáticamente en el navegador.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Estructura del proyecto (resumen)
 
-## Learn More
+- `src/app/page.tsx` — página de inicio.
+- `src/app/catalogo/` — catálogo de productos al mayoreo.
+- `src/app/escaner/` — escáner de código de barras para reordenar productos.
+- `src/lib/supabase/` — conexión a la base de datos (Supabase).
+- `docs/` — el manual completo del proyecto: estrategia, negocio, técnica y pendientes.
 
-To learn more about Next.js, take a look at the following resources:
+## Este proyecto está construido con
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js](https://nextjs.org) — el framework de la página web.
+- [Supabase](https://supabase.com) — la base de datos y autenticación.
+- Pensado para desplegarse en [Vercel](https://vercel.com).
