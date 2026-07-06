@@ -18,7 +18,7 @@ Este es el documento maestro del proyecto **Anaquelito**. Aquí se centraliza to
 
 ## Estado actual en una frase
 
-Anaquelito es una plataforma B2B de venta de dulces y botanas al mayoreo para tienditas, cafés y emprendedores, con un diferenciador operativo (reorden por escaneo de código de barras) que la competencia (K-Botanas y similares) no tiene. El frontend base ya existe (home, catálogo, escáner) sobre Next.js + Supabase; falta conectar datos reales, autenticación, lógica de precios por nivel y el flujo de pedido completo.
+Anaquelito es una plataforma B2B de venta de dulces y botanas al mayoreo para tienditas, cafés y emprendedores, con un diferenciador operativo (reorden por escaneo de código de barras) que la competencia (K-Botanas y similares) no tiene. El frontend base ya existe (home, catálogo, escáner) sobre Next.js, desplegado en Vercel y conectado a una base de datos real en Supabase (productos, clientes, pedidos, códigos de barra, crédito). El catálogo ya muestra productos reales de la base de datos. Falta: autenticación, carrito/checkout, escaneo real de código de barras y definir las reglas de negocio marcadas como pendientes en el resto de los documentos.
 
 ## Cómo trabajar con este manual
 

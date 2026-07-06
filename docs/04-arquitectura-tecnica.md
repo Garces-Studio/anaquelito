@@ -18,13 +18,25 @@ src/
     globals.css          # Variables de marca (colores, radios, sombras)
     catalog/
       page.tsx           # Catálogo B2B (placeholder con productos hardcodeados)
-    scanner/
+    escaner/
       page.tsx           # Escáner de código de barras (placeholder visual, sin lógica de cámara real)
   lib/
     supabase/
-      client.ts           # Cliente Supabase para componentes de cliente
-      server.ts           # Cliente Supabase para server components (cookies)
+      client.ts           # Cliente Supabase para componentes de cliente (crearCliente)
+      server.ts           # Cliente Supabase para server components (crearCliente, usa cookies)
+supabase/
+  migrations/
+    0001_esquema_inicial.sql   # Tablas: clientes, productos, codigos_barra, pedidos, pedido_items, lineas_credito + RLS
+    0002_productos_de_ejemplo.sql
 ```
+
+## Base de datos (Supabase) — ya conectada
+
+- Proyecto real: `hdyvbsowyotiojlukkbl` (`https://hdyvbsowyotiojlukkbl.supabase.co`).
+- Conexión desde herramientas locales/CLI usa el **Session pooler** (`aws-0-us-east-1.pooler.supabase.com:5432`), no la conexión directa — la conexión directa de Supabase es IPv6 únicamente y puede fallar en redes sin soporte IPv6.
+- 6 tablas creadas con seguridad a nivel de fila (RLS) activada: `clientes`, `productos`, `codigos_barra`, `pedidos`, `pedido_items`, `lineas_credito`. El catálogo (`productos`, `codigos_barra`) es de lectura pública; todo lo demás requiere que el usuario autenticado sea el dueño del registro.
+- Las migraciones viven en `supabase/migrations/` y se pueden volver a aplicar con `psql <connection-string> -f supabase/migrations/archivo.sql`.
+- Credenciales reales en `.env.local` (no se sube a git): URL pública, llave `anon`/`publishable`, y `SUPABASE_DB_URL` (solo para scripts locales, nunca se usa en el navegador).
 
 ## Decisiones técnicas ya tomadas
 
@@ -33,11 +45,12 @@ src/
 
 ## Decisiones técnicas pendientes
 
-- **[PENDIENTE] Esquema de base de datos:** tablas mínimas necesarias — productos, precios por nivel, clientes, pedidos, líneas de crédito, códigos de barra por producto.
-- **[PENDIENTE] Autenticación:** Supabase Auth para clientes B2B (login por negocio) — falta implementar el flujo de "Ingresar" que ya aparece en el botón del home.
-- **[PENDIENTE] Escaneo real de cámara:** el placeholder en `src/app/escaner/page.tsx` no tiene lógica de cámara ni lectura de código de barras. Se necesita elegir una librería (ej. lectura vía `BarcodeDetector` API nativa del navegador con fallback a una librería JS como `@zxing/browser`).
+- **[PENDIENTE] Autenticación:** Supabase Auth para clientes B2B (login por negocio) — falta implementar el flujo de "Ingresar" que ya aparece en el botón del home, y conectarlo con la tabla `clientes`.
+- **[PENDIENTE] Escaneo real de cámara:** el placeholder en `src/app/escaner/page.tsx` no tiene lógica de cámara ni lectura de código de barras. Se necesita elegir una librería (ej. lectura vía `BarcodeDetector` API nativa del navegador con fallback a una librería JS como `@zxing/browser`), y conectarla con la tabla `codigos_barra`.
+- **[PENDIENTE] Carrito y checkout:** falta toda la lógica de armar un pedido (`pedidos` + `pedido_items`) desde el catálogo y el escáner.
 - **[PENDIENTE] Pasarela de pago:** Stripe, Mercado Pago o Kueski — depende de la decisión de crédito en [03-modelo-de-negocio.md](03-modelo-de-negocio.md).
-- **[PENDIENTE] Hosting/despliegue:** lo natural con Next.js es Vercel, pero confirmar si Supabase + Vercel es el combo final.
+- **[PENDIENTE] Variables de entorno en Vercel:** el proyecto ya está desplegado en Vercel, pero falta confirmar que `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` estén configuradas ahí también (en local ya funcionan vía `.env.local`).
+- **[PENDIENTE] Panel de administración del catálogo:** hoy los productos solo se pueden agregar con SQL directo; hace falta una pantalla simple para que el socio no técnico pueda dar de alta productos sin tocar código.
 
 ## Convenciones del proyecto
 

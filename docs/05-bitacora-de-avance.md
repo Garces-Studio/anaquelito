@@ -22,3 +22,16 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - README traducido y simplificado para que el socio no técnico lo entienda.
 - Se decidió trabajar únicamente con Claude Code de aquí en adelante (se dejan de usar Antigravity/Codex en paralelo) para evitar conflictos de edición simultánea, que sí llegaron a ocurrir en esta misma sesión.
 - Se conecta el repositorio local a GitHub: `github.com/Garces-Studio/anaquelito`.
+
+## 2026-07-06 (base de datos real)
+
+- **Supabase conectado de verdad.** Proyecto real: `hdyvbsowyotiojlukkbl`. Se usó el connection string del **Session pooler** (`aws-0-us-east-1.pooler.supabase.com:5432`) porque la conexión directa de Supabase es solo IPv6 y esta red no tenía ruta IPv6.
+- Se creó la primera migración real (`supabase/migrations/0001_esquema_inicial.sql`) con 6 tablas: `clientes`, `productos`, `codigos_barra`, `pedidos`, `pedido_items`, `lineas_credito`. Todas con seguridad a nivel de fila (RLS): el catálogo es de lectura pública, todo lo demás solo lo ve el dueño del registro.
+- Se agregaron productos de ejemplo (`supabase/migrations/0002_productos_de_ejemplo.sql`) para poder probar el catálogo con datos reales.
+- Se conectó `src/app/catalogo/page.tsx` a Supabase de verdad (antes tenía 6 productos inventados a mano). Ya lee de la tabla `productos` en vivo.
+- `.env.local` configurado con la URL y la llave pública (`anon`/`publishable`) reales del proyecto. La contraseña de la base de datos vive solo en `.env.local` (no se sube a git).
+- Se hizo una reinstalación limpia de `node_modules` porque había quedado corrupta (un paquete con configuración inválida rompía `next lint`); ahora el servidor de desarrollo levanta sin problema.
+- Se agregó `.claude/launch.json` para poder levantar el servidor de desarrollo desde las herramientas de previsualización.
+- Se corrigió una advertencia de Next.js sobre "múltiples lockfiles" fijando `turbopack.root` en `next.config.ts`.
+- Probado en navegador real: home → navega a catálogo → catálogo muestra productos reales de la base de datos (Cacahuate Japonés $75, Gomitas Surtidas $92, etc.).
+- Pendiente todavía: autenticación de clientes, flujo de pedido/carrito completo, escáner de código de barras funcional, y despliegue confirmado en Vercel con las variables de entorno de Supabase configuradas ahí también.

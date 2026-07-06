@@ -13,21 +13,20 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 
 ## Decisiones técnicas
 
-- [ ] Esquema de base de datos en Supabase (productos, precios por nivel, clientes, pedidos, códigos de barra).
-- [ ] Flujo de autenticación (Supabase Auth) para el botón "Ingresar" del home.
-- [ ] Librería/estrategia real de lectura de código de barras para el escáner.
+- [ ] Flujo de autenticación (Supabase Auth) para el botón "Ingresar" del home, conectado a la tabla `clientes`.
+- [ ] Librería/estrategia real de lectura de código de barras para el escáner (`BarcodeDetector` nativo vs `@zxing/browser`).
 - [ ] Pasarela de pago a integrar (Stripe / Mercado Pago / Kueski).
 - [ ] Evaluar si se necesita una librería de componentes UI antes de que el catálogo crezca (hoy todo es estilo inline).
+- [ ] Confirmar variables de entorno de Supabase en Vercel (Project Settings → Environment Variables), no solo en `.env.local`.
+- [ ] Arreglar el permiso de escritura en GitHub para que `git push` no necesite un token nuevo cada vez (agregar la cuenta correcta como colaboradora de Garces-Studio/anaquelito).
 
 ## Construcción pendiente (frontend/producto)
 
 - [ ] Landings específicas por segmento ("Soy tiendita", "Soy café/restaurante", "Soy emprendedor").
-- [ ] Catálogo conectado a datos reales (hoy son 6 productos hardcodeados).
-- [ ] Carrito y checkout completo.
+- [ ] Carrito y checkout completo (tablas `pedidos`/`pedido_items` ya existen, falta la lógica y la UI).
+- [ ] Escáner de código de barras funcional (hoy es solo una animación visual).
 - [ ] Portal de cliente B2B (historial de pedidos, reorden, estado de cuenta).
+- [ ] Panel simple para dar de alta productos sin tocar SQL directamente.
 - [ ] Página de "cómo funciona el crédito" con condiciones sin ambigüedad.
 - [ ] Plan mínimo de contenido (blog/redes) para los primeros 90 días.
-
-## Preguntas abiertas para ti (Mauricio)
-
-- [ ] ¿Confirmamos que solo se trabajará este proyecto conmigo (Claude Code) para evitar conflictos con Antigravity/Codex, o van a dividir tareas explícitamente entre herramientas? (ver recomendación en el chat — evitar tocar los mismos archivos desde dos asistentes distintos sin sincronizar).
+- [ ] Reemplazar los 6 productos de ejemplo por el catálogo curado real, una vez definido.
