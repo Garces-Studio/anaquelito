@@ -1,3 +1,9 @@
+/* ============================================================
+   Anaquelito — Estilos globales
+   1) Base y utilidades de la portada (carrusel a pantalla completa)
+   2) Tema "tienda" (.tema-tienda): catálogo, escáner y páginas interiores
+   ============================================================ */
+
 :root {
   /* Colores de Marca */
   --brand-primary: #FF5A5F; /* Coral/Rojo vibrante y apetitoso */
@@ -8,12 +14,12 @@
   --bg-color: #FAFAFA;
   --surface-color: #FFFFFF;
   --surface-hover: #F0F0F0;
-  --border-color: #EAEAEA;
+  --border-color: rgba(255, 255, 255, 0.2);
 
   /* Colores de Texto */
-  --text-primary: #222222;
-  --text-secondary: #717171;
-  
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+
   /* Colores de Estado */
   --success: #28A745;
   --warning: #FFC107;
@@ -23,29 +29,13 @@
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-  --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
-  --shadow-lg: 0 16px 32px rgba(0,0,0,0.12);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+  --shadow-md: 0 8px 16px rgba(0,0,0,0.3);
+  --shadow-lg: 0 16px 32px rgba(0,0,0,0.4);
 
   /* Micro-animaciones */
   --transition-fast: 0.15s ease-out;
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-color: #0A0A0A;
-    --surface-color: #1A1A1A;
-    --surface-hover: #2A2A2A;
-    --border-color: #333333;
-    
-    --text-primary: #FFFFFF;
-    --text-secondary: #A0A0A0;
-
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
-    --shadow-md: 0 8px 16px rgba(0,0,0,0.3);
-    --shadow-lg: 0 16px 32px rgba(0,0,0,0.4);
-  }
 }
 
 * {
@@ -54,8 +44,12 @@
   margin: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: var(--font-outfit), system-ui, -apple-system, sans-serif;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-primary);
   line-height: 1.5;
@@ -74,36 +68,458 @@ button {
   border: none;
   background: none;
   font-family: inherit;
+  color: inherit;
 }
 
-/* Utilidades */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
+input { font-family: inherit; }
+
+/* Grano analógico premium (portada) */
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0%200%20200%20200'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter%20id='noise'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.9'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23noise)'%20opacity='0.08'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-repeat: repeat;
 }
 
-/* Tipografía */
-h1, h2, h3, h4 {
-  font-weight: 700;
-  line-height: 1.2;
+/* Efecto de mezcla multiply para quitar fondo blanco de imágenes de productos */
+.blend-multiply {
+  mix-blend-mode: multiply;
+  filter: contrast(1.05) saturate(1.1);
 }
 
-h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-h2 { font-size: 2rem; margin-bottom: 0.75rem; }
-h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+/* Tipografía display gigante */
+.font-anton {
+  font-family: var(--font-anton), Impact, sans-serif;
+}
 
-/* Clases de micro-animaciones */
+/* Micro-interacción usada por los botones del carrusel */
 .hover-scale {
   transition: transform var(--transition-normal);
 }
 .hover-scale:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-2px) scale(1.04);
 }
 
-.hover-glow {
-  transition: box-shadow var(--transition-normal);
+/* ============================================================
+   TEMA TIENDA — "Mercado moderno"
+   Cálido, apetitoso y claro: papel de estraza, tinta café,
+   etiquetas de precio con borde punteado y margen a la vista.
+   Aplica a todo lo que cuelga de src/app/(tienda)/.
+   ============================================================ */
+
+.tema-tienda {
+  /* Superficie cálida (papel de estraza claro, no blanco hospital) */
+  --fondo: #FFF6EC;
+  --papel: #FFFFFF;
+  --papel-suave: #FFEFDD;
+  --borde: #EBD9C3;
+
+  /* Tinta cálida (café oscuro, no negro puro) */
+  --tinta: #2B1B12;
+  --tinta-suave: #7A6455;
+
+  /* Marca y estados */
+  --coral: #FF5A5F;
+  --coral-oscuro: #E0484D;
+  --amarillo: #FFB400;
+  --teal: #00A699;
+  --exito: #1E9E6A;
+  --peligro: #D64545;
+
+  /* Radios y sombras cálidas */
+  --radio-md: 16px;
+  --radio-gr: 24px;
+  --sombra-ch: 0 2px 8px rgba(43, 27, 18, 0.06);
+  --sombra-md: 0 10px 30px rgba(43, 27, 18, 0.10);
+
+  /* Movimiento */
+  --rapido: 0.16s ease-out;
+  --suave: 0.32s cubic-bezier(0.34, 1.3, 0.5, 1);
+
+  background-color: var(--fondo);
+  color: var(--tinta);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.55;
 }
-.hover-glow:hover {
-  box-shadow: 0 0 20px rgba(255, 90, 95, 0.4);
+
+@media (prefers-color-scheme: dark) {
+  .tema-tienda {
+    /* Modo oscuro cálido: café de tueste oscuro, no gris frío */
+    --fondo: #17100B;
+    --papel: #221812;
+    --papel-suave: #2C2018;
+    --borde: #3C2D22;
+    --tinta: #F7EDE2;
+    --tinta-suave: #B39A88;
+    --sombra-ch: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --sombra-md: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Los títulos interiores usan la misma display de la portada (Anton) */
+.tema-tienda h1,
+.tema-tienda h2,
+.tema-tienda h3 {
+  font-family: var(--font-anton), Impact, sans-serif;
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+}
+.tema-tienda h1, .tema-tienda h2 { text-transform: uppercase; }
+
+.tema-tienda main { flex: 1; }
+
+.contenedor {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  width: 100%;
+}
+
+/* ---------- Botones ---------- */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.98rem;
+  transition: transform var(--suave), box-shadow var(--suave), background var(--rapido);
+}
+.boton-primario {
+  background: var(--coral);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(255, 90, 95, 0.35);
+}
+.boton-primario:hover {
+  background: var(--coral-oscuro);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(255, 90, 95, 0.45);
+}
+.boton-secundario {
+  background: var(--papel);
+  color: var(--tinta);
+  border: 2px solid var(--borde);
+}
+.boton-secundario:hover {
+  border-color: var(--tinta);
+  transform: translateY(-2px);
+}
+
+/* ---------- Encabezado ---------- */
+.encabezado {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--fondo) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--borde);
+}
+.encabezado-interior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-anton), Impact, sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.marca-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px 12px 12px 4px; /* forma de etiqueta de precio */
+  background: var(--coral);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 1.15rem;
+  transform: rotate(-6deg);
+  transition: transform var(--suave);
+}
+.marca:hover .marca-logo { transform: rotate(4deg) scale(1.08); }
+.navegacion {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.navegacion a {
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--tinta-suave);
+  transition: color var(--rapido), background var(--rapido);
+}
+.navegacion a:hover {
+  color: var(--tinta);
+  background: var(--papel-suave);
+}
+.navegacion .boton { padding: 0.55rem 1.2rem; font-size: 0.92rem; color: #fff; }
+@media (max-width: 640px) {
+  .navegacion a:not(.boton) { display: none; }
+}
+
+/* ---------- Secciones ---------- */
+.seccion { padding: 4rem 0; }
+.seccion-titulo {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin-bottom: 0.6rem;
+}
+.seccion-bajada {
+  color: var(--tinta-suave);
+  font-size: 1.05rem;
+  max-width: 560px;
+  margin-bottom: 2.25rem;
+}
+
+/* ---------- Pasos (cómo funciona) ---------- */
+.rejilla-pasos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+  counter-reset: paso;
+}
+.paso {
+  position: relative;
+  background: var(--papel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  padding: 2.25rem 1.5rem 1.5rem;
+}
+.paso::before {
+  counter-increment: paso;
+  content: counter(paso);
+  position: absolute;
+  top: -18px; left: 1.25rem;
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  background: var(--amarillo);
+  color: #2B1B12;
+  font-family: var(--font-anton), Impact, sans-serif;
+  font-size: 1.2rem;
+  border-radius: 12px 12px 12px 4px;
+  transform: rotate(-6deg);
+  box-shadow: var(--sombra-ch);
+}
+.paso h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.paso p { color: var(--tinta-suave); font-size: 0.95rem; }
+
+/* ---------- Catálogo ---------- */
+.filtros-categorias {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.chip {
+  padding: 0.45rem 1.05rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--borde);
+  background: var(--papel);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--tinta-suave);
+  transition: all var(--rapido);
+}
+.chip:hover { border-color: var(--coral); color: var(--coral); }
+.chip-activo {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--fondo);
+}
+@media (prefers-color-scheme: dark) {
+  .chip-activo { background: var(--coral); border-color: var(--coral); color: #fff; }
+}
+
+.buscador {
+  display: flex;
+  gap: 0.5rem;
+}
+.buscador input {
+  padding: 0.7rem 1.1rem;
+  width: min(320px, 60vw);
+  border-radius: 999px;
+  border: 1.5px solid var(--borde);
+  background: var(--papel);
+  color: var(--tinta);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color var(--rapido);
+}
+.buscador input:focus { border-color: var(--coral); }
+
+.rejilla-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+.tarjeta-producto {
+  background: var(--papel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-gr);
+  padding: 1.25rem;
+  box-shadow: var(--sombra-ch);
+  transition: transform var(--suave), box-shadow var(--suave);
+  display: flex;
+  flex-direction: column;
+}
+.tarjeta-producto:hover {
+  transform: translateY(-5px) rotate(-0.4deg);
+  box-shadow: var(--sombra-md);
+}
+.tarjeta-producto .foto {
+  height: 150px;
+  background: var(--papel-suave);
+  border-radius: var(--radio-md);
+  margin-bottom: 1rem;
+  display: grid;
+  place-items: center;
+  font-size: 3rem;
+}
+.tarjeta-producto h3 { font-size: 1.1rem; margin-bottom: 0.2rem; text-transform: uppercase; }
+.tarjeta-producto .unidad {
+  color: var(--tinta-suave);
+  font-size: 0.85rem;
+  margin-bottom: 0.9rem;
+}
+.tarjeta-producto .precios {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+.tarjeta-producto .precio-mayoreo {
+  font-family: var(--font-anton), Impact, sans-serif;
+  font-size: 1.5rem;
+  color: var(--tinta);
+}
+.tarjeta-producto .precio-mayoreo small {
+  font-size: 0.78rem;
+  color: var(--tinta-suave);
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 600;
+}
+/* La etiqueta de margen: nuestro golpe directo a la competencia */
+.etiqueta-margen {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: color-mix(in srgb, var(--exito) 14%, transparent);
+  color: var(--exito);
+  font-weight: 800;
+  font-size: 0.82rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+@media (prefers-color-scheme: dark) {
+  .etiqueta-margen { color: #5BD69E; }
+}
+.tarjeta-producto .sugerido {
+  font-size: 0.82rem;
+  color: var(--tinta-suave);
+  margin-bottom: 1rem;
+}
+.tarjeta-producto .boton { width: 100%; padding: 0.7rem 1rem; font-size: 0.92rem; margin-top: auto; }
+
+/* ---------- Escáner ---------- */
+.visor-escaner {
+  max-width: 400px;
+  margin: 0 auto;
+  height: 300px;
+  background: #14100C;
+  border-radius: var(--radio-gr);
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: #F7EDE2;
+  box-shadow: var(--sombra-md);
+  border: 1px solid var(--borde);
+}
+.linea-escaner {
+  position: absolute;
+  width: 80%;
+  height: 2px;
+  left: 10%;
+  background: var(--coral);
+  box-shadow: 0 0 14px var(--coral);
+  animation: escanear 2.2s ease-in-out infinite;
+}
+@keyframes escanear {
+  0%, 100% { top: 12%; }
+  50% { top: 88%; }
+}
+
+/* ---------- Pie de página ---------- */
+.pie {
+  border-top: 1px solid var(--borde);
+  padding: 3rem 0 2rem;
+  margin-top: 3rem;
+}
+.pie h4 {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tinta-suave);
+  margin-bottom: 0.75rem;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 700;
+}
+.pie-interior {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.pie ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.pie a { color: var(--tinta-suave); font-size: 0.95rem; }
+.pie a:hover { color: var(--coral); }
+.pie-legal {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--borde);
+  font-size: 0.85rem;
+  color: var(--tinta-suave);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- Animaciones de entrada ---------- */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.aparecer { animation: aparecer 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.retraso-1 { animation-delay: 0.08s; }
+.retraso-2 { animation-delay: 0.16s; }
+.retraso-3 { animation-delay: 0.24s; }
+.retraso-4 { animation-delay: 0.32s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
