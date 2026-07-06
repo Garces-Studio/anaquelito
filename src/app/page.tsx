@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, X } from 'lucide-react';
 import Link from 'next/link';
 
 const DULCES = [
@@ -39,11 +39,12 @@ export default function Inicio() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Detectar si es móvil
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 640);
+      setIsMobile(window.innerWidth < 768);
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -83,7 +84,7 @@ export default function Inicio() {
     return 'back';
   };
 
-  // Estilos según el rol de la tarjeta
+  // Estilos según el rol de la tarjeta adaptados para el layout split
   const obtenerEstiloRol = (rol: string) => {
     const baseStyle: React.CSSProperties = {
       position: 'absolute',
@@ -92,94 +93,220 @@ export default function Inicio() {
       willChange: 'transform, filter, opacity',
     };
 
-    switch (rol) {
-      case 'center':
-        return {
-          ...baseStyle,
-          left: '50%',
-          transform: `translateX(-50%) scale(${isMobile ? 1.25 : 1.68})`,
-          opacity: 1,
-          filter: 'blur(0px)',
-          zIndex: 20,
-          height: isMobile ? '60%' : '92%',
-          bottom: isMobile ? '22%' : 0,
-        };
-      case 'left':
-        return {
-          ...baseStyle,
-          left: isMobile ? '20%' : '30%',
-          transform: 'translateX(-50%) scale(1)',
-          opacity: 0.85,
-          filter: 'blur(2px)',
-          zIndex: 10,
-          height: isMobile ? '16%' : '28%',
-          bottom: isMobile ? '32%' : '12%',
-        };
-      case 'right':
-        return {
-          ...baseStyle,
-          left: isMobile ? '80%' : '70%',
-          transform: 'translateX(-50%) scale(1)',
-          opacity: 0.85,
-          filter: 'blur(2px)',
-          zIndex: 10,
-          height: isMobile ? '16%' : '28%',
-          bottom: isMobile ? '32%' : '12%',
-        };
-      case 'back':
-      default:
-        return {
-          ...baseStyle,
-          left: '50%',
-          transform: 'translateX(-50%) scale(1)',
-          opacity: 1,
-          filter: 'blur(4px)',
-          zIndex: 5,
-          height: isMobile ? '13%' : '22%',
-          bottom: isMobile ? '32%' : '12%',
-        };
+    if (isMobile) {
+      switch (rol) {
+        case 'center':
+          return {
+            ...baseStyle,
+            left: '50%',
+            transform: 'translateX(-50%) scale(1.15)',
+            opacity: 1,
+            filter: 'blur(0px)',
+            zIndex: 20,
+            height: '62%',
+            bottom: '18%',
+          };
+        case 'left':
+          return {
+            ...baseStyle,
+            left: '15%',
+            transform: 'translateX(-50%) scale(0.8)',
+            opacity: 0.7,
+            filter: 'blur(2px)',
+            zIndex: 10,
+            height: '32%',
+            bottom: '24%',
+          };
+        case 'right':
+          return {
+            ...baseStyle,
+            left: '85%',
+            transform: 'translateX(-50%) scale(0.8)',
+            opacity: 0.7,
+            filter: 'blur(2px)',
+            zIndex: 10,
+            height: '32%',
+            bottom: '24%',
+          };
+        case 'back':
+        default:
+          return {
+            ...baseStyle,
+            left: '50%',
+            transform: 'translateX(-50%) scale(0.7)',
+            opacity: 0.4,
+            filter: 'blur(4px)',
+            zIndex: 5,
+            height: '25%',
+            bottom: '24%',
+          };
+      }
+    } else {
+      switch (rol) {
+        case 'center':
+          return {
+            ...baseStyle,
+            left: '50%',
+            transform: 'translateX(-50%) scale(1.35)',
+            opacity: 1,
+            filter: 'blur(0px)',
+            zIndex: 20,
+            height: '75%',
+            bottom: '22%',
+          };
+        case 'left':
+          return {
+            ...baseStyle,
+            left: '15%',
+            transform: 'translateX(-50%) scale(0.9)',
+            opacity: 0.8,
+            filter: 'blur(2px)',
+            zIndex: 10,
+            height: '45%',
+            bottom: '30%',
+          };
+        case 'right':
+          return {
+            ...baseStyle,
+            left: '85%',
+            transform: 'translateX(-50%) scale(0.9)',
+            opacity: 0.8,
+            filter: 'blur(2px)',
+            zIndex: 10,
+            height: '45%',
+            bottom: '30%',
+          };
+        case 'back':
+        default:
+          return {
+            ...baseStyle,
+            left: '50%',
+            transform: 'translateX(-50%) scale(0.8)',
+            opacity: 0.4,
+            filter: 'blur(4px)',
+            zIndex: 5,
+            height: '35%',
+            bottom: '32%',
+          };
+      }
     }
   };
 
   return (
     <main 
       style={{ 
-        backgroundColor: DULCES[activeIndex].bg, 
-        transition: 'background-color 650ms cubic-bezier(0.4, 0, 0.2, 1)',
-        fontFamily: 'var(--font-inter), sans-serif',
         position: 'relative',
         width: '100vw',
         height: '100vh',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        backgroundColor: '#0A0806'
       }}
     >
-      {/* Capa de textura analógica */}
+      {/* Video de fondo en bucle */}
+      <video 
+        className="video-background"
+        autoPlay 
+        muted 
+        loop 
+        playsInline
+      >
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_154941_df1a96e1-a06f-450c-bd02-d863414cc1a0.mp4" type="video/mp4" />
+      </video>
+
+      {/* Superposición con gradiente que responde al color del dulce seleccionado */}
+      <div 
+        className="video-overlay"
+        style={{
+          background: isMobile 
+            ? `linear-gradient(to bottom, rgba(10, 8, 6, 0.85) 45%, ${DULCES[activeIndex].bg}44 100%)`
+            : `linear-gradient(to right, rgba(10, 8, 6, 0.9) 35%, rgba(10, 8, 6, 0.6) 70%, ${DULCES[activeIndex].bg}33 100%)`,
+          transition: 'background 650ms cubic-bezier(0.4, 0, 0.2, 1)'
+        }}
+      />
+
+      {/* Capa de grano analógico premium */}
       <div className="grain-overlay" />
 
-      {/* Marca / Encabezado */}
-      <div 
-        style={{ 
-          position: 'absolute', 
-          top: '24px', 
-          left: isMobile ? '16px' : '32px', 
-          zIndex: 60,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}
-      >
-        <span 
-          style={{ 
-            fontSize: '12px', 
-            fontWeight: 700, 
-            textTransform: 'uppercase', 
-            color: '#FFFFFF', 
-            opacity: 0.9, 
-            letterSpacing: '0.18em' 
-          }}
-        >
+      {/* NAVBAR SUPERIOR */}
+      <nav className="portada-nav animate-fade-in">
+        <Link href="/" className="portada-logo font-podium">
           ANAQUELITO
-        </span>
+        </Link>
+        
+        {/* Enlaces centrales (desktop) */}
+        <div className="portada-menu-links">
+          <Link href="/catalogo" className="portada-menu-link">Catálogo</Link>
+          <Link href="/escaner" className="portada-menu-link">Escáner</Link>
+          <Link href="/catalogo?categoria=dulces" className="portada-menu-link">Dulces</Link>
+          <Link href="/catalogo?categoria=fritos" className="portada-menu-link">Botanas</Link>
+        </div>
+
+        {/* CTA de la Derecha (desktop) */}
+        <Link href="/catalogo" className="portada-nav-cta">
+          <span>Ingresar</span>
+          <ArrowUpRight size={14} />
+        </Link>
+
+        {/* Hamburguesa (móvil) */}
+        <button 
+          className="portada-hamburger" 
+          onClick={() => setMenuOpen(true)}
+          aria-label="Abrir menú"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+      </nav>
+
+      {/* MENÚ MÓVIL OVERLAY */}
+      <div className={`menu-movil-overlay ${menuOpen ? 'activo' : ''}`}>
+        <div className="menu-movil-cabecera">
+          <span className="portada-logo font-podium">ANAQUELITO</span>
+          <button onClick={() => setMenuOpen(false)} style={{ color: '#FFFFFF' }} aria-label="Cerrar menú">
+            <X size={28} />
+          </button>
+        </div>
+        <div className="menu-movil-cuerpo">
+          <Link 
+            href="/catalogo" 
+            className="menu-movil-enlace font-podium"
+            style={{ transitionDelay: '100ms' }}
+            onClick={() => setMenuOpen(false)}
+          >
+            Catálogo
+          </Link>
+          <Link 
+            href="/escaner" 
+            className="menu-movil-enlace font-podium"
+            style={{ transitionDelay: '180ms' }}
+            onClick={() => setMenuOpen(false)}
+          >
+            Escáner
+          </Link>
+          <Link 
+            href="/catalogo?categoria=dulces" 
+            className="menu-movil-enlace font-podium"
+            style={{ transitionDelay: '260ms' }}
+            onClick={() => setMenuOpen(false)}
+          >
+            Dulces
+          </Link>
+          <Link 
+            href="/catalogo?categoria=fritos" 
+            className="menu-movil-enlace font-podium"
+            style={{ transitionDelay: '340ms' }}
+            onClick={() => setMenuOpen(false)}
+          >
+            Botanas
+          </Link>
+          <div className="menu-movil-cta" style={{ transitionDelay: '420ms' }}>
+            <Link href="/catalogo" className="portada-nav-cta" onClick={() => setMenuOpen(false)}>
+              <span>Ingresar al negocio</span>
+              <ArrowUpRight size={14} />
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Texto Fantasma Gigante Detrás */}
@@ -194,165 +321,132 @@ export default function Inicio() {
           pointerEvents: 'none', 
           userSelect: 'none', 
           zIndex: 2, 
-          top: '18%',
+          top: isMobile ? '38%' : '18%',
           fontSize: 'clamp(90px, 28vw, 380px)',
           fontWeight: 900,
           color: '#FFFFFF',
-          opacity: 0.1,
+          opacity: 0.04,
           lineHeight: 1,
           textTransform: 'uppercase',
           letterSpacing: '-0.02em',
           whiteSpace: 'nowrap'
         }}
       >
-        DULCES
+        MAYOREO
       </div>
 
-      {/* Carrusel de Productos */}
-      <div style={{ position: 'absolute', inset: 0, zIndex: 3 }}>
-        {DULCES.map((dulce, indice) => {
-          const rol = obtenerRol(indice);
-          const estilo = obtenerEstiloRol(rol);
-          return (
-            <div key={indice} style={estilo}>
-              {/* Imagen del dulce */}
-              <img 
-                src={dulce.src} 
-                alt={dulce.nombre} 
-                className="blend-multiply"
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'contain', 
-                  objectPosition: 'bottom center',
-                  pointerEvents: 'none'
-                }} 
-                draggable={false}
-              />
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Navegación y Textos (Abajo Izquierda) */}
-      <div 
-        style={{ 
-          position: 'absolute', 
-          bottom: isMobile ? '24px' : '80px', 
-          left: isMobile ? '16px' : '96px', 
-          zIndex: 60,
-          maxWidth: '320px' 
-        }}
-      >
-        <p 
-          style={{ 
-            fontWeight: 700, 
-            textTransform: 'uppercase', 
-            letterSpacing: '0.02em', 
-            fontSize: isMobile ? '16px' : '22px',
-            color: '#FFFFFF', 
-            opacity: 0.95,
-            marginBottom: isMobile ? '8px' : '12px'
-          }}
-        >
-          {DULCES[activeIndex].nombre}
-        </p>
-        
-        {!isMobile && (
-          <p 
-            style={{ 
-              fontSize: '14px', 
-              color: '#FFFFFF', 
-              opacity: 0.85, 
-              lineHeight: 1.6, 
-              marginBottom: '20px' 
-            }}
-          >
-            {DULCES[activeIndex].descripcion}
-          </p>
-        )}
-
-        {/* Botones de navegación */}
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button 
-            onClick={() => navegar('prev')}
-            style={{
-              width: isMobile ? '48px' : '64px',
-              height: isMobile ? '48px' : '64px',
-              borderRadius: '50%',
-              border: '2px solid #FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#FFFFFF',
-              transition: 'transform 150ms, background-color 150ms'
-            }}
-            className="hover-scale"
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-          >
-            <ArrowLeft size={24} strokeWidth={2.25} />
-          </button>
+      {/* CONTENIDO PRINCIPAL EN CUADRÍCULA SPLIT */}
+      <div className="portada-grid">
+        {/* Columna Izquierda: Información de Negocio */}
+        <div className="portada-col-info">
           
-          <button 
-            onClick={() => navegar('next')}
-            style={{
-              width: isMobile ? '48px' : '64px',
-              height: isMobile ? '48px' : '64px',
-              borderRadius: '50%',
-              border: '2px solid #FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#FFFFFF',
-              transition: 'transform 150ms, background-color 150ms'
-            }}
-            className="hover-scale"
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-          >
-            <ArrowRight size={24} strokeWidth={2.25} />
-          </button>
-        </div>
-      </div>
+          {/* Tagline */}
+          <div className="tagline-hero animate-fade-up">
+            <Crown size={14} style={{ opacity: 0.8 }} />
+            <span>El aliado de tu tiendita B2B</span>
+          </div>
 
-      {/* Botón Catálogo (Abajo Derecha) */}
-      <div 
-        style={{ 
-          position: 'absolute', 
-          bottom: isMobile ? '24px' : '80px', 
-          right: isMobile ? '16px' : '40px', 
-          zIndex: 60 
-        }}
-      >
-        <Link 
-          href="/catalogo" 
-          className="font-anton"
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px',
-            fontSize: 'clamp(20px, 4vw, 56px)', 
-            fontWeight: 400, 
-            color: '#FFFFFF', 
-            opacity: 0.95, 
-            letterSpacing: '-0.02em', 
-            lineHeight: 1, 
-            textTransform: 'uppercase',
-            transition: 'opacity 200ms'
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.95'}
-        >
-          <span>CATÁLOGO</span>
-          <ArrowRight 
-            style={{ 
-              width: isMobile ? '20px' : '32px', 
-              height: isMobile ? '20px' : '32px', 
-              strokeWidth: 2.25 
-            }} 
-          />
-        </Link>
+          {/* Título Principal VANGUARD style */}
+          <h1 className="titulo-hero font-podium animate-fade-up-delay-1">
+            <span className="titulo-linea">SURTE.</span>
+            <span className="titulo-linea">AHORRA.</span>
+            <span className="titulo-linea">CRECE.</span>
+          </h1>
+
+          {/* Subtexto */}
+          <p className="subtexto-hero animate-fade-up-delay-2">
+            Abastece tu tiendita de dulces y botanas de alta rotación directamente desde tu celular. Sin intermediarios, con el margen de ganancia calculado y envío rápido.
+          </p>
+
+          {/* Botones de acción */}
+          <div className="fila-cta-hero animate-fade-up-delay-3">
+            <Link href="/catalogo" className="boton-cta-negro">
+              <span>VER CATÁLOGO</span>
+              <ArrowUpRight size={14} />
+            </Link>
+            <Link href="/escaner" className="boton-cta-cristal">
+              <span>ESCANEAR PRODUCTO</span>
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          {/* Estadísticas de VANGUARD adaptadas a Anaquelito */}
+          <div className="fila-stats-hero animate-fade-up-delay-4">
+            <div className="stat-item">
+              <span className="stat-valor">1.1M+</span>
+              <span className="stat-etiqueta">Tienditas en México</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-valor">24 HRS</span>
+              <span className="stat-etiqueta">Entrega Promedio</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-valor">~40%</span>
+              <span className="stat-etiqueta">Margen Sugerido</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Columna Derecha: Carrusel Flotante */}
+        <div className="portada-col-carrusel animate-fade-in-delay">
+          
+          {/* Renderizado de Dulces con Efecto 3D */}
+          <div style={{ position: 'absolute', inset: 0, zIndex: 3 }}>
+            {DULCES.map((dulce, indice) => {
+              const rol = obtenerRol(indice);
+              const estilo = obtenerEstiloRol(rol);
+              return (
+                <div key={indice} style={estilo}>
+                  <img 
+                    src={dulce.src} 
+                    alt={dulce.nombre} 
+                    className="blend-multiply"
+                    style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'contain', 
+                      objectPosition: 'bottom center',
+                      pointerEvents: 'none',
+                      filter: rol === 'center' ? 'drop-shadow(0 20px 40px rgba(0,0,0,0.65))' : 'blur(2px)'
+                    }} 
+                    draggable={false}
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Controles de carrusel y descripción del producto activo */}
+          <div className="controles-carrusel-premium">
+            <div className="info-producto-carrusel">
+              <span className="nombre-producto-carrusel">
+                {DULCES[activeIndex].nombre}
+              </span>
+              <span className="desc-producto-carrusel">
+                {DULCES[activeIndex].descripcion}
+              </span>
+            </div>
+
+            <div className="botones-carrusel-premium">
+              <button 
+                onClick={() => navegar('prev')}
+                className="boton-carrusel-premium"
+                aria-label="Anterior"
+              >
+                <ArrowLeft size={18} strokeWidth={2.25} />
+              </button>
+              <button 
+                onClick={() => navegar('next')}
+                className="boton-carrusel-premium"
+                aria-label="Siguiente"
+              >
+                <ArrowRight size={18} strokeWidth={2.25} />
+              </button>
+            </div>
+          </div>
+
+        </div>
       </div>
     </main>
   );

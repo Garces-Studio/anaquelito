@@ -1,6 +1,7 @@
 import Link from 'next/link';
+import EnlaceCarrito from './carrito/EnlaceCarrito';
 
-/** Barra de navegación fija que comparten todas las páginas. */
+/** Barra de navegación fija que comparten las páginas de la tienda. */
 export default function Encabezado() {
   return (
     <header className="encabezado">
@@ -12,6 +13,7 @@ export default function Encabezado() {
         <nav className="navegacion">
           <Link href="/catalogo">Catálogo</Link>
           <Link href="/escaner">Escanear</Link>
+          <EnlaceCarrito />
           <Link href="/catalogo" className="boton boton-primario">
             Surtir mi negocio
           </Link>

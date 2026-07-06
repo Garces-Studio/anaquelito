@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { crearCliente } from '@/lib/supabase/server';
+import BotonAgregar from '@/componentes/carrito/BotonAgregar';
 
 // Emoji ilustrativo por categoría mientras no hay fotografías de producto
 const EMOJI_CATEGORIA: Record<string, string> = {
@@ -139,7 +140,14 @@ export default async function PaginaCatalogo({
                   Sugerido de reventa: ${producto.precio_sugerido_reventa}
                 </p>
               )}
-              <button className="boton boton-primario">+ Agregar al carrito</button>
+              <BotonAgregar
+                producto={{
+                  id: producto.id,
+                  nombre: producto.nombre,
+                  unidad: producto.unidad,
+                  precio_mayoreo: producto.precio_mayoreo,
+                }}
+              />
             </article>
           );
         })}

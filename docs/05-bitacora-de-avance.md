@@ -48,3 +48,15 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - **Escáner rediseñado** con el tema nuevo y copy honesto ("vista previa — se activa próximamente") en vez de simular una cámara activa.
 - Se detectó y arregló una caché de compilación corrupta (`.next` apuntaba a módulos de la instalación anterior); se limpió y el sitio compila y responde 200 en las tres rutas.
 - **Verificado en navegador**: portada carrusel, catálogo con margen y filtros, escáner, modo oscuro y móvil.
+
+## 2026-07-06 (producción viva + carrito funcional)
+
+- **Producción verificada**: `anaquelito.vercel.app` responde y el catálogo lee productos reales de Supabase (las variables de entorno en Vercel ya quedaron configuradas).
+- **Carrito de compras completo y funcional** (verificado en navegador con clics reales):
+  - Botón "+ Agregar al carrito" en cada producto, con confirmación visual ("✓ Agregado").
+  - Contador de artículos en el encabezado, visible también en celular.
+  - Página `/carrito`: lista de artículos, controles de cantidad (+/−), quitar artículo, subtotal calculado y vaciar carrito.
+  - El carrito se guarda en el navegador (localStorage): si el cliente cierra la pestaña, su pedido sigue ahí.
+  - **Pedido por WhatsApp**: el botón de confirmar genera un mensaje con el pedido completo listo para enviarse al WhatsApp del negocio. Falta definir el número (variable `NEXT_PUBLIC_WHATSAPP_NUMERO`); mientras tanto el botón aparece deshabilitado con aviso honesto.
+- Archivos nuevos: `src/componentes/carrito/` (contexto, botón de agregar, enlace con contador) y `src/app/(tienda)/carrito/page.tsx`.
+- Se empezó a explorar una tipografía display personalizada (PODIUM Sharp) importada en `globals.css` — ver pendiente sobre su licencia.
