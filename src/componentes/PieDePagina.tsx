@@ -22,15 +22,15 @@ export default function PieDePagina() {
             <ul>
               <li><Link href="/catalogo">Catálogo mayorista</Link></li>
               <li><Link href="/escaner">Reordenar con escáner</Link></li>
-              <li><Link href="/#precios">Niveles de precio</Link></li>
+              <li><Link href="/">Portada</Link></li>
             </ul>
           </div>
           <div>
-            <h4>Para tu negocio</h4>
+            <h4>Categorías</h4>
             <ul>
-              <li><Link href="/#segmentos">Soy tiendita</Link></li>
-              <li><Link href="/#segmentos">Soy café o fonda</Link></li>
-              <li><Link href="/#segmentos">Soy emprendedor</Link></li>
+              <li><Link href="/catalogo?categoria=gomitas">Gomitas</Link></li>
+              <li><Link href="/catalogo?categoria=chocolates">Chocolates</Link></li>
+              <li><Link href="/catalogo?categoria=frutos_secos">Frutos secos</Link></li>
             </ul>
           </div>
           <div>

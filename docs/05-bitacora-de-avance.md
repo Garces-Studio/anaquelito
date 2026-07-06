@@ -35,3 +35,16 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - Se corrigió una advertencia de Next.js sobre "múltiples lockfiles" fijando `turbopack.root` en `next.config.ts`.
 - Probado en navegador real: home → navega a catálogo → catálogo muestra productos reales de la base de datos (Cacahuate Japonés $75, Gomitas Surtidas $92, etc.).
 - Pendiente todavía: autenticación de clientes, flujo de pedido/carrito completo, escáner de código de barras funcional, y despliegue confirmado en Vercel con las variables de entorno de Supabase configuradas ahí también.
+
+## 2026-07-06 (rediseño completo del sitio)
+
+- **Análisis en vivo de k-botanas.com** documentado en [02-analisis-competitivo.md](02-analisis-competitivo.md): tabla de debilidad → cómo la atacamos.
+- **Portada nueva tipo carrusel** a pantalla completa con fotografías reales de producto (`public/papas.png`, `mazapan.png`, `gomitas.png`, `paleta.png`), fondo de color que cambia por producto, texto gigante "DULCES" de fondo y grano analógico. Usa la librería de íconos `lucide-react`.
+- **Sistema de diseño "Mercado moderno"** para las páginas interiores (tema cálido: papel de estraza, tinta café, etiquetas de precio con forma rotada, modo oscuro café tostado). Tipografías: Anton (títulos, energía de cartel de mercado) + Inter (texto).
+- **Separación por grupos de ruta**: la portada vive a pantalla completa sin menús; catálogo y escáner viven en `src/app/(tienda)/` con encabezado fijo y pie de página compartidos (`src/componentes/`).
+- **Catálogo mejorado**: filtros por categoría (chips), búsqueda por nombre (funciona con parámetros GET), y el diferenciador estrella — cada producto muestra su **precio de mayoreo + precio sugerido de reventa + etiqueta "le ganas ~X%"**. Nadie en la competencia muestra el margen.
+- **Base de datos**: migración `0003` — columna `precio_sugerido_reventa` en `productos`, y dos correcciones de seguridad en RLS detectadas en revisión propia: faltaba política para que un cliente nuevo se registre, y para que un cliente agregue artículos a sus pedidos pendientes.
+- **Seguridad HTTP**: cabeceras agregadas en `next.config.ts` (anti-clickjacking, anti-MIME-sniffing, política de referencia y de permisos del navegador).
+- **Escáner rediseñado** con el tema nuevo y copy honesto ("vista previa — se activa próximamente") en vez de simular una cámara activa.
+- Se detectó y arregló una caché de compilación corrupta (`.next` apuntaba a módulos de la instalación anterior); se limpió y el sitio compila y responde 200 en las tres rutas.
+- **Verificado en navegador**: portada carrusel, catálogo con margen y filtros, escáner, modo oscuro y móvil.

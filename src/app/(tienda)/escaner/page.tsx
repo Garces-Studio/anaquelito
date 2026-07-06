@@ -1,57 +1,57 @@
-import React from 'react';
+import Link from 'next/link';
 
 export default function PaginaEscaner() {
   return (
-    <div className="container" style={{ padding: '2rem 1.5rem', textAlign: 'center' }}>
-      <h2 style={{ marginBottom: '1rem' }}>Escanear Producto</h2>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-        Usa la cámara de tu celular para escanear el código de barras (UPC) de la bolsa vacía y agregarlo al carrito.
+    <main className="contenedor" style={{ padding: '3rem 1.25rem 4rem', textAlign: 'center' }}>
+      <h1 className="seccion-titulo aparecer">¿Se acabó? Escanéalo.</h1>
+      <p
+        className="seccion-bajada aparecer retraso-1"
+        style={{ marginInline: 'auto' }}
+      >
+        Apunta la cámara al código de barras de la bolsa vacía y el producto
+        entra directo a tu carrito con tu precio de mayoreo.
       </p>
 
-      <div style={{
-        maxWidth: '400px',
-        margin: '0 auto',
-        height: '300px',
-        background: '#000',
-        borderRadius: 'var(--radius-lg)',
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#fff',
-        boxShadow: 'var(--shadow-lg)'
-      }}>
-        <div style={{
-          position: 'absolute',
-          width: '80%',
-          height: '2px',
-          background: 'rgba(255, 90, 95, 0.8)',
-          boxShadow: '0 0 10px rgba(255, 90, 95, 1)',
-          animation: 'scan 2s linear infinite'
-        }}></div>
-        {/* Simulación visual de cámara */}
-        <span>[Cámara Activada]</span>
-        <style>{`
-          @keyframes scan {
-            0% { top: 10%; }
-            50% { top: 90%; }
-            100% { top: 10%; }
-          }
-        `}</style>
+      <div className="visor-escaner aparecer retraso-2">
+        <div className="linea-escaner"></div>
+        <span style={{ fontSize: '0.95rem', opacity: 0.8 }}>
+          Vista previa — el escáner se activa próximamente
+        </span>
       </div>
 
-      <button style={{
-        marginTop: '2rem',
-        padding: '1rem 2rem',
-        background: 'var(--surface-color)',
-        border: '2px solid var(--border-color)',
-        borderRadius: 'var(--radius-md)',
-        fontWeight: 'bold',
-        fontSize: '1rem'
-      }} className="hover-scale">
-        Ingresar Código Manualmente
-      </button>
-    </div>
+      <div
+        className="aparecer retraso-3"
+        style={{
+          display: 'flex',
+          gap: '0.9rem',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          marginTop: '2rem',
+        }}
+      >
+        <button className="boton boton-secundario">
+          Ingresar código manualmente
+        </button>
+        <Link href="/catalogo" className="boton boton-primario">
+          Mientras tanto, ver catálogo
+        </Link>
+      </div>
+
+      {/* Cómo funcionará el reorden: expectativa clara para el cliente */}
+      <div className="rejilla-pasos" style={{ textAlign: 'left', marginTop: '3.5rem' }}>
+        <div className="paso">
+          <h3>Escanea la bolsa vacía</h3>
+          <p>Cualquier código de barras UPC de los productos de nuestro catálogo.</p>
+        </div>
+        <div className="paso">
+          <h3>Confirma cantidad</h3>
+          <p>Te sugerimos la cantidad de tu pedido anterior para ir más rápido.</p>
+        </div>
+        <div className="paso">
+          <h3>Listo en 30 segundos</h3>
+          <p>Tu resurtido queda pedido sin buscar producto por producto.</p>
+        </div>
+      </div>
+    </main>
   );
 }

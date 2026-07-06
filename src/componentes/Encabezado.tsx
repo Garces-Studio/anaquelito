@@ -12,7 +12,6 @@ export default function Encabezado() {
         <nav className="navegacion">
           <Link href="/catalogo">Catálogo</Link>
           <Link href="/escaner">Escanear</Link>
-          <Link href="/#como-funciona">Cómo funciona</Link>
           <Link href="/catalogo" className="boton boton-primario">
             Surtir mi negocio
           </Link>

@@ -13,22 +13,41 @@
 ```
 src/
   app/
-    page.tsx           # Home
-    layout.tsx          # Layout raíz, fuente Outfit, metadata
-    globals.css          # Variables de marca (colores, radios, sombras)
-    catalog/
-      page.tsx           # Catálogo B2B (placeholder con productos hardcodeados)
-    escaner/
-      page.tsx           # Escáner de código de barras (placeholder visual, sin lógica de cámara real)
+    page.tsx             # Portada: carrusel de productos a pantalla completa (sin menús)
+    layout.tsx           # Layout raíz: solo fuentes (Anton + Inter) y estilos globales
+    globals.css          # 1) estilos de la portada  2) tema ".tema-tienda" para páginas interiores
+    (tienda)/            # Grupo de ruta: páginas con encabezado + pie + tema cálido
+      layout.tsx         # Envuelve con Encabezado, PieDePagina y .tema-tienda
+      catalogo/
+        page.tsx         # Catálogo con datos reales, filtros por categoría, búsqueda y margen visible
+      escaner/
+        page.tsx         # Escáner (vista previa honesta; cámara real pendiente)
+  componentes/
+    Encabezado.tsx       # Barra de navegación compartida
+    PieDePagina.tsx      # Pie de página compartido
   lib/
     supabase/
-      client.ts           # Cliente Supabase para componentes de cliente (crearCliente)
-      server.ts           # Cliente Supabase para server components (crearCliente, usa cookies)
+      client.ts          # Cliente Supabase para componentes de cliente (crearCliente)
+      server.ts          # Cliente Supabase para server components (crearCliente, usa cookies)
+public/                  # Fotografías de producto (papas, mazapán, gomitas, paleta)
 supabase/
   migrations/
-    0001_esquema_inicial.sql   # Tablas: clientes, productos, codigos_barra, pedidos, pedido_items, lineas_credito + RLS
-    0002_productos_de_ejemplo.sql
+    0001_esquema_inicial.sql          # Tablas + RLS
+    0002_productos_de_ejemplo.sql     # Datos de prueba
+    0003_margen_sugerido_y_seguridad.sql  # precio_sugerido_reventa + políticas RLS faltantes
 ```
+
+## Diseño
+
+- **Portada**: carrusel a pantalla completa con fotos reales de producto y fondo que cambia de color. No tiene menú: un solo llamado a la acción (CATÁLOGO).
+- **Páginas interiores**: tema "mercado moderno" (`.tema-tienda` en `globals.css`) — papel cálido, tinta café, modo oscuro café tostado, tipografía Anton para títulos e Inter para texto.
+- **Regla de oro del catálogo**: todo producto muestra su margen estimado ("le ganas ~X%"). Es el diferenciador frente a la competencia y no se quita sin decisión de los dos socios.
+
+## Seguridad
+
+- **RLS en todas las tablas** (ver migraciones 0001 y 0003).
+- **Cabeceras HTTP** en `next.config.ts`: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy` (cámara solo para el propio sitio, por el escáner).
+- **Secretos**: solo en `.env.local` (ignorado por git). La llave que va al navegador es la pública (`anon`); la contraseña de la base de datos jamás se usa en el frontend.
 
 ## Base de datos (Supabase) — ya conectada
 
