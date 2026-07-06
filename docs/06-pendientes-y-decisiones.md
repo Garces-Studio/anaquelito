@@ -2,6 +2,11 @@
 
 Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-avance.md](05-bitacora-de-avance.md)) y se borra de aquí.
 
+## Para activar YA (rápidas)
+
+- [ ] **Número de WhatsApp del negocio**: definirlo con el socio y configurarlo como `NEXT_PUBLIC_WHATSAPP_NUMERO` (formato internacional sin signos, ej. `5215512345678`) en `.env.local` y en Vercel. Con eso el botón "Enviar pedido por WhatsApp" del carrito queda funcionando y ya se pueden recibir pedidos reales.
+- [ ] **Licencia de la tipografía PODIUM Sharp**: la versión importada en `globals.css` es un "DEMO" servido por un CDN de terceros (onlinewebfonts.com). Antes de lanzar hay que comprar la licencia comercial y servir la fuente desde nuestro propio proyecto, o elegir una fuente libre equivalente. Usar una fuente demo en un negocio real es una violación de licencia.
+
 ## Decisiones de negocio (necesitan a tu socio)
 
 - [ ] Zona geográfica de lanzamiento (¿CDMX? ¿qué alcaldías/municipios primero?).
