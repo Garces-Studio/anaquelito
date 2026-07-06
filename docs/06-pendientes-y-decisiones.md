@@ -17,8 +17,7 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 - [ ] Librería/estrategia real de lectura de código de barras para el escáner (`BarcodeDetector` nativo vs `@zxing/browser`).
 - [ ] Pasarela de pago a integrar (Stripe / Mercado Pago / Kueski).
 - [ ] Evaluar si se necesita una librería de componentes UI antes de que el catálogo crezca (hoy todo es estilo inline).
-- [ ] Confirmar variables de entorno de Supabase en Vercel (Project Settings → Environment Variables), no solo en `.env.local`.
-- [ ] Arreglar el permiso de escritura en GitHub para que `git push` no necesite un token nuevo cada vez (agregar la cuenta correcta como colaboradora de Garces-Studio/anaquelito).
+- [ ] **URGENTE antes de que la página desplegada funcione:** configurar en Vercel (Project Settings → Environment Variables) las dos variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` (los valores están en el `.env.local` local). Sin esto, el catálogo en producción no puede leer la base de datos.
 
 ## Construcción pendiente (frontend/producto)
 
