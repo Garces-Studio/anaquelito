@@ -5,10 +5,12 @@ import { crearClienteMercadoPago } from '@/lib/mercadopago/cliente';
 
 type ArticuloRecibido = {
   id: string;
-  nombre: string;
-  unidad: string;
-  precio_mayoreo: number;
   cantidad: number;
+  // El navegador puede mandar nombre/precio, pero NO se confía en ellos:
+  // los datos reales siempre se leen de la base de datos (ver abajo).
+  nombre?: string;
+  unidad?: string;
+  precio_mayoreo?: number;
 };
 
 type CuerpoCheckout = {
@@ -50,6 +52,42 @@ export async function POST(solicitud: NextRequest) {
 
   const supabaseAdmin = crearClienteAdmin();
 
+  // 0. SEGURIDAD: los precios NUNCA vienen del navegador. Se buscan los
+  //    productos en la base de datos y se cobra con el precio real; si algún
+  //    id no existe o está inactivo, se rechaza el pedido completo.
+  const cantidadPorId = new Map<string, number>();
+  for (const articulo of articulos) {
+    const cantidad = Math.floor(Number(articulo.cantidad));
+    if (!articulo.id || !Number.isFinite(cantidad) || cantidad <= 0 || cantidad > 10000) {
+      return NextResponse.json({ error: 'Artículo con cantidad inválida' }, { status: 400 });
+    }
+    cantidadPorId.set(articulo.id, (cantidadPorId.get(articulo.id) ?? 0) + cantidad);
+  }
+
+  const { data: productosDb, error: errorProductos } = await supabaseAdmin
+    .from('productos')
+    .select('id, nombre, unidad, precio_mayoreo, activo')
+    .in('id', [...cantidadPorId.keys()]);
+
+  if (errorProductos) {
+    return NextResponse.json({ error: `No se pudieron verificar los productos: ${errorProductos.message}` }, { status: 500 });
+  }
+
+  const disponibles = (productosDb ?? []).filter((p) => p.activo);
+  if (disponibles.length !== cantidadPorId.size) {
+    return NextResponse.json(
+      { error: 'Uno o más productos del carrito ya no están disponibles. Actualiza tu carrito.' },
+      { status: 409 }
+    );
+  }
+
+  const lineas = disponibles.map((producto) => ({
+    id: producto.id,
+    nombre: producto.nombre,
+    cantidad: cantidadPorId.get(producto.id)!,
+    precio_unitario: Number(producto.precio_mayoreo),
+  }));
+
   // 1. Cliente de invitado (sin cuenta todavía; auth_user_id queda vacío)
   const { data: cliente, error: errorCliente } = await supabaseAdmin
     .from('clientes')
@@ -66,7 +104,7 @@ export async function POST(solicitud: NextRequest) {
     return NextResponse.json({ error: `No se pudo registrar el negocio: ${errorCliente.message}` }, { status: 500 });
   }
 
-  const total = articulos.reduce((suma, a) => suma + a.cantidad * a.precio_mayoreo, 0);
+  const total = lineas.reduce((suma, linea) => suma + linea.cantidad * linea.precio_unitario, 0);
 
   // 2. Pedido
   const { data: pedido, error: errorPedido } = await supabaseAdmin
@@ -84,13 +122,13 @@ export async function POST(solicitud: NextRequest) {
     return NextResponse.json({ error: `No se pudo crear el pedido: ${errorPedido.message}` }, { status: 500 });
   }
 
-  // 3. Artículos del pedido
+  // 3. Artículos del pedido (con los precios verificados de la base de datos)
   const { error: errorItems } = await supabaseAdmin.from('pedido_items').insert(
-    articulos.map((a) => ({
+    lineas.map((linea) => ({
       pedido_id: pedido.id,
-      producto_id: a.id,
-      cantidad: a.cantidad,
-      precio_unitario: a.precio_mayoreo,
+      producto_id: linea.id,
+      cantidad: linea.cantidad,
+      precio_unitario: linea.precio_unitario,
     }))
   );
 
@@ -105,11 +143,11 @@ export async function POST(solicitud: NextRequest) {
   try {
     const preferencia = await mercadoPago.create({
       body: {
-        items: articulos.map((a) => ({
-          id: a.id,
-          title: a.nombre,
-          quantity: a.cantidad,
-          unit_price: a.precio_mayoreo,
+        items: lineas.map((linea) => ({
+          id: linea.id,
+          title: linea.nombre,
+          quantity: linea.cantidad,
+          unit_price: linea.precio_unitario,
           currency_id: 'MXN',
         })),
         external_reference: pedido.id,

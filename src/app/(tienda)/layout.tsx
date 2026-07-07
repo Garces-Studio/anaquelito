@@ -3,10 +3,9 @@
 import { usePathname } from 'next/navigation';
 import PieDePagina from "@/componentes/PieDePagina";
 
-// Diseño de las páginas de la tienda. El catálogo es una experiencia inmersiva
-// a pantalla completa (carrusel TOONHUB) y se muestra SIN encabezado, pie ni
-// tema; las demás páginas sí llevan el chrome cálido compartido.
-// La portada carrusel NO pasa por aquí — vive a pantalla completa aparte.
+// Diseño de las páginas de la tienda. El Encabezado ya lo pone el layout raíz
+// para TODO el sitio, así que aquí solo se agrega el tema cálido y el pie.
+// El catálogo es una experiencia inmersiva a pantalla completa y va sin pie.
 export default function DisenoTienda({
   children,
 }: Readonly<{

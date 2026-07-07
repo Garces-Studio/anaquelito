@@ -1,5 +1,3 @@
-@import url('https://db.onlinewebfonts.com/c/8b75d9dcff6a48c35a46656192adf019?family=FSP+DEMO+-+PODIUM+Sharp+4.11');
-
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
@@ -10,7 +8,11 @@
    ============================================================ */
 
 :root {
-  --font-podium: "FSP DEMO - PODIUM Sharp 4.11", sans-serif;
+  /* UNA sola fuente para todo el sitio: Plus Jakarta Sans (--font-principal,
+     cargada por next/font en layout.tsx). Los alias históricos (podium, anton,
+     inter, kanit, outfit) apuntan aquí para que TODO el código existente
+     cambie de fuente sin tocar página por página. */
+  --font-podium: var(--font-principal), system-ui, sans-serif;
   --font-titulo: var(--font-podium);
   --font-inter: var(--font-podium);
   --font-kanit: var(--font-podium);
@@ -516,6 +518,11 @@ input { font-family: inherit; }
 @keyframes escanear {
   0%, 100% { top: 15%; }
   50% { top: 85%; }
+}
+/* Línea del escáner REAL (sobre el video en vivo de la cámara) */
+.linea-escaner-real {
+  top: 15%;
+  animation: escanear 2.2s ease-in-out infinite;
 }
 @keyframes pulso-escaner {
   0%, 100% { border-color: rgba(255, 255, 255, 0.15); opacity: 0.8; }
@@ -1454,3 +1461,70 @@ input { font-family: inherit; }
 .font-kanit {
   font-family: var(--font-kanit), 'Kanit', sans-serif;
 }
+
+/* ============================================================
+   PULIDO MÓVIL GLOBAL (enfoque iPhone)
+   Sensación de app nativa: sin flash azul al tocar, sin retraso
+   de doble tap, respuesta táctil al presionar y respeto a las
+   zonas seguras (notch / Dynamic Island / barra de inicio).
+   ============================================================ */
+
+html {
+  /* Evita que iOS agrande el texto al rotar el teléfono */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  /* Sin rebote lateral raro al hacer swipe en los bordes */
+  overscroll-behavior-x: none;
+}
+
+a, button, [role="button"], input[type="submit"] {
+  /* Quita el recuadro azul/gris de iOS y Android al tocar */
+  -webkit-tap-highlight-color: transparent;
+  /* Elimina el retraso de 300ms del doble-tap: los toques responden al instante */
+  touch-action: manipulation;
+}
+
+/* Respuesta táctil universal: en pantallas SIN cursor (teléfonos), todo botón
+   y enlace se "hunde" ligeramente al presionarlo. Feedback instantáneo sin JS. */
+@media (hover: none) and (pointer: coarse) {
+  button:not(:disabled):active,
+  a:active,
+  [role="button"]:active {
+    transform: scale(0.965);
+    transition: transform 90ms ease-out;
+  }
+
+  /* En móvil las animaciones de entrada corren un poco más rápido:
+     el usuario hace scroll con el pulgar y no espera. */
+  .aparecer { animation-duration: 0.45s; }
+}
+
+/* Zonas seguras del iPhone (notch y barra de inicio) */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+  .tema-tienda .pie {
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Los inputs en iOS hacen zoom automático si la fuente es < 16px.
+   Se fuerza 16px en móvil para que el teclado no "brinque" la página. */
+@media (max-width: 640px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Scroll con inercia suave para carruseles/áreas horizontales */
+.scroll-tactil {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.scroll-tactil::-webkit-scrollbar { display: none; }

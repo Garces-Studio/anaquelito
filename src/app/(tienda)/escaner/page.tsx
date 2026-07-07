@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -8,12 +9,29 @@ import {
   Barcode,
   Camera,
   Check,
-  Clock3,
   PackageCheck,
+  RefreshCw,
   ScanLine,
+  SearchX,
   ShoppingCart,
   Sparkles,
 } from 'lucide-react';
+import EscanerCamara from '@/componentes/EscanerCamara';
+import { usarCarrito } from '@/componentes/carrito/ContextoCarrito';
+import { crearCliente } from '@/lib/supabase/client';
+
+/** Producto que regresa la búsqueda por código de barras. */
+type ProductoEscaneado = {
+  id: string;
+  nombre: string;
+  unidad: string;
+  precio_mayoreo: number;
+  precio_sugerido_reventa: number | null;
+  imagen_url: string | null;
+  activo: boolean;
+};
+
+type FaseEscaner = 'inactivo' | 'escaneando' | 'buscando' | 'resultado';
 
 const flotantes = [
   { src: '/paleta.png', className: 'left-[5%] top-[16%] hidden w-20 md:block', rotate: -12, delay: 0 },
@@ -89,6 +107,57 @@ function ProductoFlotante({
 }
 
 export default function PaginaEscaner() {
+  const { agregar } = usarCarrito();
+
+  const [fase, setFase] = useState<FaseEscaner>('inactivo');
+  const [codigoLeido, setCodigoLeido] = useState('');
+  const [producto, setProducto] = useState<ProductoEscaneado | null>(null);
+  const [agregado, setAgregado] = useState(false);
+  const [entradaManual, setEntradaManual] = useState(false);
+  const [codigoManual, setCodigoManual] = useState('');
+
+  /** Busca el código en la tabla codigos_barra (lectura pública por RLS). */
+  const buscarCodigo = async (codigo: string) => {
+    setFase('buscando');
+    setCodigoLeido(codigo);
+    setAgregado(false);
+    try {
+      const supabase = crearCliente();
+      const { data } = await supabase
+        .from('codigos_barra')
+        .select('codigo, productos(id, nombre, unidad, precio_mayoreo, precio_sugerido_reventa, imagen_url, activo)')
+        .eq('codigo', codigo)
+        .maybeSingle();
+
+      const encontrado = (data?.productos ?? null) as ProductoEscaneado | null;
+      setProducto(encontrado && encontrado.activo ? encontrado : null);
+    } catch {
+      setProducto(null);
+    } finally {
+      setFase('resultado');
+    }
+  };
+
+  const agregarAlCarrito = () => {
+    if (!producto) return;
+    agregar({
+      id: producto.id,
+      nombre: producto.nombre,
+      unidad: producto.unidad,
+      precio_mayoreo: Number(producto.precio_mayoreo),
+    });
+    setAgregado(true);
+  };
+
+  const enviarCodigoManual = (evento: React.FormEvent) => {
+    evento.preventDefault();
+    const codigo = codigoManual.trim();
+    if (!codigo) return;
+    setEntradaManual(false);
+    setCodigoManual('');
+    buscarCodigo(codigo);
+  };
+
   return (
     <main className="overflow-hidden bg-[#FFF6EC] text-[#2B1B12]">
       <section className="relative min-h-[calc(100vh-84px)] overflow-hidden border-b border-[#EBD9C3] px-4 pb-16 pt-28 md:px-8 md:pb-20 md:pt-32">
@@ -118,8 +187,33 @@ export default function PaginaEscaner() {
             </motion.p>
 
             <motion.div variants={aparecer} className="mt-8 flex flex-wrap items-center gap-4">
-              <BotonPrincipal href="/catalogo">Mientras tanto, ver catálogo</BotonPrincipal>
-              <button type="button" className="inline-flex items-center gap-2 rounded-full border border-[#2B1B12] bg-white/55 px-5 py-3 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] shadow-sm transition hover:bg-white">
+              <button
+                type="button"
+                onClick={() => {
+                  setFase('escaneando');
+                  document.getElementById('visor-escaner')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
+                className="group inline-flex items-center justify-center rounded-full border-2 border-[#2B1B12] p-1 transition-colors hover:border-[#FF5A5F] active:scale-95"
+              >
+                <span className="flex items-center gap-3 rounded-full bg-[#2B1B12] px-5 py-2.5 text-[#FFF6EC] transition-colors group-hover:bg-[#FF5A5F] sm:px-7">
+                  <span className="grid h-6 w-6 place-items-center rounded-full bg-white/10">
+                    <Camera size={13} />
+                  </span>
+                  <span className="text-[11px] font-black uppercase tracking-[0.18em]">Escanear ahora</span>
+                  <span className="grid h-6 w-6 place-items-center rounded-full bg-white/15">
+                    <ArrowRight className="-rotate-45 transition-transform group-hover:rotate-0" size={13} />
+                  </span>
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEntradaManual(true);
+                  setFase('inactivo');
+                  document.getElementById('visor-escaner')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
+                className="inline-flex items-center gap-2 rounded-full border border-[#2B1B12] bg-white/55 px-5 py-3 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] shadow-sm transition hover:bg-white active:scale-95"
+              >
                 <Barcode size={16} />
                 Ingresar código
               </button>
@@ -140,6 +234,7 @@ export default function PaginaEscaner() {
           </div>
 
           <motion.div
+            id="visor-escaner"
             initial={{ opacity: 0, y: 38, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.85, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
@@ -149,50 +244,175 @@ export default function PaginaEscaner() {
             <div className="relative rounded-lg border border-[#EBD9C3] bg-white/86 p-4 shadow-[0_30px_70px_rgba(43,27,18,0.14)] backdrop-blur md:p-5">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF5A5F]">Vista previa</p>
-                  <h2 className="font-podium !font-black text-3xl uppercase leading-none tracking-normal md:text-4xl">Cámara lista</h2>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF5A5F]">Lector UPC</p>
+                  <h2 className="font-podium !font-black text-3xl uppercase leading-none tracking-normal md:text-4xl">
+                    {fase === 'escaneando' && 'Escaneando'}
+                    {fase === 'buscando' && 'Buscando…'}
+                    {fase === 'resultado' && (producto ? '¡Detectado!' : 'Sin coincidencia')}
+                    {fase === 'inactivo' && 'Cámara lista'}
+                  </h2>
                 </div>
-                <span className="inline-flex items-center gap-2 rounded-full bg-[#00A699]/10 px-3 py-2 text-[10px] font-black uppercase tracking-[0.14em] text-[#007A70]">
-                  <span className="h-2 w-2 rounded-full bg-[#00A699]" />
-                  Próximamente
+                <span className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-[10px] font-black uppercase tracking-[0.14em] ${
+                  fase === 'escaneando' ? 'bg-[#FF5A5F]/10 text-[#FF5A5F]' : 'bg-[#00A699]/10 text-[#007A70]'
+                }`}>
+                  <span className={`h-2 w-2 rounded-full ${fase === 'escaneando' ? 'animate-pulse bg-[#FF5A5F]' : 'bg-[#00A699]'}`} />
+                  {fase === 'escaneando' ? 'En vivo' : 'Escáner real'}
                 </span>
               </div>
 
-              <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-[#EBD9C3] bg-[#1C120D] sm:aspect-[5/4]">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(255,90,95,0.22),transparent_32%),linear-gradient(135deg,rgba(255,246,236,0.08),rgba(0,166,153,0.12))]" />
-                <motion.div
-                  animate={{ y: ['12%', '82%', '12%'] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-                  className="absolute left-[9%] z-20 h-[2px] w-[82%] bg-[#FF5A5F] shadow-[0_0_24px_#FF5A5F]"
-                />
-                <div className="absolute inset-6 rounded-lg border border-dashed border-white/35" />
-                <div className="absolute left-1/2 top-1/2 w-[78%] -translate-x-1/2 -translate-y-1/2">
-                  <motion.div
-                    animate={{ scale: [1, 1.035, 1], rotate: [-1, 1, -1] }}
-                    transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
-                    className="relative"
-                  >
-                    <Image src="/gomitas.png" alt="Producto dentro del escáner" width={1024} height={1024} className="blend-multiply drop-shadow-[0_24px_35px_rgba(0,0,0,0.34)]" />
-                  </motion.div>
-                </div>
-                <div className="absolute inset-x-4 bottom-4 rounded-lg border border-white/10 bg-white/10 p-3 text-white backdrop-blur-md">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-[10px] font-black uppercase tracking-[0.16em] text-white/70">Buscando UPC</span>
-                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#FFB400]">
-                      <Clock3 size={13} /> 00:30
+              {/* ---------- Estado: cámara apagada ---------- */}
+              {fase === 'inactivo' && (
+                <div className="relative grid aspect-[3/4] place-items-center overflow-hidden rounded-lg border border-[#EBD9C3] bg-[#1C120D] sm:aspect-[4/3]">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(255,90,95,0.22),transparent_32%),linear-gradient(135deg,rgba(255,246,236,0.08),rgba(0,166,153,0.12))]" />
+                  <div className="absolute inset-6 rounded-lg border border-dashed border-white/25" />
+                  <div className="relative z-10 flex flex-col items-center gap-5 px-6 text-center">
+                    <span className="grid h-16 w-16 place-items-center rounded-full bg-[#FF5A5F] text-white shadow-[0_18px_45px_rgba(255,90,95,0.45)]">
+                      <Camera size={28} />
                     </span>
-                  </div>
-                  <div className="mt-3 flex h-12 items-end gap-1">
-                    {Array.from({ length: 34 }).map((_, index) => (
-                      <span
-                        key={index}
-                        className="block w-full rounded-full bg-white/85"
-                        style={{ height: `${index % 5 === 0 ? 44 : index % 3 === 0 ? 30 : 18}px` }}
-                      />
-                    ))}
+                    <p className="max-w-[260px] text-sm font-semibold leading-6 text-white/80">
+                      Activa la cámara trasera y apunta al código de barras del empaque.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setFase('escaneando')}
+                      className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-white px-7 text-[12px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition active:scale-95"
+                    >
+                      <ScanLine size={17} /> Abrir cámara
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEntradaManual(true)}
+                      className="text-[11px] font-black uppercase tracking-[0.14em] text-white/60 underline-offset-4 transition hover:text-white hover:underline"
+                    >
+                      O escribe el código a mano
+                    </button>
                   </div>
                 </div>
-              </div>
+              )}
+
+              {/* ---------- Estado: cámara en vivo ---------- */}
+              {fase === 'escaneando' && (
+                <>
+                  <EscanerCamara activo onCodigo={buscarCodigo} />
+                  <button
+                    type="button"
+                    onClick={() => setFase('inactivo')}
+                    className="mt-3 w-full rounded-full border border-[#EBD9C3] bg-white py-3 text-[11px] font-black uppercase tracking-[0.16em] text-[#6B5546] transition hover:border-[#D64545] hover:text-[#D64545]"
+                  >
+                    Detener cámara
+                  </button>
+                </>
+              )}
+
+              {/* ---------- Estado: consultando la base ---------- */}
+              {fase === 'buscando' && (
+                <div className="grid aspect-[3/4] place-items-center rounded-lg border border-[#EBD9C3] bg-[#1C120D] sm:aspect-[4/3]">
+                  <div className="flex flex-col items-center gap-3 text-white">
+                    <RefreshCw className="h-9 w-9 animate-spin text-[#FFB400]" />
+                    <p className="text-[11px] font-black uppercase tracking-[0.16em] text-white/75">
+                      Verificando {codigoLeido} en el catálogo…
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* ---------- Estado: resultado ---------- */}
+              {fase === 'resultado' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 16, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {producto ? (
+                    <div className="rounded-lg border border-[#00A699]/40 bg-[#00A699]/5 p-4">
+                      <div className="flex items-center gap-4">
+                        <div className="relative grid h-24 w-24 shrink-0 place-items-center overflow-hidden rounded-lg border border-[#EBD9C3] bg-[#FFF6EC]">
+                          {producto.imagen_url ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={producto.imagen_url} alt={producto.nombre} className="h-full w-full object-contain p-1.5" />
+                          ) : (
+                            <span className="text-4xl">🍬</span>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <span className="rounded-full bg-[#00A699]/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-[#007A70]">
+                            UPC {codigoLeido}
+                          </span>
+                          <h3 className="mt-1.5 font-podium !font-black text-2xl uppercase leading-none tracking-normal">
+                            {producto.nombre}
+                          </h3>
+                          <p className="mt-1 text-xs font-bold text-[#6B5546]">
+                            ${Number(producto.precio_mayoreo).toFixed(2)} · por {producto.unidad}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                        <button
+                          type="button"
+                          onClick={agregarAlCarrito}
+                          className={`inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full text-[11px] font-black uppercase tracking-[0.16em] text-white transition active:scale-95 ${
+                            agregado ? 'bg-[#1E9E6A]' : 'bg-[#2B1B12] hover:bg-[#FF5A5F]'
+                          }`}
+                        >
+                          {agregado ? <><Check size={16} /> En el carrito</> : <><ShoppingCart size={16} /> Agregar al carrito</>}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setFase('escaneando')}
+                          className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full border border-[#EBD9C3] bg-white text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition hover:border-[#FF5A5F] hover:text-[#FF5A5F] active:scale-95"
+                        >
+                          <ScanLine size={16} /> Escanear otro
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-[#FFB400]/50 bg-[#FFB400]/8 p-5 text-center">
+                      <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[#FFB400] text-[#2B1B12]">
+                        <SearchX size={22} />
+                      </span>
+                      <h3 className="mt-3 font-podium !font-black text-2xl uppercase leading-none">Código sin registrar</h3>
+                      <p className="mx-auto mt-2 max-w-xs text-sm font-semibold leading-6 text-[#6B5546]">
+                        El código <strong>{codigoLeido}</strong> todavía no está ligado a ningún producto del catálogo.
+                      </p>
+                      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                        <button
+                          type="button"
+                          onClick={() => setFase('escaneando')}
+                          className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-[#2B1B12] text-[11px] font-black uppercase tracking-[0.16em] text-white transition hover:bg-[#FF5A5F] active:scale-95"
+                        >
+                          <ScanLine size={16} /> Intentar de nuevo
+                        </button>
+                        <Link
+                          href="/catalogo"
+                          className="inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full border border-[#EBD9C3] bg-white text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition hover:border-[#FF5A5F] hover:text-[#FF5A5F]"
+                        >
+                          Buscar en el catálogo
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {/* ---------- Entrada manual de código ---------- */}
+              {entradaManual && (
+                <form onSubmit={enviarCodigoManual} className="mt-3 flex gap-2">
+                  <input
+                    autoFocus
+                    inputMode="numeric"
+                    value={codigoManual}
+                    onChange={(e) => setCodigoManual(e.target.value)}
+                    placeholder="Ej. 7501234567890"
+                    className="min-h-12 w-full rounded-full border border-[#EBD9C3] bg-white px-5 text-sm font-bold text-[#2B1B12] outline-none transition focus:border-[#FF5A5F]"
+                  />
+                  <button
+                    type="submit"
+                    className="shrink-0 rounded-full bg-[#2B1B12] px-6 text-[11px] font-black uppercase tracking-[0.14em] text-white transition hover:bg-[#FF5A5F] active:scale-95"
+                  >
+                    Buscar
+                  </button>
+                </form>
+              )}
             </div>
 
             <motion.div
@@ -268,7 +488,7 @@ export default function PaginaEscaner() {
               Tu carrito se arma sin buscar producto por producto
             </h2>
             <p className="mt-6 max-w-xl text-base font-semibold leading-7 text-[#6B5546]">
-              Cuando activemos la lectura real, el escáner consultará los códigos del catálogo y agregará el producto correcto al carrito. Por ahora esta pantalla muestra el flujo final de forma clara.
+              El escáner lee el código de barras con la cámara de tu teléfono, lo busca en nuestro catálogo y te deja agregar el producto al carrito en un toque. Así se ve un resultado típico:
             </p>
           </div>
 
@@ -309,7 +529,7 @@ export default function PaginaEscaner() {
                   <Check size={16} />
                 </span>
                 <p className="text-sm font-semibold leading-6 text-[#6B5546]">
-                  La lectura real de cámara se conectará en la siguiente etapa. Esta vista deja listo el flujo visual para escanear, confirmar y reordenar.
+                  Consejo: para que un producto se detecte, su código de barras debe estar registrado en el panel de administrador (Productos → Código de barras).
                 </p>
               </div>
             </div>

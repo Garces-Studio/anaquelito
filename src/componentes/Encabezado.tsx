@@ -16,6 +16,7 @@ const enlaces = [
 export default function Encabezado() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [usuario, setUsuario] = useState<User | null>(null);
+  const [esAdmin, setEsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [oculto, setOculto] = useState(false);
@@ -53,6 +54,21 @@ export default function Encabezado() {
     });
     return () => suscripcion.subscription.unsubscribe();
   }, []);
+
+  // ¿La sesión actual es de un administrador? (RLS solo deja ver la fila propia)
+  useEffect(() => {
+    if (!usuario) {
+      setEsAdmin(false);
+      return;
+    }
+    const supabase = crearCliente();
+    supabase
+      .from('administradores')
+      .select('auth_user_id')
+      .eq('auth_user_id', usuario.id)
+      .maybeSingle()
+      .then(({ data }) => setEsAdmin(Boolean(data)));
+  }, [usuario]);
 
   const enlaceCuenta = usuario
     ? { href: '/dashboard', texto: 'Mi cuenta' }
@@ -100,6 +116,18 @@ export default function Encabezado() {
                 </Link>
               );
             })}
+            {esAdmin && (
+              <Link
+                href="/admin"
+                className={`rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] transition ${
+                  pathname.startsWith('/admin')
+                    ? 'bg-[#7621B0] text-white shadow-[0_10px_24px_rgba(118,33,176,0.25)]'
+                    : 'text-[#7621B0] hover:bg-[#7621B0]/10'
+                }`}
+              >
+                Admin
+              </Link>
+            )}
           </nav>
 
           <div className="hidden items-center gap-2 md:flex">
@@ -140,7 +168,12 @@ export default function Encabezado() {
           </button>
         </div>
         <div className="flex flex-col gap-3 px-5 py-8">
-          {[{ href: '/', texto: 'Inicio' }, ...enlaces, { href: enlaceCuenta.href, texto: enlaceCuenta.texto }].map((enlace, index) => (
+          {[
+            { href: '/', texto: 'Inicio' },
+            ...enlaces,
+            ...(esAdmin ? [{ href: '/admin', texto: 'Admin' }] : []),
+            { href: enlaceCuenta.href, texto: enlaceCuenta.texto },
+          ].map((enlace, index) => (
             <Link
               key={`${enlace.href}-${enlace.texto}`}
               href={enlace.href}
