@@ -1,45 +1,29 @@
 import type { Metadata } from "next";
-import { Anton, Inter, Kanit } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-// Tipografía de títulos: display condensada con energía de cartel de mercado
-const anton = Anton({
-  variable: "--font-anton",
-  weight: "400",
+// Fuente principal y única para todo el sitio: limpia, legible y con soporte completo de español (acentos, ñ)
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
-});
-
-// Tipografía de texto: limpia y muy legible en celular
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-// Tipografía Kanit para el portafolio premium de Jack
-const kanit = Kanit({
-  variable: "--font-kanit",
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "Jack -- 3D Creator",
+  title: "Anaquelito -- Tu Aliado Dulcero B2B",
   description:
     "Mayoreo de dulces y botanas para tienditas, cafés y emprendedores en CDMX. Precios claros, margen visible en cada producto y reorden escaneando la bolsa vacía.",
 };
 
 import { ProveedorCarrito } from "@/componentes/carrito/ContextoCarrito";
 
-// Diseño raíz: solo fuentes y estilos globales. La portada (carrusel) va a
-// pantalla completa sin menús; las páginas de la tienda agregan su encabezado
-// y pie propios en src/app/(tienda)/layout.tsx.
 export default function DisenoPrincipal({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${anton.variable} ${inter.variable} ${kanit.variable}`}>
+    <html lang="es" className={`${plusJakartaSans.variable}`}>
       <body>
         <ProveedorCarrito>
           {children}

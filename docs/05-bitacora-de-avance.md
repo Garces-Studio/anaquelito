@@ -2,6 +2,12 @@
 
 Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fecha + resumen) cada vez que se cierre un bloque de trabajo relevante — no hace falta registrar cada commit, sí cada hito.
 
+## 2026-07-07 (continuación — escáner con dirección visual premium)
+
+- **Página `/escaner` rediseñada** con el lenguaje visual inspirado en la vitrina tipo Stone Sip: hero editorial, producto protagonista, dulces flotantes, visor de cámara con línea de escaneo animada, tarjetas de métricas, marquesina y flujo de reorden en tres pasos.
+- El copy conserva la promesa real del proyecto: escanear el UPC de la bolsa/empaque vacío para reordenar sin buscar producto por producto.
+- Se mantuvo la honestidad del estado actual: la lectura real de cámara todavía está pendiente; esta entrega deja lista la experiencia visual y el flujo esperado para conectar después la lógica de lectura de códigos de barras.
+
 ## 2026-07-06
 
 - Se crea la carpeta `docs/` con el manual del proyecto (este documento y sus hermanos), consolidando la investigación de mercado y el estado técnico existente hasta ahora.
