@@ -391,22 +391,7 @@ export default function PaginaCatalogo() {
             DULCES
           </div>
 
-          <Link
-            href="/"
-            className="absolute left-4 top-5 text-xs font-black uppercase text-white sm:left-8"
-            style={{ zIndex: 60, opacity: 0.95, letterSpacing: '0.18em' }}
-          >
-            ANAQUELITO
-          </Link>
 
-          <Link
-            href="/carrito"
-            className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/45 bg-white/12 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-white backdrop-blur transition hover:bg-white/20 sm:right-8"
-            style={{ zIndex: 60 }}
-          >
-            <ShoppingBag size={15} />
-            Carrito
-          </Link>
 
           <div className="absolute inset-0" style={{ zIndex: 3 }}>
             {PRODUCTOS.map((item, indice) => (

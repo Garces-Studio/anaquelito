@@ -11,26 +11,42 @@ import { crearCliente } from '@/lib/supabase/client';
 export default function Encabezado() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [usuario, setUsuario] = useState<User | null>(null);
+  
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const pathname = usePathname();
-  const esInicio = pathname === '/';
+  const [oculto, setOculto] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Efecto de entrada al cargar la página
+  const pathname = usePathname();
+
+  // Animación inicial al montar
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Detectar scroll para ajustar el menú flotante
+  // Detectar scroll para ajustar opacidad y ocultar/mostrar al bajar/subir
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      
+      // Fondo transparente o difuminado si pasamos 20px
+      setScrolled(currentScrollY > 20);
+      
+      // Lógica de "Smart Header": se oculta al bajar (para no estorbar), baja al subir
+      if (currentScrollY > lastScrollY && currentScrollY > 150) {
+        setOculto(true);
+      } else if (currentScrollY < lastScrollY) {
+        setOculto(false);
+      }
+      
+      setLastScrollY(currentScrollY);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
-  // Observar el estado de sesión
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
+  // Autenticación
   useEffect(() => {
     const supabase = crearCliente();
     supabase.auth.getUser().then(({ data }) => setUsuario(data.user));
@@ -46,13 +62,13 @@ export default function Encabezado() {
 
   return (
     <>
-      {/* HEADER CONTENEDOR FLOTANTE PREMIUM CON ANIMACIÓN DE ENTRADA */}
+      {/* HEADER CONTENEDOR FLOTANTE PREMIUM CON ANIMACIÓN DE ENTRADA Y SCROLL */}
       <header 
         className="fixed top-4 left-0 right-0 z-50 px-4 w-full flex justify-center pointer-events-none select-none"
         style={{
-          opacity: mounted ? 1 : 0,
-          transform: mounted ? 'translateY(0)' : 'translateY(-100px)',
-          transition: 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)'
+          opacity: mounted && !oculto ? 1 : 0,
+          transform: mounted && !oculto ? 'translateY(0)' : 'translateY(-120px)',
+          transition: 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1)'
         }}
       >
         <div
@@ -64,7 +80,7 @@ export default function Encabezado() {
         >
           {/* VISTA MÓVIL */}
           <div className="flex md:hidden items-center justify-between w-full">
-            <Link href="/" className="font-black text-base tracking-[0.2em] uppercase hover:text-[#FF8A3D] transition-colors duration-200">
+            <Link href="/" className="font-titulo font-black text-base tracking-[0.2em] uppercase hover:text-[#FF8A3D] transition-colors duration-200">
               ANAQUELITO
             </Link>
             <div className="flex items-center gap-4">
@@ -79,11 +95,11 @@ export default function Encabezado() {
             </div>
           </div>
 
-          {/* VISTA ESCRITORIO (DISEÑO UNIFICADO PREMIUM, INSPIRADO EN PLATAFORMAS MODERNAS) */}
+          {/* VISTA ESCRITORIO (DISEÑO UNIFICADO PREMIUM, FUENTE PODIUM SHARP) */}
           <div className="hidden md:flex items-center justify-between w-full">
             
             {/* LADO IZQUIERDO: Enlaces de navegación */}
-            <nav className="flex gap-8 items-center w-1/3 justify-start" aria-label="Menú principal izquierdo">
+            <nav className="flex gap-8 items-center w-1/3 justify-start font-titulo" aria-label="Menú principal izquierdo">
               <Link
                 href="/catalogo"
                 className={`font-black text-sm uppercase tracking-wider transition-colors duration-200 ${
@@ -104,13 +120,13 @@ export default function Encabezado() {
 
             {/* CENTRO: Marca / Logotipo */}
             <div className="flex justify-center items-center w-1/3">
-              <Link href="/" className="font-black text-lg tracking-[0.25em] uppercase text-center hover:text-[#FF8A3D] hover:scale-105 transition-all duration-300">
+              <Link href="/" className="font-titulo font-black text-lg tracking-[0.25em] uppercase text-center hover:text-[#FF8A3D] hover:scale-105 transition-all duration-300">
                 ANAQUELITO
               </Link>
             </div>
 
             {/* LADO DERECHO: Iniciar sesión / Mi cuenta y Carrito */}
-            <div className="flex gap-5 items-center w-1/3 justify-end">
+            <div className="flex gap-5 items-center w-1/3 justify-end font-titulo">
               <Link
                 href={enlaceCuenta.href}
                 className="px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-[0.15em] bg-[#FF5A5F] hover:bg-[#E0484D] hover:scale-105 text-white shadow-[0_0_15px_rgba(255,90,95,0.4)] transition-all duration-300 whitespace-nowrap"
@@ -131,12 +147,12 @@ export default function Encabezado() {
       {/* MENÚ MÓVIL OVERLAY */}
       <div className={`menu-movil-overlay ${menuOpen ? 'activo' : ''}`} style={{ position: 'fixed', zIndex: 999 }}>
         <div className="menu-movil-cabecera">
-          <span className="portada-logo font-black tracking-[0.2em] uppercase text-[#FF8A3D]">ANAQUELITO</span>
+          <span className="portada-logo font-titulo font-black tracking-[0.2em] uppercase text-[#FF8A3D]">ANAQUELITO</span>
           <button onClick={() => setMenuOpen(false)} style={{ color: '#FFFFFF' }} aria-label="Cerrar menú" className="cursor-pointer hover:scale-110 transition-transform">
             <X size={28} />
           </button>
         </div>
-        <div className="menu-movil-cuerpo">
+        <div className="menu-movil-cuerpo font-titulo">
           <Link
             href="/"
             className="menu-movil-enlace font-black uppercase tracking-wider text-xl hover:text-[#FF8A3D]"

@@ -1,3 +1,5 @@
+@import url('https://db.onlinewebfonts.com/c/8b75d9dcff6a48c35a46656192adf019?family=FSP+DEMO+-+PODIUM+Sharp+4.11');
+
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
@@ -8,11 +10,12 @@
    ============================================================ */
 
 :root {
-  --font-podium: var(--font-outfit), sans-serif;
-  --font-titulo: var(--font-outfit), sans-serif;
-  --font-inter: var(--font-outfit), sans-serif;
-  --font-kanit: var(--font-outfit), sans-serif;
-  --font-anton: var(--font-outfit), sans-serif;
+  --font-podium: "FSP DEMO - PODIUM Sharp 4.11", sans-serif;
+  --font-titulo: var(--font-podium);
+  --font-inter: var(--font-podium);
+  --font-kanit: var(--font-podium);
+  --font-anton: var(--font-podium);
+  --font-outfit: var(--font-podium);
 
   /* Colores de Marca */
   --brand-primary: #FF5A5F; /* Coral/Rojo vibrante y apetitoso */
@@ -144,10 +147,11 @@ input { font-family: inherit; }
   --exito: #1E9E6A;
   --peligro: #D64545;
 
-  /* Fuente única de títulos en toda la tienda: la display de Outfit. El cuerpo sigue en Outfit. */
-  --font-titulo: var(--font-outfit), sans-serif;
-  --font-inter: var(--font-outfit), sans-serif;
-  --font-kanit: var(--font-outfit), sans-serif;
+  /* Fuente única de toda la tienda: Podium Sharp */
+  --font-titulo: var(--font-podium);
+  --font-inter: var(--font-podium);
+  --font-kanit: var(--font-podium);
+  --font-outfit: var(--font-podium);
 
   /* Degradado de marca colorido, reutilizable en títulos y detalles */
   --degradado-marca: linear-gradient(135deg, #FF5A5F 0%, #FFB400 50%, #7621B0 100%);
