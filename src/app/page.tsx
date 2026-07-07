@@ -210,7 +210,7 @@ export default function Inicio() {
         loop 
         playsInline
       >
-        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_154941_df1a96e1-a06f-450c-bd02-d863414cc1a0.mp4" type="video/mp4" />
+        <source src="/dulces-loop.mp4" type="video/mp4" />
       </video>
 
       {/* Superposición con gradiente que responde al color del dulce seleccionado */}

@@ -398,12 +398,17 @@ input { font-family: inherit; }
 }
 .tarjeta-producto .foto {
   height: 150px;
-  background: var(--papel-suave);
+  background: linear-gradient(135deg, var(--papel-suave) 0%, var(--fondo) 100%);
   border-radius: var(--radio-md);
   margin-bottom: 1rem;
   display: grid;
   place-items: center;
-  font-size: 3rem;
+  font-size: 3.2rem;
+  transition: transform var(--suave);
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+}
+.tarjeta-producto:hover .foto {
+  transform: scale(1.03) translateY(-2px);
 }
 .tarjeta-producto h3 { font-size: 1.1rem; margin-bottom: 0.2rem; text-transform: uppercase; }
 .tarjeta-producto .unidad {
@@ -464,8 +469,17 @@ input { font-family: inherit; }
   display: grid;
   place-items: center;
   color: #F7EDE2;
-  box-shadow: var(--sombra-md);
+  box-shadow: 0 0 40px rgba(255, 90, 95, 0.12), var(--sombra-md);
   border: 1px solid var(--borde);
+}
+.visor-escaner::after {
+  content: '';
+  position: absolute;
+  inset: 24px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.2);
+  border-radius: var(--radio-md);
+  pointer-events: none;
+  animation: pulso-escaner 2s infinite ease-in-out;
 }
 .linea-escaner {
   position: absolute;
@@ -474,11 +488,15 @@ input { font-family: inherit; }
   left: 10%;
   background: var(--coral);
   box-shadow: 0 0 14px var(--coral);
-  animation: escanear 2.2s ease-in-out infinite;
+  animation: escanear 2s ease-in-out infinite;
 }
 @keyframes escanear {
-  0%, 100% { top: 12%; }
-  50% { top: 88%; }
+  0%, 100% { top: 15%; }
+  50% { top: 85%; }
+}
+@keyframes pulso-escaner {
+  0%, 100% { border-color: rgba(255, 255, 255, 0.15); opacity: 0.8; }
+  50% { border-color: rgba(255, 90, 95, 0.4); opacity: 1; }
 }
 
 /* ---------- Carrito ---------- */
