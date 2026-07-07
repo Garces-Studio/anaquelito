@@ -40,29 +40,18 @@ const IMAGENES_PRODUCTOS: Record<string, string> = {
   'Papas Fritas Caseras': '/papas.png',
 };
 
-// 21 GIF images from motionsites.ai
-const GIFS_MARQUESINA = [
-  'https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif',
-  'https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif',
-  'https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif',
-  'https://motionsites.ai/assets/hero-stellar-ai-v2-preview-DjvxjG3C.gif',
-  'https://motionsites.ai/assets/hero-asme-preview-B_nGDnTP.gif',
-  'https://motionsites.ai/assets/hero-transform-data-preview-Cx5OU29N.gif',
-  'https://motionsites.ai/assets/hero-vitara-preview-Cjz2QYyU.gif',
-  'https://motionsites.ai/assets/hero-terra-preview-BFjrCr7T.gif',
-  'https://motionsites.ai/assets/hero-skyelite-preview-DHaZIgUv.gif',
-  'https://motionsites.ai/assets/hero-aethera-preview-DknSlcTa.gif',
-  'https://motionsites.ai/assets/hero-designpro-preview-D8c5_een.gif',
-  'https://motionsites.ai/assets/hero-stellar-ai-preview-D3HL6bw1.gif',
-  'https://motionsites.ai/assets/hero-xportfolio-preview-D4A8maiC.gif',
-  'https://motionsites.ai/assets/hero-orbit-web3-preview-BXt4OttD.gif',
-  'https://motionsites.ai/assets/hero-nexora-preview-cx5HmUgo.gif',
-  'https://motionsites.ai/assets/hero-evr-ventures-preview-DZxeVFEX.gif',
-  'https://motionsites.ai/assets/hero-planet-orbit-preview-DWAP8Z1P.gif',
-  'https://motionsites.ai/assets/hero-new-era-preview-CocuDUm9.gif',
-  'https://motionsites.ai/assets/hero-wealth-preview-B70idl_u.gif',
-  'https://motionsites.ai/assets/hero-luminex-preview-CxOP7ce6.gif',
-  'https://motionsites.ai/assets/hero-celestia-preview-0yO3jXO8.gif',
+// Candy tiles for the marquee rows
+const MARQUEE_CANDIES = [
+  { nombre: 'PAPAS FUEGO', src: '/papas.png', bg: '#F4845F' },
+  { nombre: 'MAZAPÁN', src: '/mazapan.png', bg: '#E8C07D' },
+  { nombre: 'GOMITAS ENCHILADAS', src: '/gomitas.png', bg: '#6BBF7A' },
+  { nombre: 'PALETA TAMARINDO', src: '/paleta.png', bg: '#E882B4' },
+  { nombre: 'CACAHUATE JAPONÉS', src: '/cacahuate.png', bg: '#E8C07D' },
+  { nombre: 'CHOCOLATE DE MESA', src: '/chocolate.png', bg: '#F4845F' },
+  { nombre: 'SEMILLAS', src: '/semillas.png', bg: '#6BBF7A' },
+  { nombre: 'PALOMITAS', src: '/palomitas.png', bg: '#E882B4' },
+  { nombre: 'PAPAS CASERAS', src: '/papas.png', bg: '#F4845F' },
+  { nombre: 'GOMITAS SURTIDAS', src: '/gomitas.png', bg: '#6BBF7A' },
 ];
 
 export default function PaginaCatalogo() {
@@ -136,39 +125,42 @@ export default function PaginaCatalogo() {
   };
 
   // Split images into two rows, tripled for seamless loop
-  const fila1 = [...GIFS_MARQUESINA.slice(0, 11), ...GIFS_MARQUESINA.slice(0, 11), ...GIFS_MARQUESINA.slice(0, 11)];
-  const fila2 = [...GIFS_MARQUESINA.slice(11), ...GIFS_MARQUESINA.slice(11), ...GIFS_MARQUESINA.slice(11)];
+  const fila1 = [...MARQUEE_CANDIES, ...MARQUEE_CANDIES, ...MARQUEE_CANDIES];
+  const fila2 = [...MARQUEE_CANDIES.reverse(), ...MARQUEE_CANDIES, ...MARQUEE_CANDIES];
 
-  // Projects data
+  // Stacking candy highlight cards
   const projects = [
     {
       num: '01',
-      category: 'Client Project',
-      name: 'Nextlevel Studio',
-      col1_img1: 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png&w=1280&q=85',
-      col1_img2: 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8.png&w=1280&q=85',
-      col2_img: 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png&w=1280&q=85',
+      category: 'Estrella de Ventas',
+      name: 'Papas Crujientes Fuego',
+      col1_img1: '/papas.png',
+      col1_img2: '/papas.png',
+      col2_img: '/papas.png',
+      desc: 'Papas fritas artesanales con el picor perfecto.',
     },
     {
       num: '02',
-      category: 'Personal Work',
-      name: 'Aura Brand Identity',
-      col1_img1: 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055654_911201c5-36d9-4bc6-bac7-331adfce159f.png&w=1280&q=85',
-      col1_img2: 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055723_5ceda0b8-d9c2-4665-b2e3-83ba19ba76d1.png&w=1280&q=85',
-      col2_img: 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055753_adc5dcbd-a8e6-49c0-b43a-9b030d835cea.png&w=1280&q=85',
+      category: 'Tradición Indispensable',
+      name: 'Mazapán Tradicional',
+      col1_img1: '/mazapan.png',
+      col1_img2: '/mazapan.png',
+      col2_img: '/mazapan.png',
+      desc: 'El dulce clásico de cacahuate suave y delicioso.',
     },
     {
       num: '03',
-      category: 'Client Project',
-      name: 'Solaris Digital',
-      col1_img1: 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055759_963cfb0b-4bd1-4b0f-9d0a-09bd6cf95b2f.png&w=1280&q=85',
-      col1_img2: 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_060108_438f781a-9846-4dcc-89ab-c4e6cb830f5b.png&w=1280&q=85',
-      col2_img: 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055818_9d062121-ad7e-46b9-999a-1a6a692ef1ee.png&w=1280&q=85',
+      category: 'Favorito del Cliente',
+      name: 'Gomitas Enchiladas',
+      col1_img1: '/gomitas.png',
+      col1_img2: '/gomitas.png',
+      col2_img: '/gomitas.png',
+      desc: 'Gomitas cubiertas de auténtico chile en polvo.',
     },
   ];
 
   return (
-    <div className="bg-[#0C0C0C] text-white font-kanit w-full overflow-x-clip min-h-screen relative selection:bg-[#B600A8]/30 selection:text-white">
+    <div className="bg-[#0C0C0C] text-white font-kanit w-full overflow-x-clip min-h-screen relative selection:bg-[#FF5A5F]/30 selection:text-white">
       {/* Capa de ruido de fondo premium */}
       <div className="grain-overlay opacity-[0.15]" />
 
@@ -178,32 +170,41 @@ export default function PaginaCatalogo() {
         <FadeIn y={-20} className="w-full z-30">
           <nav className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8 w-full max-w-7xl mx-auto">
             <span className="font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#D7E2EA] to-white/70 text-lg md:text-2xl select-none cursor-default font-podium">
-              JACK
+              ANAQUELITO
             </span>
             <div className="flex gap-4 sm:gap-6 md:gap-10">
-              {['about', 'pricing', 'projects', 'contact'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollToSection(item)}
-                  className="text-[#D7E2EA] font-medium uppercase tracking-wider text-xs md:text-sm lg:text-[1.1rem] hover:opacity-70 transition-opacity duration-200 cursor-pointer"
-                >
-                  {item === 'pricing' ? 'Candy Shop' : item}
-                </button>
-              ))}
+              {['about', 'pricing', 'projects', 'contact'].map((item) => {
+                let label = '';
+                if (item === 'about') label = 'Nosotros';
+                else if (item === 'pricing') label = 'Dulces';
+                else if (item === 'projects') label = 'Destacados';
+                else if (item === 'contact') label = 'Contacto';
+                return (
+                  <button
+                    key={item}
+                    onClick={() => scrollToSection(item)}
+                    className="text-[#D7E2EA] font-medium uppercase tracking-wider text-xs md:text-sm lg:text-[1.1rem] hover:text-[#FF5A5F] transition-colors duration-200 cursor-pointer"
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
           </nav>
         </FadeIn>
 
-        {/* Hero Portrait (Centered Absolutely behind text) */}
-        <div className="absolute left-1/2 -translate-x-1/2 z-10 w-[280px] sm:w-[360px] md:w-[440px] lg:w-[520px] top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0 pointer-events-auto">
+        {/* Hero Portrait: Centered Lollipop Icon with Magnet effect */}
+        <div className="absolute left-1/2 -translate-x-1/2 z-10 w-[240px] sm:w-[320px] md:w-[380px] lg:w-[460px] top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-12 pointer-events-auto">
           <FadeIn y={30} delay={0.6}>
-            <Magnet padding={150} strength={3}>
-              <img
-                src="https://shrug-person-78902957.figma.site/_components/v2/d24c01ad3a56fc65e942a1f501eb73db42d7cf9a/Rectangle_40443.81459862.png"
-                alt="Portrait of Jack"
-                className="w-full h-auto object-contain select-none pointer-events-none drop-shadow-[0_20px_50px_rgba(182,0,168,0.25)] brightness-105"
-                draggable={false}
-              />
+            <Magnet padding={150} strength={4}>
+              <div className="relative w-full aspect-square flex items-center justify-center bg-gradient-to-br from-[#FF5A5F]/20 to-[#FFB400]/20 rounded-full p-8 md:p-12 shadow-[0_20px_50px_rgba(255,90,95,0.3)] backdrop-blur-sm border border-white/10 group">
+                <img
+                  src="/paleta.png"
+                  alt="Dulce Gigante"
+                  className="w-5/6 h-5/6 object-contain select-none pointer-events-none drop-shadow-[0_15px_30px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-105"
+                  draggable={false}
+                />
+              </div>
             </Magnet>
           </FadeIn>
         </div>
@@ -212,7 +213,7 @@ export default function PaginaCatalogo() {
         <div className="w-full flex-1 flex items-center justify-center z-20 relative pointer-events-none select-none overflow-hidden">
           <FadeIn y={40} delay={0.15} className="w-full text-center">
             <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw] mt-6 sm:mt-4 md:-mt-5">
-              Hi, i&apos;m jack
+              HOLA, SOY DULCE
             </h1>
           </FadeIn>
         </div>
@@ -221,14 +222,14 @@ export default function PaginaCatalogo() {
         <div className="w-full z-20 px-6 md:px-10 pb-7 sm:pb-8 md:pb-10 max-w-7xl mx-auto flex justify-between items-end gap-4 relative">
           <FadeIn y={20} delay={0.35}>
             <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug text-left text-[11px] sm:text-xs md:text-sm lg:text-base max-w-[160px] sm:max-w-[220px] md:max-w-[260px] cursor-default select-none opacity-80">
-              a 3d creator driven by crafting striking and unforgettable projects
+              un distribuidor de dulces impulsado por llevar sabor y margen a tu negocio
             </p>
           </FadeIn>
 
           <FadeIn y={20} delay={0.5}>
             <ContactButton
-              onClick={() => scrollToSection('contact')}
-              label="Contact Me"
+              onClick={() => scrollToSection('pricing')}
+              label="Ver Dulces"
             />
           </FadeIn>
         </div>
@@ -247,15 +248,24 @@ export default function PaginaCatalogo() {
               transform: `translateX(${scrollOffset - 200}px) translateZ(0)`,
             }}
           >
-            {fila1.map((url, index) => (
-              <img
+            {fila1.map((item, index) => (
+              <div
                 key={`r1-${index}`}
-                src={url}
-                alt="Marquee gif item"
-                className="w-[420px] h-[270px] rounded-2xl object-cover flex-shrink-0 select-none shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-white/5"
-                loading="lazy"
-                draggable={false}
-              />
+                className="w-[400px] h-[250px] rounded-2xl flex-shrink-0 select-none shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-white/5 flex items-center justify-between p-6 relative overflow-hidden group"
+                style={{ background: `linear-gradient(135deg, ${item.bg}22 0%, #111 100%)` }}
+              >
+                <div className="flex flex-col justify-between h-full z-10">
+                  <span className="text-white/40 text-xs font-bold tracking-widest uppercase">Anaquelito</span>
+                  <span className="font-black text-2xl tracking-wide text-white uppercase">{item.nombre}</span>
+                </div>
+                <img
+                  src={item.src}
+                  alt={item.nombre}
+                  className="w-[180px] h-[180px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                  draggable={false}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -268,15 +278,24 @@ export default function PaginaCatalogo() {
               transform: `translateX(${-(scrollOffset - 200)}px) translateZ(0)`,
             }}
           >
-            {fila2.map((url, index) => (
-              <img
+            {fila2.map((item, index) => (
+              <div
                 key={`r2-${index}`}
-                src={url}
-                alt="Marquee gif item"
-                className="w-[420px] h-[270px] rounded-2xl object-cover flex-shrink-0 select-none shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-white/5"
-                loading="lazy"
-                draggable={false}
-              />
+                className="w-[400px] h-[250px] rounded-2xl flex-shrink-0 select-none shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-white/5 flex items-center justify-between p-6 relative overflow-hidden group"
+                style={{ background: `linear-gradient(135deg, ${item.bg}22 0%, #111 100%)` }}
+              >
+                <div className="flex flex-col justify-between h-full z-10">
+                  <span className="text-white/40 text-xs font-bold tracking-widest uppercase">Anaquelito</span>
+                  <span className="font-black text-2xl tracking-wide text-white uppercase">{item.nombre}</span>
+                </div>
+                <img
+                  src={item.src}
+                  alt={item.nombre}
+                  className="w-[180px] h-[180px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                  draggable={false}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -288,48 +307,44 @@ export default function PaginaCatalogo() {
         className="min-h-screen w-full relative px-5 sm:px-8 md:px-10 py-20 flex flex-col justify-center items-center gap-10 sm:gap-14 md:gap-16 overflow-hidden"
       >
         {/* Absolute corner decorations */}
-        {/* Top-left: Moon icon */}
         <div className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] z-10 pointer-events-none select-none">
           <FadeIn x={-80} duration={0.9} delay={0.1}>
             <img
               src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/moon_icon.11395d36.png"
-              alt="Decorative Moon"
+              alt="3D Moon shape"
               className="w-[120px] sm:w-[160px] md:w-[210px] h-auto animate-[pulse_6s_infinite_ease-in-out]"
               draggable={false}
             />
           </FadeIn>
         </div>
 
-        {/* Bottom-left: 3D object */}
         <div className="absolute bottom-[8%] left-[3%] sm:left-[6%] md:left-[10%] z-10 pointer-events-none select-none">
           <FadeIn x={-80} duration={0.9} delay={0.25}>
             <img
               src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/p59_1.4659672e.png"
-              alt="Decorative 3D Object"
+              alt="3D Abstract shape"
               className="w-[100px] sm:w-[140px] md:w-[180px] h-auto animate-[bounce_8s_infinite_ease-in-out]"
               draggable={false}
             />
           </FadeIn>
         </div>
 
-        {/* Top-right: Lego icon */}
         <div className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] z-10 pointer-events-none select-none">
           <FadeIn x={80} duration={0.9} delay={0.15}>
             <img
               src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/lego_icon-1.703bb594.png"
-              alt="Decorative Lego"
+              alt="3D Block shape"
               className="w-[120px] sm:w-[160px] md:w-[210px] h-auto animate-[pulse_5s_infinite_ease-in-out]"
               draggable={false}
             />
           </FadeIn>
         </div>
 
-        {/* Bottom-right: 3D group */}
         <div className="absolute bottom-[8%] right-[3%] sm:right-[6%] md:right-[10%] z-10 pointer-events-none select-none">
           <FadeIn x={80} duration={0.9} delay={0.3}>
             <img
               src="https://shrug-person-78902957.figma.site/_components/v2/ebb2b8f25d8e24d5f0a5ca8af4c950de81aa2fd7/Group_134-1.2e04f3ce.png"
-              alt="Decorative 3D Group"
+              alt="3D Abstract group shape"
               className="w-[130px] sm:w-[170px] md:w-[220px] h-auto animate-[bounce_7s_infinite_ease-in-out]"
               draggable={false}
             />
@@ -339,14 +354,14 @@ export default function PaginaCatalogo() {
         {/* Heading */}
         <FadeIn y={40} delay={0}>
           <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]">
-            About me
+            Nosotros
           </h2>
         </FadeIn>
 
         {/* Animated paragraph */}
         <div className="max-w-[560px] text-center w-full z-20">
           <AnimatedText
-            text="With more than five years of experience in design, i focus on branding, web design, and user experience, i truly enjoy working with businesses that aim to stand out and present their best image. Let's build something incredible together!"
+            text="Con más de cinco años de experiencia en el mercado de dulces, nos enfocamos en el mayoreo, logística rápida y el mejor servicio. Nos encanta trabajar con tienditas y negocios que buscan destacar y ofrecer calidad. ¡Hagamos algo dulce juntos!"
             className="text-[#D7E2EA] font-medium leading-relaxed text-base sm:text-lg md:text-xl lg:text-2xl"
           />
         </div>
@@ -355,7 +370,7 @@ export default function PaginaCatalogo() {
         <FadeIn y={30} delay={0.1} className="z-20 mt-6 sm:mt-10">
           <ContactButton
             onClick={() => scrollToSection('pricing')}
-            label="Enter Candy Shop"
+            label="Comprar Dulces"
           />
         </FadeIn>
       </section>
@@ -365,7 +380,7 @@ export default function PaginaCatalogo() {
         <div className="max-w-5xl mx-auto w-full">
           <FadeIn className="text-center w-full mb-16 sm:mb-20 md:mb-28">
             <h2 className="font-black uppercase text-center text-[#0C0C0C] leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]">
-              Services
+              Beneficios
             </h2>
           </FadeIn>
 
@@ -374,28 +389,28 @@ export default function PaginaCatalogo() {
             {[
               {
                 num: '01',
-                title: '3D Modeling',
-                desc: 'Creation of detailed objects, characters, or environments tailored to specific client needs, ideal for games, products, and visualizations.',
+                title: 'Mayoreo Directo',
+                desc: 'Precios competitivos sin intermediarios, optimizados para maximizar el margen de tu tiendita o negocio.',
               },
               {
                 num: '02',
-                title: 'Rendering',
-                desc: 'High-quality, photorealistic renders that showcase designs with custom lighting, textures, and materials to bring concepts to life.',
+                title: 'Entrega Express',
+                desc: 'Envío rápido en menos de 24 horas en CDMX y área metropolitana para que nunca te quedes sin stock.',
               },
               {
                 num: '03',
-                title: 'Motion Design',
-                desc: 'Dynamic animations and motion graphics that add energy and storytelling to brands, products, and digital experiences.',
+                title: 'Margen Visible',
+                desc: 'Calculamos el porcentaje de ganancia sugerido en cada producto directamente en tu pantalla.',
               },
               {
                 num: '04',
-                title: 'Branding',
-                desc: 'Crafting cohesive visual identities -- from logos to full brand systems -- that communicate a clear and memorable presence.',
+                title: 'Surtido Premium',
+                desc: 'Los dulces y botanas de mayor rotación y las marcas más buscadas por tus clientes en un solo lugar.',
               },
               {
                 num: '05',
-                title: 'Web Design',
-                desc: 'Designing clean, modern, and conversion-focused websites with attention to layout, typography, and user experience.',
+                title: 'Escáner Inteligente',
+                desc: 'Reordena tus productos al instante escaneando la bolsa vacía con la cámara de tu celular.',
               },
             ].map((srv, index) => (
               <FadeIn
@@ -432,7 +447,7 @@ export default function PaginaCatalogo() {
         <div className="max-w-5xl mx-auto w-full">
           <FadeIn className="text-center w-full mb-16 sm:mb-20">
             <h2 className="hero-heading font-black uppercase text-center leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]">
-              Project
+              Destacados
             </h2>
           </FadeIn>
 
@@ -459,7 +474,7 @@ export default function PaginaCatalogo() {
                       top: `${index * 28}px`,
                       boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
                     }}
-                    className="w-full rounded-[40px] sm:rounded-[50px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-4 sm:p-6 md:p-8 flex flex-col justify-between h-[70vh] sm:h-[75vh]"
+                    className="w-full rounded-[40px] sm:rounded-[50px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-6 sm:p-8 md:p-10 flex flex-col justify-between h-[70vh] sm:h-[75vh]"
                   >
                     {/* Top Row info */}
                     <div className="flex justify-between items-center w-full border-b border-[#D7E2EA]/10 pb-4">
@@ -476,31 +491,42 @@ export default function PaginaCatalogo() {
                           </span>
                         </div>
                       </div>
-                      <LiveProjectButton label="Live Project" disabled={true} />
+                      <LiveProjectButton label="Ver Producto" onClick={() => scrollToSection('pricing')} />
                     </div>
 
-                    {/* Bottom Row grid */}
-                    <div className="flex-1 grid grid-cols-10 gap-3 md:gap-4 mt-4 h-full min-h-0">
+                    {/* Bottom Row grid with Candy Assets */}
+                    <div className="flex-1 grid grid-cols-10 gap-4 mt-6 h-full min-h-0">
                       {/* Left stack (40%) */}
-                      <div className="col-span-4 flex flex-col gap-3 md:gap-4 h-full justify-between">
-                        <img
-                          src={proj.col1_img1}
-                          alt={`${proj.name} render 1`}
-                          className="w-full flex-1 rounded-[24px] sm:rounded-[36px] md:rounded-[48px] object-cover h-[45%] shadow-md"
-                        />
-                        <img
-                          src={proj.col1_img2}
-                          alt={`${proj.name} render 2`}
-                          className="w-full flex-1 rounded-[24px] sm:rounded-[36px] md:rounded-[48px] object-cover h-[45%] shadow-md"
-                        />
+                      <div className="col-span-4 flex flex-col gap-4 h-full justify-between">
+                        <div className="relative flex-1 rounded-[24px] sm:rounded-[36px] bg-gradient-to-br from-white/5 to-transparent border border-white/5 p-3 flex items-center justify-center h-[45%] overflow-hidden shadow-inner">
+                          <img
+                            src={proj.col1_img1}
+                            alt={`${proj.name} 1`}
+                            className="max-h-[85%] max-w-[85%] object-contain select-none pointer-events-none drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)] animate-[bounce_8s_infinite_ease-in-out]"
+                          />
+                        </div>
+                        <div className="relative flex-1 rounded-[24px] sm:rounded-[36px] bg-gradient-to-br from-white/5 to-transparent border border-white/5 p-3 flex items-center justify-center h-[45%] overflow-hidden shadow-inner">
+                          <img
+                            src={proj.col1_img2}
+                            alt={`${proj.name} 2`}
+                            className="max-h-[85%] max-w-[85%] object-contain select-none pointer-events-none drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)] animate-[bounce_6s_infinite_ease-in-out]"
+                          />
+                        </div>
                       </div>
                       {/* Right tall image (60%) */}
                       <div className="col-span-6 h-full">
-                        <img
-                          src={proj.col2_img}
-                          alt={`${proj.name} tall render`}
-                          className="w-full h-full rounded-[24px] sm:rounded-[36px] md:rounded-[48px] object-cover shadow-md"
-                        />
+                        <div className="relative w-full h-full rounded-[24px] sm:rounded-[36px] bg-gradient-to-br from-[#FF5A5F]/10 to-transparent border border-white/5 p-6 flex flex-col justify-between items-center overflow-hidden shadow-md">
+                          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,transparent_70%)] pointer-events-none" />
+                          <div className="text-center">
+                            <h4 className="font-anton text-2xl sm:text-3xl text-white uppercase tracking-wide">{proj.name}</h4>
+                            <p className="text-xs text-[#D7E2EA]/60 uppercase tracking-widest mt-1">{proj.desc}</p>
+                          </div>
+                          <img
+                            src={proj.col2_img}
+                            alt={`${proj.name} Main`}
+                            className="max-h-[60%] max-w-[80%] object-contain select-none pointer-events-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] animate-[pulse_5s_infinite_ease-in-out] my-auto"
+                          />
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -514,18 +540,18 @@ export default function PaginaCatalogo() {
       {/* ==================== 6. COLORFUL SWEET CANDY SHOP ==================== */}
       <section
         id="pricing"
-        className="w-full bg-gradient-to-b from-[#0C0C0C] via-[#150117] to-[#0A000A] text-white pt-24 pb-32 px-4 sm:px-6 md:px-10 lg:px-14 border-t-2 border-[#B600A8]/20 z-40 relative"
+        className="w-full bg-gradient-to-b from-[#0C0C0C] via-[#150117] to-[#0A000A] text-white pt-24 pb-32 px-4 sm:px-6 md:px-10 lg:px-14 border-t-2 border-[#FF5A5F]/20 z-40 relative"
       >
         <div className="max-w-7xl mx-auto flex flex-col gap-10 sm:gap-14">
           {/* Header del Catálogo */}
-          <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-6 border-b border-[#B600A8]/20">
+          <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-6 border-b border-[#FF5A5F]/25">
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-[#B600A8] font-bold tracking-widest text-xs uppercase">
+              <div className="flex items-center gap-2 text-[#FF5A5F] font-bold tracking-widest text-xs uppercase">
                 <Sparkles className="h-4 w-4 animate-pulse" />
                 Venta de Mayoreo Directa
               </div>
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-podium uppercase tracking-tight text-white">
-                Nuestra Selección
+                Catálogo Dulce
               </h2>
               <p className="text-[#D7E2EA]/70 text-sm max-w-lg mt-1 font-light">
                 Directo de distribuidor. Margen visible en cada producto y reorden automatizado escaneando la bolsa vacía.
@@ -539,7 +565,7 @@ export default function PaginaCatalogo() {
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 placeholder="Buscar golosinas..."
-                className="w-full pl-12 pr-5 py-3 rounded-full bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-[#B600A8] focus:bg-white/[0.08] transition-all placeholder-white/30 focus:ring-4 focus:ring-[#B600A8]/10"
+                className="w-full pl-12 pr-5 py-3 rounded-full bg-white/5 border border-white/10 text-white text-sm sm:text-base outline-none focus:border-[#FF5A5F] focus:bg-white/[0.08] transition-all placeholder-white/30 focus:ring-4 focus:ring-[#FF5A5F]/10"
               />
               <Search className="absolute left-4 h-5 w-5 text-white/40" />
             </div>
@@ -552,9 +578,9 @@ export default function PaginaCatalogo() {
           >
             <button
               onClick={() => setCategoriaFiltro('')}
-              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all border ${
+              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all border cursor-pointer ${
                 !categoriaFiltro
-                  ? 'bg-gradient-to-r from-[#B600A8] to-[#7621B0] text-white border-transparent shadow-lg shadow-[#B600A8]/20'
+                  ? 'bg-gradient-to-r from-[#FF5A5F] to-[#FFB400] text-white border-transparent shadow-lg shadow-[#FF5A5F]/20'
                   : 'bg-white/5 text-[#D7E2EA]/70 border-white/10 hover:text-white hover:border-white/30'
               }`}
             >
@@ -564,10 +590,10 @@ export default function PaginaCatalogo() {
               <button
                 key={cat}
                 onClick={() => setCategoriaFiltro(cat)}
-                className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all border ${
+                className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all border cursor-pointer ${
                   categoriaFiltro === cat
-                    ? 'bg-gradient-to-r from-[#B600A8] to-[#7621B0] text-white border-transparent shadow-lg shadow-[#B600A8]/20'
-                    : 'bg-white/5 text-[#D7E2EA]/70 border-white/10 hover:text-white hover:border-[#B600A8]/50'
+                    ? 'bg-gradient-to-r from-[#FF5A5F] to-[#FFB400] text-white border-transparent shadow-lg shadow-[#FF5A5F]/20'
+                    : 'bg-white/5 text-[#D7E2EA]/70 border-white/10 hover:text-white hover:border-[#FF5A5F]/50'
                 }`}
               >
                 {EMOJI_CATEGORIA[cat] ?? '🍬'} {NOMBRE_CATEGORIA[cat]}
@@ -586,7 +612,7 @@ export default function PaginaCatalogo() {
           {/* Loading state */}
           {loading && (
             <div className="flex flex-col items-center justify-center p-24 text-white/40 gap-4">
-              <RefreshCw className="h-10 w-10 animate-spin text-[#B600A8]" />
+              <RefreshCw className="h-10 w-10 animate-spin text-[#FF5A5F]" />
               <p className="text-sm font-semibold tracking-widest uppercase animate-pulse">
                 Abriendo vitrinas...
               </p>
@@ -603,7 +629,7 @@ export default function PaginaCatalogo() {
                   setCategoriaFiltro('');
                   setBusqueda('');
                 }}
-                className="text-xs text-white underline mt-4 hover:text-[#B600A8] transition-colors font-medium uppercase tracking-wider"
+                className="text-xs text-white underline mt-4 hover:text-[#FF5A5F] transition-colors font-medium uppercase tracking-wider cursor-pointer"
               >
                 Resetear búsqueda
               </button>
@@ -716,10 +742,10 @@ export default function PaginaCatalogo() {
           <div className="flex flex-col md:flex-row justify-between items-start gap-8">
             <div className="flex flex-col gap-3">
               <span className="font-extrabold font-podium tracking-widest text-2xl text-white">
-                JACK &amp; ANAQUELITO
+                ANAQUELITO
               </span>
               <p className="max-w-sm text-sm font-light leading-relaxed">
-                Empowering retailers with top-tier 3D design and wholesale candy supply systems in Mexico.
+                Empoderando comercios locales y tienditas de abarrotes con el mejor surtido mayorista de dulces y botanas en México.
               </p>
             </div>
             <div className="flex flex-col gap-3">
@@ -728,7 +754,7 @@ export default function PaginaCatalogo() {
               </span>
               <a
                 href="mailto:hola@anaquelito.mx"
-                className="text-white hover:text-[#B600A8] transition-colors text-base font-medium flex items-center gap-2 group"
+                className="text-white hover:text-[#FF5A5F] transition-colors text-base font-medium flex items-center gap-2 group"
               >
                 hola@anaquelito.mx
                 <ArrowRight className="h-4 w-4 transform transition-transform group-hover:translate-x-1" />
@@ -737,9 +763,9 @@ export default function PaginaCatalogo() {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-white/5 text-xs font-light tracking-wide gap-4">
-            <p>&copy; {new Date().getFullYear()} Jack &amp; Anaquelito. Todos los derechos reservados.</p>
-            <p className="flex items-center gap-1.5 uppercase font-medium text-[#B600A8]">
-              Designed with focus <Sparkles className="h-3 w-3" />
+            <p>&copy; {new Date().getFullYear()} Anaquelito Mayoreo. Todos los derechos reservados.</p>
+            <p className="flex items-center gap-1.5 uppercase font-medium text-[#FF5A5F]">
+              Creado con dulzura <Sparkles className="h-3 w-3" />
             </p>
           </div>
         </div>

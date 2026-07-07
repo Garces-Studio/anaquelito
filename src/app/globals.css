@@ -698,6 +698,47 @@ input { font-family: inherit; }
   border-bottom: 1px solid var(--borde);
 }
 
+/* ---------- Niveles (usado en resúmenes tipo dashboard) ---------- */
+.rejilla-niveles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem;
+}
+.nivel {
+  background: var(--papel);
+  border: 2px dashed var(--borde);
+  border-radius: var(--radio-md);
+  padding: 1.5rem;
+  text-align: center;
+}
+.nivel-destacado { border-style: solid; border-color: var(--coral); }
+.nivel .descuento {
+  display: block;
+  font-family: var(--font-anton), Impact, sans-serif;
+  font-size: 2rem;
+  color: var(--coral);
+  margin-bottom: 0.35rem;
+}
+.nivel h3 { font-size: 0.85rem; text-transform: none; color: var(--tinta-suave); font-weight: 600; }
+
+/* ---------- Tarjetas de segmento (direcciones, cupones, etc.) ---------- */
+.rejilla-segmentos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+.tarjeta-segmento {
+  background: var(--papel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  padding: 1.25rem;
+  transition: transform var(--suave), box-shadow var(--rapido);
+}
+.tarjeta-segmento:hover { transform: translateY(-2px); box-shadow: var(--sombra-md); }
+.tarjeta-segmento h3 { font-size: 1rem; margin-bottom: 0.5rem; text-transform: none; }
+.tarjeta-segmento p { font-size: 0.9rem; color: var(--tinta-suave); line-height: 1.5; }
+.tarjeta-segmento .enlace { display: inline-block; margin-top: 0.5rem; font-size: 0.85rem; color: var(--coral); font-weight: 700; }
+
 /* ---------- Pie de página ---------- */
 .pie {
   border-top: 1px solid var(--borde);
