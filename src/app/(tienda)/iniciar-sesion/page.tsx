@@ -94,7 +94,7 @@ export default function PaginaIniciarSesion() {
 
             {error && <p className="rounded-lg border border-[#D64545]/30 bg-[#D64545]/10 px-4 py-3 text-sm font-bold text-[#D64545]">{error}</p>}
 
-            <button type="submit" disabled={enviando} className="inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-[#2B1B12] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white transition hover:bg-[#FF5A5F] disabled:opacity-60">
+            <button type="submit" disabled={enviando} className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-[#2B1B12] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white transition hover:bg-[#FF5A5F] disabled:opacity-60">
               {enviando ? 'Entrando...' : 'Iniciar sesión'} <ArrowRight size={16} />
             </button>
 

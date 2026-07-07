@@ -75,8 +75,8 @@ export default function Encabezado() {
               : 'border-white/65 bg-white/55 shadow-[0_12px_40px_rgba(43,27,18,0.08)]'
           }`}
         >
-          <Link href="/" className="flex items-center gap-2 rounded-full pr-2 text-[#2B1B12]">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#FF5A5F] text-white shadow-[0_10px_24px_rgba(255,90,95,0.28)]">
+          <Link href="/" className="flex items-center gap-2 rounded-full pr-2" style={{ color: '#2B1B12' }}>
+            <span className="grid h-9 w-9 place-items-center rounded-full shadow-[0_10px_24px_rgba(255,90,95,0.28)]" style={{ backgroundColor: '#FF5A5F', color: '#FFFFFF' }}>
               <ScanLine size={17} />
             </span>
             <span className="font-titulo text-sm font-black uppercase tracking-[0.2em] sm:text-base">Anaquelito</span>
@@ -94,6 +94,7 @@ export default function Encabezado() {
                       ? 'bg-[#2B1B12] text-white shadow-[0_10px_24px_rgba(43,27,18,0.14)]'
                       : 'text-[#6B5546] hover:bg-[#FFEFDD] hover:text-[#2B1B12]'
                   }`}
+                  style={activo ? { backgroundColor: '#2B1B12', color: '#FFFFFF' } : { color: '#6B5546' }}
                 >
                   {enlace.texto}
                 </Link>
@@ -105,22 +106,24 @@ export default function Encabezado() {
             <Link
               href={enlaceCuenta.href}
               className="rounded-full border border-[#EBD9C3] bg-white px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition hover:border-[#FF5A5F] hover:text-[#FF5A5F]"
+              style={{ backgroundColor: '#FFFFFF', color: '#2B1B12' }}
             >
               {enlaceCuenta.texto}
             </Link>
-            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] bg-white text-[#2B1B12]">
+            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] bg-white text-[#2B1B12]" style={{ backgroundColor: '#FFFFFF', color: '#2B1B12' }}>
               <EnlaceCarrito />
             </span>
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
-            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] bg-white text-[#2B1B12]">
+            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] bg-white text-[#2B1B12]" style={{ backgroundColor: '#FFFFFF', color: '#2B1B12' }}>
               <EnlaceCarrito />
             </span>
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
               className="grid h-10 w-10 place-items-center rounded-full bg-[#2B1B12] text-white"
+              style={{ backgroundColor: '#2B1B12', color: '#FFFFFF' }}
               aria-label="Abrir menú"
             >
               <Menu size={19} />

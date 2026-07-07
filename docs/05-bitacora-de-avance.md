@@ -2,6 +2,14 @@
 
 Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fecha + resumen) cada vez que se cierre un bloque de trabajo relevante — no hace falta registrar cada commit, sí cada hito.
 
+## 2026-07-07 (continuación — estándar visual para cuenta, dashboard, carrito y catálogo)
+
+- **Encabezado rediseñado** con navegación flotante, cápsula translúcida cálida, acceso a cuenta/carrito y menú móvil de pantalla completa; se eliminó el color anterior que no convencía y se dejó una presencia más profesional para la tienda.
+- **Inicio de sesión y crear cuenta** pasaron a un diseño minimalista premium: fondo cálido con luces suaves, formularios limpios, paneles de producto, iconografía consistente y CTA claros para negocios que quieren surtir.
+- **Dashboard del cliente** se reconstruyó como panel de negocio: resumen de pedidos, total comprado, cupones, último pedido, dirección principal, historial, direcciones y promociones con tarjetas limpias y animaciones de entrada.
+- **Carrito de compras** se llevó al mismo estándar visual con estado vacío, lista de productos, controles de cantidad, resumen fijo y CTA de checkout más claros.
+- **Catálogo** recibió más movimiento: elementos flotantes en el hero, entradas escalonadas en métricas/filtros/kits, hover más visible en tarjetas y transiciones más vivas sin sacrificar legibilidad.
+
 ## 2026-07-07 (continuación — escáner con dirección visual premium)
 
 - **Página `/escaner` rediseñada** con el lenguaje visual inspirado en la vitrina tipo Stone Sip: hero editorial, producto protagonista, dulces flotantes, visor de cámara con línea de escaneo animada, tarjetas de métricas, marquesina y flujo de reorden en tres pasos.

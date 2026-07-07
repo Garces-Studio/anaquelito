@@ -391,7 +391,8 @@ export default function PaginaCatalogo() {
             DULCES
           </div>
 
-
+          <div className="pointer-events-none absolute left-[8%] top-[18%] z-[4] hidden h-20 w-20 rounded-lg border border-white/35 bg-white/18 shadow-[0_20px_60px_rgba(43,27,18,0.18)] backdrop-blur md:block" style={{ animation: 'flotar-dulce 7s ease-in-out infinite' }} />
+          <div className="pointer-events-none absolute right-[10%] top-[24%] z-[4] hidden h-14 w-14 rounded-full border border-white/35 bg-white/16 shadow-[0_18px_50px_rgba(43,27,18,0.14)] backdrop-blur md:block" style={{ animation: 'flotar-dulce 8s ease-in-out 0.8s infinite reverse' }} />
 
           <div className="absolute inset-0" style={{ zIndex: 3 }}>
             {PRODUCTOS.map((item, indice) => (
@@ -413,7 +414,7 @@ export default function PaginaCatalogo() {
             ))}
           </div>
 
-          <div className="absolute bottom-5 left-4 sm:bottom-16 sm:left-10 lg:left-20" style={{ zIndex: 60, maxWidth: 390 }}>
+          <div className="absolute bottom-5 left-4 aparecer sm:bottom-16 sm:left-10 lg:left-20" style={{ zIndex: 60, maxWidth: 390 }}>
             <p className="mb-2 text-base font-black uppercase tracking-[0.14em] text-white sm:text-[22px]">
               {activo.categoriaLabel} / {activo.etiqueta}
             </p>
@@ -446,7 +447,7 @@ export default function PaginaCatalogo() {
 
           <a
             href="#catalogo-completo"
-            className="group absolute bottom-6 right-4 flex items-center text-right text-2xl font-black uppercase leading-none text-white transition hover:opacity-100 sm:bottom-16 sm:right-10 sm:text-5xl"
+            className="group absolute bottom-6 right-4 flex items-center text-right text-2xl font-black uppercase leading-none text-white transition hover:translate-x-1 hover:opacity-100 sm:bottom-16 sm:right-10 sm:text-5xl"
             style={{ zIndex: 60, opacity: 0.96 }}
           >
             Ver catálogo
@@ -471,7 +472,7 @@ export default function PaginaCatalogo() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_12%,rgba(255,90,95,0.12),transparent_28%),radial-gradient(circle_at_88%_18%,rgba(0,166,153,0.12),transparent_28%)]" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-            <div>
+            <div className="aparecer">
               <span className="inline-flex items-center gap-2 rounded-full bg-[#FF5A5F]/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#FF5A5F]">
                 <Sparkles size={14} /> Catálogo B2B
               </span>
@@ -484,8 +485,12 @@ export default function PaginaCatalogo() {
                 [`${PRODUCTOS.length}`, 'Productos'],
                 [`$${totalInversion}`, 'Inversión mix'],
                 [`$${totalReventa}`, 'Reventa sugerida'],
-              ].map(([dato, texto]) => (
-                <div key={texto} className="rounded-lg border border-[#EBD9C3] bg-white/75 p-5 shadow-sm backdrop-blur">
+              ].map(([dato, texto], index) => (
+                <div
+                  key={texto}
+                  className="aparecer rounded-lg border border-[#EBD9C3] bg-white/75 p-5 shadow-sm backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(43,27,18,0.1)]"
+                  style={{ animationDelay: `${0.1 + index * 0.07}s` }}
+                >
                   <strong className="block text-4xl font-black leading-none">{dato}</strong>
                   <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B5546]">{texto}</span>
                 </div>
@@ -493,7 +498,7 @@ export default function PaginaCatalogo() {
             </div>
           </div>
 
-          <div className="sticky top-0 z-30 mt-10 rounded-lg border border-[#EBD9C3] bg-white/82 p-3 shadow-[0_18px_50px_rgba(43,27,18,0.08)] backdrop-blur-xl">
+          <div className="sticky top-0 z-30 mt-10 rounded-lg border border-[#EBD9C3] bg-white/82 p-3 shadow-[0_18px_50px_rgba(43,27,18,0.08)] backdrop-blur-xl aparecer retraso-2">
             <div className="grid gap-3 lg:grid-cols-[1fr_auto_auto] lg:items-center">
               <label className="flex min-h-12 items-center gap-3 rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] px-4">
                 <Search size={18} className="text-[#FF5A5F]" />
@@ -553,7 +558,7 @@ export default function PaginaCatalogo() {
             {productosFiltrados.map((producto, index) => (
               <article
                 key={producto.id}
-                className="group relative overflow-hidden rounded-lg border border-[#EBD9C3] bg-white p-4 shadow-[0_18px_45px_rgba(43,27,18,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_65px_rgba(43,27,18,0.12)]"
+                className="group relative overflow-hidden rounded-lg border border-[#EBD9C3] bg-white p-4 shadow-[0_18px_45px_rgba(43,27,18,0.06)] transition duration-500 hover:-translate-y-2 hover:rotate-[0.25deg] hover:shadow-[0_28px_65px_rgba(43,27,18,0.12)]"
                 style={{ animation: `fade-up 0.65s ease-out ${Math.min(index * 0.04, 0.24)}s both` }}
               >
                 <div className="pointer-events-none absolute -right-16 -top-16 h-36 w-36 rounded-full opacity-25 blur-2xl transition-transform duration-500 group-hover:scale-125" style={{ backgroundColor: producto.bg }} />
@@ -619,7 +624,7 @@ export default function PaginaCatalogo() {
 
       <section className="border-t border-[#EBD9C3] bg-white px-4 py-16 md:px-8 lg:py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+          <div className="mb-10 flex flex-col justify-between gap-5 md:flex-row md:items-end aparecer">
             <div>
               <span className="text-xs font-black uppercase tracking-[0.2em] text-[#FF5A5F]">Kits sugeridos</span>
               <h2 className="mt-3 text-[clamp(2.8rem,7vw,6rem)] font-black uppercase leading-[0.86]">Compra por objetivo</h2>
@@ -630,8 +635,12 @@ export default function PaginaCatalogo() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            {KITS.map((kit) => (
-              <article key={kit.nombre} className="rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] p-6 shadow-[0_14px_34px_rgba(43,27,18,0.05)]">
+            {KITS.map((kit, index) => (
+              <article
+                key={kit.nombre}
+                className="aparecer rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] p-6 shadow-[0_14px_34px_rgba(43,27,18,0.05)] transition duration-300 hover:-translate-y-1 hover:border-[#FF5A5F] hover:bg-white hover:shadow-[0_24px_56px_rgba(43,27,18,0.1)]"
+                style={{ animationDelay: `${index * 0.08}s` }}
+              >
                 <h3 className="text-3xl font-black uppercase leading-none">{kit.nombre}</h3>
                 <p className="mt-4 text-sm font-semibold leading-6 text-[#6B5546]">{kit.texto}</p>
                 <div className="mt-6 grid grid-cols-2 gap-3">
