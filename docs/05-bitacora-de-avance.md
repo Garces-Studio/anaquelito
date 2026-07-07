@@ -60,3 +60,10 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
   - **Pedido por WhatsApp**: el botón de confirmar genera un mensaje con el pedido completo listo para enviarse al WhatsApp del negocio. Falta definir el número (variable `NEXT_PUBLIC_WHATSAPP_NUMERO`); mientras tanto el botón aparece deshabilitado con aviso honesto.
 - Archivos nuevos: `src/componentes/carrito/` (contexto, botón de agregar, enlace con contador) y `src/app/(tienda)/carrito/page.tsx`.
 - Se empezó a explorar una tipografía display personalizada (PODIUM Sharp) importada en `globals.css` — ver pendiente sobre su licencia.
+
+## 2026-07-06 (auditoría y arreglos de móvil)
+
+- **Bug crítico de móvil arreglado**: en la portada, la columna del carrusel se colapsaba a 0px de altura en pantallas chicas, haciendo que la tarjeta de descripción del producto se encimara sobre las estadísticas ("1.1M+ / 24 HRS / ~40%"). Causa: todos los hijos de esa columna son `position: absolute` y no aportan tamaño, así que flexbox la encogía a la fuerza. Se corrigió con `flex-shrink: 0` en las dos columnas del héroe.
+- **Bug de encabezado en móvil arreglado**: el botón "Surtir mi negocio" se partía en dos líneas junto al ícono del carrito. Se ajustó tamaño de fuente y relleno en pantallas chicas.
+- Verificado en viewport móvil (375×812): portada, catálogo, carrito y escáner — los cuatro se ven correctos ahora.
+- **Nota de riesgo — no técnica, de propiedad intelectual**: el video de fondo de la portada (servido desde un CloudFront de terceros) muestra un personaje que parece ser una Tortuga Ninja (arma tipo sai, estética reconocible). Si ese video usa un personaje con derechos de autor/marca registrada (Paramount/Nickelodeon), no se puede usar en un sitio comercial sin licencia — es un riesgo legal real, no un detalle de estilo. Recomendación: reemplazarlo por contenido propio o un video de stock con licencia clara antes de lanzar. Ver pendiente en 06.

@@ -280,6 +280,12 @@ input { font-family: inherit; }
   /* En pantallas chicas se ocultan los enlaces de texto,
      pero el carrito y el botón principal siempre se ven */
   .navegacion a:not(.boton):not(.enlace-carrito) { display: none; }
+  .navegacion .boton {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+  .marca { font-size: 1.05rem; }
 }
 
 /* ---------- Secciones ---------- */
@@ -1106,12 +1112,17 @@ input { font-family: inherit; }
     height: auto;
     padding-top: 0;
     margin-bottom: 3rem;
+    flex-shrink: 0; /* si no, flexbox la encoge porque su contenido cabe de sobra */
   }
-  
+
   .portada-col-carrusel {
     width: 100%;
     height: 480px;
     margin-bottom: 2rem;
+    /* Sin esto, la columna se colapsa a 0px: todos sus hijos son
+       position:absolute y no aportan tamaño, así que flexbox la
+       encoge para que la fila quepa en el alto disponible. */
+    flex-shrink: 0;
   }
   
   .titulo-hero {
