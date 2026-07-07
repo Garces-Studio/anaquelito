@@ -8,11 +8,11 @@
    ============================================================ */
 
 :root {
-  --font-podium: var(--font-plus-jakarta), sans-serif;
-  --font-titulo: var(--font-plus-jakarta), sans-serif;
-  --font-inter: var(--font-plus-jakarta), sans-serif;
-  --font-kanit: var(--font-plus-jakarta), sans-serif;
-  --font-anton: var(--font-plus-jakarta), sans-serif;
+  --font-podium: var(--font-montserrat), sans-serif;
+  --font-titulo: var(--font-montserrat), sans-serif;
+  --font-inter: var(--font-montserrat), sans-serif;
+  --font-kanit: var(--font-montserrat), sans-serif;
+  --font-anton: var(--font-montserrat), sans-serif;
 
   /* Colores de Marca */
   --brand-primary: #FF5A5F; /* Coral/Rojo vibrante y apetitoso */
@@ -144,10 +144,10 @@ input { font-family: inherit; }
   --exito: #1E9E6A;
   --peligro: #D64545;
 
-  /* Fuente única de títulos en toda la tienda: la display de Plus Jakarta Sans. El cuerpo sigue en Inter (Plus Jakarta). */
-  --font-titulo: var(--font-plus-jakarta), sans-serif;
-  --font-inter: var(--font-plus-jakarta), sans-serif;
-  --font-kanit: var(--font-plus-jakarta), sans-serif;
+  /* Fuente única de títulos en toda la tienda: la display de Montserrat. El cuerpo sigue en Montserrat. */
+  --font-titulo: var(--font-montserrat), sans-serif;
+  --font-inter: var(--font-montserrat), sans-serif;
+  --font-kanit: var(--font-montserrat), sans-serif;
 
   /* Degradado de marca colorido, reutilizable en títulos y detalles */
   --degradado-marca: linear-gradient(135deg, #FF5A5F 0%, #FFB400 50%, #7621B0 100%);
