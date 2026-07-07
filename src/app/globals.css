@@ -623,6 +623,78 @@ input { font-family: inherit; }
   transform: none !important;
 }
 
+/* ---------- Checkout ---------- */
+.grid-checkout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .grid-checkout { grid-template-columns: 1fr; }
+}
+
+.formulario-checkout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  background: var(--papel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-gr);
+  padding: 1.75rem;
+  box-shadow: var(--sombra-ch);
+}
+.formulario-checkout label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--tinta-suave);
+}
+.formulario-checkout input,
+.formulario-checkout select,
+.formulario-checkout textarea {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radio-md);
+  border: 1.5px solid var(--borde);
+  background: var(--fondo);
+  color: var(--tinta);
+  font-size: 0.98rem;
+  font-weight: 500;
+  outline: none;
+  transition: border-color var(--rapido);
+  resize: vertical;
+}
+.formulario-checkout input:focus,
+.formulario-checkout select:focus,
+.formulario-checkout textarea:focus {
+  border-color: var(--coral);
+}
+.error-checkout {
+  color: var(--peligro);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.resumen-checkout {
+  background: var(--papel);
+  border: 2px dashed var(--borde);
+  border-radius: var(--radio-md);
+  padding: 1.5rem;
+  position: sticky;
+  top: 100px;
+}
+.resumen-checkout h3 { font-size: 1.1rem; }
+.resumen-checkout-fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--borde);
+}
+
 /* ---------- Pie de página ---------- */
 .pie {
   border-top: 1px solid var(--borde);

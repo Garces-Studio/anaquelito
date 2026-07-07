@@ -78,20 +78,19 @@ export default function PaginaCarrito() {
         <p className="resumen-nota">
           Envío y descuento por volumen se confirman junto con tu pedido.
         </p>
-        {NUMERO_WHATSAPP ? (
+        <Link href="/checkout" className="boton boton-primario" style={{ width: '100%' }}>
+          Ir a pagar con Mercado Pago
+        </Link>
+        {NUMERO_WHATSAPP && (
           <a
             href={`https://wa.me/${NUMERO_WHATSAPP}?text=${mensajePedido}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="boton boton-primario"
-            style={{ width: '100%' }}
+            className="boton boton-secundario"
+            style={{ width: '100%', marginTop: '0.75rem' }}
           >
-            Enviar pedido por WhatsApp
+            O enviar pedido por WhatsApp
           </a>
-        ) : (
-          <button className="boton boton-primario" style={{ width: '100%' }} disabled>
-            Confirmar pedido (próximamente)
-          </button>
         )}
         <button
           onClick={vaciar}

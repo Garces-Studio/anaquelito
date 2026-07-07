@@ -4,6 +4,8 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 
 ## Para activar YA (rápidas)
 
+- [ ] **🔴 URGENTE — Revocar un token de GitHub expuesto.** Se encontró `[TOKEN-YA-REVOCADO-VER-BITACORA]` guardado en texto plano en `.git/config`. Ya se quitó del archivo, pero el token en sí sigue activo en GitHub hasta que lo revoques manualmente: [github.com/settings/tokens](https://github.com/settings/tokens) → busca ese token → Delete/Revoke.
+- [ ] **Credenciales para que el checkout cobre de verdad**: faltan `SUPABASE_SERVICE_ROLE_KEY` (Supabase → Project Settings → API → service_role) y `MERCADOPAGO_ACCESS_TOKEN` (developers.mercadopago.com.mx → Tus integraciones → Credenciales; usar las de **prueba** primero). Van en `.env.local` y luego en Vercel.
 - [ ] **Número de WhatsApp del negocio**: confirmado como pendiente por Mauricio (2026-07-06, "por el momento no"). Cuando se tenga, configurarlo como `NEXT_PUBLIC_WHATSAPP_NUMERO` (formato internacional sin signos, ej. `5215512345678`) en `.env.local` y en Vercel. Con eso el botón "Enviar pedido por WhatsApp" del carrito queda funcionando y ya se pueden recibir pedidos reales.
 - [ ] **Licencia de la tipografía PODIUM Sharp**: la versión importada en `globals.css` es un "DEMO" servido por un CDN de terceros (onlinewebfonts.com). Antes de lanzar hay que comprar la licencia comercial y servir la fuente desde nuestro propio proyecto, o elegir una fuente libre equivalente. Usar una fuente demo en un negocio real es una violación de licencia.
 - [ ] **⚠️ Revisar el video de fondo de la portada por posible infracción de propiedad intelectual.** Parece mostrar una Tortuga Ninja (personaje registrado de Paramount/Nickelodeon). Si no hay licencia explícita para ese clip, hay que reemplazarlo antes de mostrar el sitio a nadie fuera del equipo — el riesgo no es de diseño, es legal (derechos de autor/marca).
@@ -19,10 +21,12 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 
 ## Decisiones técnicas
 
-- [ ] Flujo de autenticación (Supabase Auth) para el botón "Ingresar" del home, conectado a la tabla `clientes`.
+- [ ] Flujo de autenticación (Supabase Auth) para el botón "Ingresar" del home, conectado a la tabla `clientes`. Una vez que exista, el checkout debería usar la sesión real en vez del checkout de invitado.
 - [ ] Librería/estrategia real de lectura de código de barras para el escáner (`BarcodeDetector` nativo vs `@zxing/browser`).
-- [ ] Pasarela de pago a integrar (Stripe / Mercado Pago / Kueski).
+- [x] Pasarela de pago: se eligió **Mercado Pago** como prioridad (Stripe queda para después). Integración construida en `src/app/api/checkout/route.ts`, falta activar con credenciales reales.
+- [ ] Webhook de Mercado Pago para actualizar el estado del pedido automáticamente cuando se confirme el pago (hoy el pedido queda en "pendiente" hasta revisarlo a mano).
 - [ ] Evaluar si se necesita una librería de componentes UI antes de que el catálogo crezca (hoy todo es estilo inline).
+- [ ] **Distribución/envío**: falta decidir con el socio qué paquetería(s) usar y cómo se calcula el costo de envío. Por ahora el checkout dice "el envío se confirma por separado".
 - [ ] **URGENTE antes de que la página desplegada funcione:** configurar en Vercel (Project Settings → Environment Variables) las dos variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` (los valores están en el `.env.local` local). Sin esto, el catálogo en producción no puede leer la base de datos.
 
 ## Construcción pendiente (frontend/producto)
