@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 
-// Fuente principal y única para todo el sitio: limpia, legible y con soporte completo de español (acentos, ñ)
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
+// Fuente principal y única para todo el sitio: ultra moderna, súper legible y geométrica
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
@@ -23,7 +23,7 @@ export default function DisenoPrincipal({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${montserrat.variable}`}>
+    <html lang="es" className={`${outfit.variable}`}>
       <body>
         <ProveedorCarrito>
           {children}

@@ -8,6 +8,12 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - El copy conserva la promesa real del proyecto: escanear el UPC de la bolsa/empaque vacío para reordenar sin buscar producto por producto.
 - Se mantuvo la honestidad del estado actual: la lectura real de cámara todavía está pendiente; esta entrega deja lista la experiencia visual y el flujo esperado para conectar después la lógica de lectura de códigos de barras.
 
+## 2026-07-07 (continuación — catálogo completo con hero tipo carrusel)
+
+- **Página `/catalogo` reconstruida** a partir del hero/carrusel tipo TOONHUB que Mauricio pidió conservar, pero adaptada a Anaquelito: textos reales, productos locales, colores por producto, grano analógico, navegación con flechas y CTA hacia el catálogo.
+- Debajo del hero se agregó una experiencia completa de catálogo: búsqueda, filtros por categoría, ordenamiento, cards con precio de mayoreo, precio sugerido, margen estimado, rotación, botón de agregar al carrito y kits sugeridos por tipo de negocio.
+- Se dejó todo con contenido honesto de producto y se mantuvieron las imágenes locales (`public/*.png`) como base visual.
+
 ## 2026-07-06
 
 - Se crea la carpeta `docs/` con el manual del proyecto (este documento y sus hermanos), consolidando la investigación de mercado y el estado técnico existente hasta ahora.

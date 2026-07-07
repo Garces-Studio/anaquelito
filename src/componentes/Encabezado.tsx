@@ -12,8 +12,14 @@ export default function Encabezado() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [usuario, setUsuario] = useState<User | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const esInicio = pathname === '/';
+
+  // Efecto de entrada al cargar la página
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Detectar scroll para ajustar el menú flotante
   useEffect(() => {
@@ -40,21 +46,20 @@ export default function Encabezado() {
 
   return (
     <>
-      {/* HEADER CONTENEDOR FLOTANTE PREMIUM */}
-      <header className="fixed top-4 left-0 right-0 z-50 px-4 w-full flex justify-center pointer-events-none select-none">
+      {/* HEADER CONTENEDOR FLOTANTE PREMIUM CON ANIMACIÓN DE ENTRADA */}
+      <header 
+        className="fixed top-4 left-0 right-0 z-50 px-4 w-full flex justify-center pointer-events-none select-none"
+        style={{
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? 'translateY(0)' : 'translateY(-100px)',
+          transition: 'all 0.8s cubic-bezier(0.22, 1, 0.36, 1)'
+        }}
+      >
         <div
-          className={`w-full max-w-4xl rounded-full backdrop-blur-md border px-8 flex items-center justify-between pointer-events-auto transition-all duration-300 ${
+          className={`w-full max-w-4xl rounded-full backdrop-blur-xl border px-6 sm:px-8 flex items-center justify-between pointer-events-auto transition-all duration-300 ${
             scrolled 
-              ? 'py-2.5 shadow-[0_16px_36px_rgba(43,27,18,0.14)]' 
-              : 'py-4 shadow-[0_12px_30px_rgba(43,27,18,0.06)]'
-          } ${
-            esInicio
-              ? scrolled 
-                ? 'bg-black/75 border-white/20 text-white' 
-                : 'bg-black/35 border-white/10 text-white'
-              : scrolled
-                ? 'bg-[#FFF6EC]/95 border-[#EBD9C3] text-[#2B1B12]'
-                : 'bg-[#FFF6EC]/80 border-[#EBD9C3]/70 text-[#2B1B12]'
+              ? 'py-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.15)] bg-black/60 border-white/10 text-white' 
+              : 'py-4 shadow-[0_12px_30px_rgba(0,0,0,0.08)] bg-black/30 border-white/15 text-white'
           }`}
         >
           {/* VISTA MÓVIL */}
@@ -66,7 +71,7 @@ export default function Encabezado() {
               {usuario && <EnlaceCarrito />}
               <button
                 onClick={() => setMenuOpen(true)}
-                className="p-1 cursor-pointer transition-transform duration-150 active:scale-90"
+                className="p-1 cursor-pointer transition-transform duration-150 active:scale-90 text-white hover:text-[#FFB400]"
                 aria-label="Abrir menú"
               >
                 <Menu size={22} className="text-current" />
@@ -74,19 +79,15 @@ export default function Encabezado() {
             </div>
           </div>
 
-          {/* VISTA ESCRITORIO (DISEÑO REFINADO, SIN SOMBREADOS NI BOTONES, CON COLORES PERSONALIZADOS AL HOVER) */}
-          <div className="hidden md:flex items-center justify-between w-full font-montserrat">
+          {/* VISTA ESCRITORIO (DISEÑO UNIFICADO PREMIUM, INSPIRADO EN PLATAFORMAS MODERNAS) */}
+          <div className="hidden md:flex items-center justify-between w-full">
             
-            {/* LADO IZQUIERDO: Enlaces de navegación (Catálogo y Escáner) */}
+            {/* LADO IZQUIERDO: Enlaces de navegación */}
             <nav className="flex gap-8 items-center w-1/3 justify-start" aria-label="Menú principal izquierdo">
               <Link
                 href="/catalogo"
                 className={`font-black text-sm uppercase tracking-wider transition-colors duration-200 ${
-                  pathname.startsWith('/catalogo')
-                    ? 'text-[#FF5A5F]'
-                    : esInicio 
-                      ? 'text-white hover:text-[#FF5A5F]' 
-                      : 'text-[#2B1B12]/80 hover:text-[#FF5A5F]'
+                  pathname.startsWith('/catalogo') ? 'text-[#FF5A5F]' : 'text-white/90 hover:text-[#FF5A5F]'
                 }`}
               >
                 Catálogo
@@ -94,11 +95,7 @@ export default function Encabezado() {
               <Link
                 href="/escaner"
                 className={`font-black text-sm uppercase tracking-wider transition-colors duration-200 ${
-                  pathname.startsWith('/escaner')
-                    ? 'text-[#00A699]'
-                    : esInicio 
-                      ? 'text-white hover:text-[#00A699]' 
-                      : 'text-[#2B1B12]/80 hover:text-[#00A699]'
+                  pathname.startsWith('/escaner') ? 'text-[#00A699]' : 'text-white/90 hover:text-[#00A699]'
                 }`}
               >
                 Escáner
@@ -107,27 +104,21 @@ export default function Encabezado() {
 
             {/* CENTRO: Marca / Logotipo */}
             <div className="flex justify-center items-center w-1/3">
-              <Link href="/" className="font-black text-lg tracking-[0.25em] uppercase text-center hover:text-[#FF8A3D] transition-colors duration-200">
+              <Link href="/" className="font-black text-lg tracking-[0.25em] uppercase text-center hover:text-[#FF8A3D] hover:scale-105 transition-all duration-300">
                 ANAQUELITO
               </Link>
             </div>
 
             {/* LADO DERECHO: Iniciar sesión / Mi cuenta y Carrito */}
-            <div className="flex gap-8 items-center w-1/3 justify-end">
+            <div className="flex gap-5 items-center w-1/3 justify-end">
               <Link
                 href={enlaceCuenta.href}
-                className={`font-black text-sm uppercase tracking-wider transition-colors duration-200 ${
-                  pathname.startsWith(enlaceCuenta.href)
-                    ? 'text-[#0084FF]'
-                    : esInicio 
-                      ? 'text-white hover:text-[#0084FF]' 
-                      : 'text-[#2B1B12]/80 hover:text-[#0084FF]'
-                }`}
+                className="px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-[0.15em] bg-[#FF5A5F] hover:bg-[#E0484D] hover:scale-105 text-white shadow-[0_0_15px_rgba(255,90,95,0.4)] transition-all duration-300 whitespace-nowrap"
               >
                 {enlaceCuenta.texto}
               </Link>
               {usuario && (
-                <div className="pl-2 border-l border-current/15 flex items-center">
+                <div className="pl-3 border-l border-white/20 flex items-center">
                   <EnlaceCarrito />
                 </div>
               )}
@@ -141,7 +132,7 @@ export default function Encabezado() {
       <div className={`menu-movil-overlay ${menuOpen ? 'activo' : ''}`} style={{ position: 'fixed', zIndex: 999 }}>
         <div className="menu-movil-cabecera">
           <span className="portada-logo font-black tracking-[0.2em] uppercase text-[#FF8A3D]">ANAQUELITO</span>
-          <button onClick={() => setMenuOpen(false)} style={{ color: '#FFFFFF' }} aria-label="Cerrar menú" className="cursor-pointer">
+          <button onClick={() => setMenuOpen(false)} style={{ color: '#FFFFFF' }} aria-label="Cerrar menú" className="cursor-pointer hover:scale-110 transition-transform">
             <X size={28} />
           </button>
         </div>
@@ -173,7 +164,7 @@ export default function Encabezado() {
           <div className="menu-movil-cta" style={{ transitionDelay: '320ms' }}>
             <Link 
               href={enlaceCuenta.href} 
-              className="portada-nav-cta font-black uppercase tracking-wider text-base hover:text-[#0084FF]" 
+              className="px-8 py-4 rounded-full font-black uppercase tracking-[0.15em] text-sm bg-[#FF5A5F] text-white shadow-[0_0_20px_rgba(255,90,95,0.5)] hover:scale-105 transition-transform" 
               onClick={() => setMenuOpen(false)}
             >
               <span>{enlaceCuenta.texto}</span>
