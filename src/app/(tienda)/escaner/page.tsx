@@ -2,8 +2,9 @@ import Link from 'next/link';
 
 export default function PaginaEscaner() {
   return (
-    <main className="contenedor" style={{ padding: '3rem 1.25rem 4rem', textAlign: 'center' }}>
-      <h1 className="seccion-titulo aparecer">¿Se acabó? Escanéalo.</h1>
+    <main className="contenedor pagina-colorida" style={{ padding: '3rem 1.25rem 4rem', textAlign: 'center' }}>
+      <span className="insignia-colorida aparecer" style={{ marginInline: 'auto' }}>📷 Resurtido en 30 segundos</span>
+      <h1 className="seccion-titulo titulo-degradado aparecer">¿Se acabó? Escanéalo.</h1>
       <p
         className="seccion-bajada aparecer retraso-1"
         style={{ marginInline: 'auto' }}

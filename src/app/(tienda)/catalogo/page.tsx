@@ -250,7 +250,7 @@ export default function PaginaCatalogo() {
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
               }}
-              className="font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw] mt-6 sm:mt-4 md:-mt-5"
+              className="font-podium uppercase tracking-tight leading-none whitespace-nowrap w-full text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw] mt-6 sm:mt-4 md:-mt-5"
             >
               HOLA, SOY DULCE
             </h1>
@@ -416,7 +416,7 @@ export default function PaginaCatalogo() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}
-            className="font-black uppercase leading-none tracking-tight text-center text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]"
+            className="font-podium uppercase leading-none tracking-tight text-center text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]"
           >
             Nosotros
           </h2>
@@ -444,7 +444,7 @@ export default function PaginaCatalogo() {
       <section className="bg-white text-[#2B1B12] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 relative z-20 border-t border-[#EBD9C3]">
         <div className="max-w-5xl mx-auto w-full">
           <FadeIn className="text-center w-full mb-16 sm:mb-20 md:mb-28">
-            <h2 className="font-black uppercase text-center text-[#2B1B12] leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]">
+            <h2 className="font-podium uppercase text-center text-[#2B1B12] leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]">
               Beneficios
             </h2>
           </FadeIn>
@@ -517,7 +517,7 @@ export default function PaginaCatalogo() {
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
               }}
-              className="font-black uppercase text-center leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]"
+              className="font-podium uppercase text-center leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]"
             >
               Destacados
             </h2>

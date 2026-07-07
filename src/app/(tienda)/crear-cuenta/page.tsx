@@ -61,8 +61,9 @@ export default function PaginaCrearCuenta() {
   };
 
   return (
-    <main className="contenedor" style={{ padding: '3rem 1.25rem 4rem', maxWidth: '640px' }}>
-      <h1 className="seccion-titulo aparecer">Crea tu cuenta</h1>
+    <main className="contenedor pagina-colorida" style={{ padding: '3rem 1.25rem 4rem', maxWidth: '640px' }}>
+      <span className="insignia-colorida aparecer">🎉 Únete a Anaquelito</span>
+      <h1 className="seccion-titulo titulo-degradado aparecer">Crea tu cuenta</h1>
       <p className="seccion-bajada aparecer retraso-1">
         Guarda tus direcciones y consulta tus pedidos desde tu propio panel.
       </p>

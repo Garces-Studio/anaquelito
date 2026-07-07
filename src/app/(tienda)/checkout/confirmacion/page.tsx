@@ -11,8 +11,8 @@ export default async function PaginaConfirmacion({
 
   if (!pedidoId) {
     return (
-      <main className="contenedor" style={{ padding: '4rem 1.25rem', textAlign: 'center' }}>
-        <h1 className="seccion-titulo">No encontramos tu pedido</h1>
+      <main className="contenedor pagina-colorida" style={{ padding: '4rem 1.25rem', textAlign: 'center' }}>
+        <h1 className="seccion-titulo titulo-degradado">No encontramos tu pedido</h1>
         <Link href="/catalogo" className="boton boton-primario">Volver al catálogo</Link>
       </main>
     );
@@ -28,12 +28,12 @@ export default async function PaginaConfirmacion({
     .single();
 
   return (
-    <main className="contenedor" style={{ padding: '4rem 1.25rem', textAlign: 'center' }}>
+    <main className="contenedor pagina-colorida" style={{ padding: '4rem 1.25rem', textAlign: 'center' }}>
       {/* Vacía el carrito del navegador ahora que el pedido ya quedó registrado */}
       <LimpiarCarrito />
 
       <span style={{ fontSize: '3rem' }}>🎉</span>
-      <h1 className="seccion-titulo aparecer">¡Pedido recibido!</h1>
+      <h1 className="seccion-titulo titulo-degradado aparecer">¡Pedido recibido!</h1>
       <p className="seccion-bajada aparecer retraso-1" style={{ marginInline: 'auto' }}>
         {pedido
           ? `Tu pedido #${pedido.id.slice(0, 8)} por $${pedido.total} está ${pedido.estado}. Te contactaremos para confirmar la entrega.`

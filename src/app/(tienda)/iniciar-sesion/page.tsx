@@ -31,8 +31,9 @@ export default function PaginaIniciarSesion() {
   };
 
   return (
-    <main className="contenedor" style={{ padding: '4rem 1.25rem', maxWidth: '440px' }}>
-      <h1 className="seccion-titulo aparecer">Inicia sesión</h1>
+    <main className="contenedor pagina-colorida" style={{ padding: '4rem 1.25rem', maxWidth: '440px' }}>
+      <span className="insignia-colorida aparecer">🍬 Bienvenido de vuelta</span>
+      <h1 className="seccion-titulo titulo-degradado aparecer">Inicia sesión</h1>
       <p className="seccion-bajada aparecer retraso-1">
         Consulta tus pedidos, direcciones y cupones.
       </p>

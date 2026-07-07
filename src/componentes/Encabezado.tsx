@@ -27,6 +27,8 @@ export default function Encabezado() {
   const enlaceCuenta = usuario
     ? { href: '/dashboard', texto: 'Mi cuenta' }
     : { href: '/iniciar-sesion', texto: 'Iniciar sesión' };
+  const colorTexto = esInicio ? '#FFFFFF' : '#2B1B12';
+  const colorEnlaceSuave = esInicio ? 'rgba(255, 255, 255, 0.8)' : '#7A6455';
 
   return (
     <>
@@ -35,27 +37,34 @@ export default function Encabezado() {
         className="portada-nav animate-fade-in"
         style={esInicio
           ? { position: 'absolute', background: 'transparent', borderBottom: 'none' }
-          : { position: 'sticky', background: 'rgba(10, 8, 6, 0.85)', borderBottom: '1px solid rgba(255,255,255,0.1)', top: 0 }
+          : { position: 'sticky', background: '#FFF6EC', borderBottom: '1px solid #EBD9C3', top: 0 }
         }
       >
-        <Link href="/" className="portada-logo font-podium">
+        <Link href="/" className="portada-logo font-podium" style={{ color: colorTexto }}>
           ANAQUELITO
         </Link>
 
         {/* Enlaces centrales */}
         <div className="portada-menu-links">
-          <Link href="/" className="portada-menu-link">Inicio</Link>
-          <Link href="/catalogo" className="portada-menu-link">Catálogo</Link>
-          <Link href="/escaner" className="portada-menu-link">Escáner</Link>
+          <Link href="/" className="portada-menu-link" style={{ color: colorEnlaceSuave }}>Inicio</Link>
+          <Link href="/catalogo" className="portada-menu-link" style={{ color: colorEnlaceSuave }}>Catálogo</Link>
+          <Link href="/escaner" className="portada-menu-link" style={{ color: colorEnlaceSuave }}>Escáner</Link>
         </div>
 
         {/* Enlace Carrito y cuenta */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
           <EnlaceCarrito />
           {!usuario && (
-            <Link href="/crear-cuenta" className="portada-menu-link">Crear cuenta</Link>
+            <Link href="/crear-cuenta" className="portada-menu-link" style={{ color: colorEnlaceSuave }}>Crear cuenta</Link>
           )}
-          <Link href={enlaceCuenta.href} className="portada-nav-cta">
+          <Link 
+            href={enlaceCuenta.href} 
+            className="portada-nav-cta"
+            style={esInicio 
+              ? { color: '#FFFFFF', borderColor: 'rgba(255, 255, 255, 0.25)' } 
+              : { color: '#FF5A5F', borderColor: '#FF5A5F', background: 'white' }
+            }
+          >
             <span>{enlaceCuenta.texto}</span>
             <ArrowUpRight size={14} />
           </Link>
@@ -67,9 +76,9 @@ export default function Encabezado() {
           onClick={() => setMenuOpen(true)}
           aria-label="Abrir menú"
         >
-          <span />
-          <span />
-          <span />
+          <span style={{ backgroundColor: colorTexto }} />
+          <span style={{ backgroundColor: colorTexto }} />
+          <span style={{ backgroundColor: colorTexto }} />
         </button>
       </nav>
 

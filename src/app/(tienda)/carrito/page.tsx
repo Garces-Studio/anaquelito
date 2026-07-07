@@ -21,8 +21,8 @@ export default function PaginaCarrito() {
 
   if (articulos.length === 0) {
     return (
-      <main className="contenedor" style={{ padding: '3rem 1.25rem 4rem', textAlign: 'center' }}>
-        <h1 className="seccion-titulo aparecer">Tu carrito está vacío</h1>
+      <main className="contenedor pagina-colorida" style={{ padding: '3rem 1.25rem 4rem', textAlign: 'center' }}>
+        <h1 className="seccion-titulo titulo-degradado aparecer">Tu carrito está vacío</h1>
         <p className="seccion-bajada aparecer retraso-1" style={{ marginInline: 'auto' }}>
           Llénalo con productos de alto margen para tu negocio.
         </p>
@@ -34,8 +34,8 @@ export default function PaginaCarrito() {
   }
 
   return (
-    <main className="contenedor" style={{ padding: '3rem 1.25rem 4rem' }}>
-      <h1 className="seccion-titulo aparecer">Tu pedido</h1>
+    <main className="contenedor pagina-colorida" style={{ padding: '3rem 1.25rem 4rem' }}>
+      <h1 className="seccion-titulo titulo-degradado aparecer">Tu pedido</h1>
       <p className="seccion-bajada aparecer retraso-1">
         Revisa cantidades y confirma. Los descuentos por volumen se aplican al confirmar el pedido.
       </p>

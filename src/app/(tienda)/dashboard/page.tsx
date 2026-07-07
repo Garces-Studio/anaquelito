@@ -26,8 +26,8 @@ export default async function PaginaDashboard() {
   // Caso raro: el usuario tiene sesión pero nunca terminó su registro de negocio.
   if (!cliente) {
     return (
-      <main className="contenedor" style={{ padding: '4rem 1.25rem', textAlign: 'center' }}>
-        <h1 className="seccion-titulo">Falta completar tu registro</h1>
+      <main className="contenedor pagina-colorida" style={{ padding: '4rem 1.25rem', textAlign: 'center' }}>
+        <h1 className="seccion-titulo titulo-degradado">Falta completar tu registro</h1>
         <p className="seccion-bajada" style={{ marginInline: 'auto' }}>
           Tu cuenta existe pero no encontramos los datos de tu negocio. Escríbenos a hola@anaquelito.mx para ayudarte.
         </p>
@@ -55,13 +55,14 @@ export default async function PaginaDashboard() {
   const totalGastado = (pedidos ?? []).reduce((suma, p) => suma + Number(p.total), 0);
 
   return (
-    <main className="contenedor" style={{ padding: '3rem 1.25rem 4rem' }}>
+    <main className="contenedor pagina-colorida" style={{ padding: '3rem 1.25rem 4rem' }}>
       <header style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
         flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem',
       }}>
         <div>
-          <h1 className="seccion-titulo aparecer">Hola, {cliente.nombre_negocio}</h1>
+          <span className="insignia-colorida aparecer">👋 Tu panel</span>
+          <h1 className="seccion-titulo titulo-degradado aparecer">Hola, {cliente.nombre_negocio}</h1>
           <p style={{ color: 'var(--tinta-suave)' }} className="aparecer retraso-1">
             Este es tu panel: tus pedidos, direcciones y cupones.
           </p>

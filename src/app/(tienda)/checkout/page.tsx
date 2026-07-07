@@ -17,8 +17,8 @@ export default function PaginaCheckout() {
 
   if (articulos.length === 0) {
     return (
-      <main className="contenedor" style={{ padding: '3rem 1.25rem 4rem', textAlign: 'center' }}>
-        <h1 className="seccion-titulo aparecer">Tu carrito está vacío</h1>
+      <main className="contenedor pagina-colorida" style={{ padding: '3rem 1.25rem 4rem', textAlign: 'center' }}>
+        <h1 className="seccion-titulo titulo-degradado aparecer">Tu carrito está vacío</h1>
         <p className="seccion-bajada aparecer retraso-1" style={{ marginInline: 'auto' }}>
           Agrega productos desde el catálogo antes de pagar.
         </p>
@@ -60,8 +60,8 @@ export default function PaginaCheckout() {
   };
 
   return (
-    <main className="contenedor" style={{ padding: '3rem 1.25rem 4rem' }}>
-      <h1 className="seccion-titulo aparecer">Confirmar pedido</h1>
+    <main className="contenedor pagina-colorida" style={{ padding: '3rem 1.25rem 4rem' }}>
+      <h1 className="seccion-titulo titulo-degradado aparecer">Confirmar pedido</h1>
       <p className="seccion-bajada aparecer retraso-1">
         Estos datos son para saber a dónde y a nombre de quién entregar.
       </p>
