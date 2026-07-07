@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, X, Sparkles, TrendingUp, CheckCircle, Package, Camera, ShoppingBag, Zap } from 'lucide-react';
 import Link from 'next/link';
-import Encabezado from '@/componentes/Encabezado';
-import PieDePagina from '@/componentes/PieDePagina';const DULCES = [
+import PieDePagina from '@/componentes/PieDePagina';
+
+const DULCES = [
   { 
     nombre: 'PAPAS CRUJIENTES FUEGO', 
     descripcion: 'Papas fritas con sal de grano y un toque de chile y limón. Crujientes al máximo, listas para activar las ventas de tu negocio.', 
@@ -259,8 +260,6 @@ export default function Inicio() {
 
         {/* Capa de grano analógico premium */}
         <div className="grain-overlay" />
-
-        <Encabezado />
 
         {/* CONTENIDO PRINCIPAL EN CUADRÍCULA SPLIT */}
         <div className="portada-grid">

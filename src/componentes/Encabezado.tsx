@@ -3,37 +3,35 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { X, Menu } from 'lucide-react';
+import { Menu, ScanLine, X } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import EnlaceCarrito from './carrito/EnlaceCarrito';
 import { crearCliente } from '@/lib/supabase/client';
 
+const enlaces = [
+  { href: '/catalogo', texto: 'Catálogo' },
+  { href: '/escaner', texto: 'Escáner' },
+];
+
 export default function Encabezado() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [usuario, setUsuario] = useState<User | null>(null);
-  
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [oculto, setOculto] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-
   const pathname = usePathname();
 
-  // Animación inicial al montar
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Detectar scroll para ajustar opacidad y ocultar/mostrar al bajar/subir
   useEffect(() => {
-    const handleScroll = () => {
+    const manejarScroll = () => {
       const currentScrollY = window.scrollY;
+      setScrolled(currentScrollY > 18);
       
-      // Fondo transparente o difuminado si pasamos 20px
-      setScrolled(currentScrollY > 20);
-      
-      // Lógica de "Smart Header": se oculta al bajar (para no estorbar), baja al subir
-      if (currentScrollY > lastScrollY && currentScrollY > 150) {
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
         setOculto(true);
       } else if (currentScrollY < lastScrollY) {
         setOculto(false);
@@ -41,12 +39,12 @@ export default function Encabezado() {
       
       setLastScrollY(currentScrollY);
     };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    manejarScroll();
+    window.addEventListener('scroll', manejarScroll, { passive: true });
+    return () => window.removeEventListener('scroll', manejarScroll);
   }, [lastScrollY]);
 
-  // Autenticación
   useEffect(() => {
     const supabase = crearCliente();
     supabase.auth.getUser().then(({ data }) => setUsuario(data.user));
@@ -58,134 +56,98 @@ export default function Encabezado() {
 
   const enlaceCuenta = usuario
     ? { href: '/dashboard', texto: 'Mi cuenta' }
-    : { href: '/iniciar-sesion', texto: 'Iniciar sesión' };
+    : { href: '/iniciar-sesion', texto: 'Entrar' };
 
   return (
     <>
-      {/* HEADER CONTENEDOR FLOTANTE PREMIUM CON ANIMACIÓN DE ENTRADA Y SCROLL */}
-      <header 
-        className="fixed top-4 left-0 right-0 z-50 px-4 w-full flex justify-center pointer-events-none select-none"
+      <header
+        className="fixed left-0 right-0 top-4 z-50 flex w-full justify-center px-4 pointer-events-none"
         style={{
           opacity: mounted && !oculto ? 1 : 0,
           transform: mounted && !oculto ? 'translateY(0)' : 'translateY(-120px)',
-          transition: 'all 0.6s cubic-bezier(0.22, 1, 0.36, 1)'
+          transition: 'opacity 520ms ease, transform 520ms cubic-bezier(0.22,1,0.36,1)',
         }}
       >
         <div
-          className={`w-full max-w-4xl rounded-full backdrop-blur-xl border px-6 sm:px-8 flex items-center justify-between pointer-events-auto transition-all duration-300 ${
-            scrolled 
-              ? 'py-2.5 shadow-[0_16px_40px_rgba(0,0,0,0.15)] bg-black/60 border-white/10 text-white' 
-              : 'py-4 shadow-[0_12px_30px_rgba(0,0,0,0.08)] bg-black/30 border-white/15 text-white'
+          className={`pointer-events-auto flex w-full max-w-5xl items-center justify-between rounded-full border px-4 py-2.5 backdrop-blur-2xl transition-all duration-300 sm:px-5 ${
+            scrolled
+              ? 'border-[#EBD9C3] bg-[#FFF6EC]/92 shadow-[0_18px_55px_rgba(43,27,18,0.13)]'
+              : 'border-white/65 bg-white/55 shadow-[0_12px_40px_rgba(43,27,18,0.08)]'
           }`}
         >
-          {/* VISTA MÓVIL */}
-          <div className="flex md:hidden items-center justify-between w-full">
-            <Link href="/" className="font-titulo font-black text-base tracking-[0.2em] uppercase hover:text-[#FF8A3D] transition-colors duration-200">
-              ANAQUELITO
+          <Link href="/" className="flex items-center gap-2 rounded-full pr-2 text-[#2B1B12]">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#FF5A5F] text-white shadow-[0_10px_24px_rgba(255,90,95,0.28)]">
+              <ScanLine size={17} />
+            </span>
+            <span className="font-titulo text-sm font-black uppercase tracking-[0.2em] sm:text-base">Anaquelito</span>
+          </Link>
+
+          <nav className="hidden items-center gap-2 md:flex" aria-label="Navegación principal">
+            {enlaces.map((enlace) => {
+              const activo = pathname.startsWith(enlace.href);
+              return (
+                <Link
+                  key={enlace.href}
+                  href={enlace.href}
+                  className={`rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] transition ${
+                    activo
+                      ? 'bg-[#2B1B12] text-white shadow-[0_10px_24px_rgba(43,27,18,0.14)]'
+                      : 'text-[#6B5546] hover:bg-[#FFEFDD] hover:text-[#2B1B12]'
+                  }`}
+                >
+                  {enlace.texto}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="hidden items-center gap-2 md:flex">
+            <Link
+              href={enlaceCuenta.href}
+              className="rounded-full border border-[#EBD9C3] bg-white px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition hover:border-[#FF5A5F] hover:text-[#FF5A5F]"
+            >
+              {enlaceCuenta.texto}
             </Link>
-            <div className="flex items-center gap-4">
-              {usuario && <EnlaceCarrito />}
-              <button
-                onClick={() => setMenuOpen(true)}
-                className="p-1 cursor-pointer transition-transform duration-150 active:scale-90 text-white hover:text-[#FFB400]"
-                aria-label="Abrir menú"
-              >
-                <Menu size={22} className="text-current" />
-              </button>
-            </div>
+            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] bg-white text-[#2B1B12]">
+              <EnlaceCarrito />
+            </span>
           </div>
 
-          {/* VISTA ESCRITORIO (DISEÑO UNIFICADO PREMIUM, FUENTE PODIUM SHARP) */}
-          <div className="hidden md:flex items-center justify-between w-full">
-            
-            {/* LADO IZQUIERDO: Enlaces de navegación */}
-            <nav className="flex gap-8 items-center w-1/3 justify-start font-titulo" aria-label="Menú principal izquierdo">
-              <Link
-                href="/catalogo"
-                className={`font-black text-sm uppercase tracking-wider transition-colors duration-200 ${
-                  pathname.startsWith('/catalogo') ? 'text-[#FF5A5F]' : 'text-white/90 hover:text-[#FF5A5F]'
-                }`}
-              >
-                Catálogo
-              </Link>
-              <Link
-                href="/escaner"
-                className={`font-black text-sm uppercase tracking-wider transition-colors duration-200 ${
-                  pathname.startsWith('/escaner') ? 'text-[#00A699]' : 'text-white/90 hover:text-[#00A699]'
-                }`}
-              >
-                Escáner
-              </Link>
-            </nav>
-
-            {/* CENTRO: Marca / Logotipo */}
-            <div className="flex justify-center items-center w-1/3">
-              <Link href="/" className="font-titulo font-black text-lg tracking-[0.25em] uppercase text-center hover:text-[#FF8A3D] hover:scale-105 transition-all duration-300">
-                ANAQUELITO
-              </Link>
-            </div>
-
-            {/* LADO DERECHO: Iniciar sesión / Mi cuenta y Carrito */}
-            <div className="flex gap-5 items-center w-1/3 justify-end font-titulo">
-              <Link
-                href={enlaceCuenta.href}
-                className="px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-[0.15em] bg-[#FF5A5F] hover:bg-[#E0484D] hover:scale-105 text-white shadow-[0_0_15px_rgba(255,90,95,0.4)] transition-all duration-300 whitespace-nowrap"
-              >
-                {enlaceCuenta.texto}
-              </Link>
-              {usuario && (
-                <div className="pl-3 border-l border-white/20 flex items-center">
-                  <EnlaceCarrito />
-                </div>
-              )}
-            </div>
-
+          <div className="flex items-center gap-2 md:hidden">
+            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] bg-white text-[#2B1B12]">
+              <EnlaceCarrito />
+            </span>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="grid h-10 w-10 place-items-center rounded-full bg-[#2B1B12] text-white"
+              aria-label="Abrir menú"
+            >
+              <Menu size={19} />
+            </button>
           </div>
         </div>
       </header>
 
-      {/* MENÚ MÓVIL OVERLAY */}
-      <div className={`menu-movil-overlay ${menuOpen ? 'activo' : ''}`} style={{ position: 'fixed', zIndex: 999 }}>
-        <div className="menu-movil-cabecera">
-          <span className="portada-logo font-titulo font-black tracking-[0.2em] uppercase text-[#FF8A3D]">ANAQUELITO</span>
-          <button onClick={() => setMenuOpen(false)} style={{ color: '#FFFFFF' }} aria-label="Cerrar menú" className="cursor-pointer hover:scale-110 transition-transform">
-            <X size={28} />
+      <div className={`fixed inset-0 z-[999] bg-[#2B1B12] text-[#FFF6EC] transition duration-300 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
+          <span className="font-titulo text-lg font-black uppercase tracking-[0.22em] text-[#FFB400]">Anaquelito</span>
+          <button type="button" onClick={() => setMenuOpen(false)} className="grid h-11 w-11 place-items-center rounded-full border border-white/20" aria-label="Cerrar menú">
+            <X size={24} />
           </button>
         </div>
-        <div className="menu-movil-cuerpo font-titulo">
-          <Link
-            href="/"
-            className="menu-movil-enlace font-black uppercase tracking-wider text-xl hover:text-[#FF8A3D]"
-            style={{ transitionDelay: '100ms' }}
-            onClick={() => setMenuOpen(false)}
-          >
-            Inicio
-          </Link>
-          <Link
-            href="/catalogo"
-            className="menu-movil-enlace font-black uppercase tracking-wider text-xl hover:text-[#FF5A5F]"
-            style={{ transitionDelay: '180ms' }}
-            onClick={() => setMenuOpen(false)}
-          >
-            Catálogo
-          </Link>
-          <Link
-            href="/escaner"
-            className="menu-movil-enlace font-black uppercase tracking-wider text-xl hover:text-[#00A699]"
-            style={{ transitionDelay: '260ms' }}
-            onClick={() => setMenuOpen(false)}
-          >
-            Escáner
-          </Link>
-          <div className="menu-movil-cta" style={{ transitionDelay: '320ms' }}>
-            <Link 
-              href={enlaceCuenta.href} 
-              className="px-8 py-4 rounded-full font-black uppercase tracking-[0.15em] text-sm bg-[#FF5A5F] text-white shadow-[0_0_20px_rgba(255,90,95,0.5)] hover:scale-105 transition-transform" 
+        <div className="flex flex-col gap-3 px-5 py-8">
+          {[{ href: '/', texto: 'Inicio' }, ...enlaces, { href: enlaceCuenta.href, texto: enlaceCuenta.texto }].map((enlace, index) => (
+            <Link
+              key={`${enlace.href}-${enlace.texto}`}
+              href={enlace.href}
               onClick={() => setMenuOpen(false)}
+              className="rounded-lg border border-white/10 bg-white/[0.04] px-5 py-5 text-3xl font-black uppercase leading-none tracking-normal transition hover:bg-white/[0.08]"
+              style={{ transitionDelay: `${index * 45}ms` }}
             >
-              <span>{enlaceCuenta.texto}</span>
+              {enlace.texto}
             </Link>
-          </div>
+          ))}
         </div>
       </div>
     </>

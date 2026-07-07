@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import Encabezado from "@/componentes/Encabezado";
 import PieDePagina from "@/componentes/PieDePagina";
 
 // Diseño de las páginas de la tienda. El catálogo es una experiencia inmersiva
@@ -22,7 +21,6 @@ export default function DisenoTienda({
 
   return (
     <div className="tema-tienda">
-      <Encabezado />
       {children}
       <PieDePagina />
     </div>

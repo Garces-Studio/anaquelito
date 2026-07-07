@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 };
 
 import { ProveedorCarrito } from "@/componentes/carrito/ContextoCarrito";
+import Encabezado from "@/componentes/Encabezado";
 
 export default function DisenoPrincipal({
   children,
@@ -26,6 +27,7 @@ export default function DisenoPrincipal({
     <html lang="es" className={`${outfit.variable}`}>
       <body>
         <ProveedorCarrito>
+          <Encabezado />
           {children}
         </ProveedorCarrito>
       </body>
