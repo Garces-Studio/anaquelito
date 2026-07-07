@@ -12,12 +12,10 @@ export default function DisenoTienda({
   children: React.ReactNode;
 }>) {
   return (
-    <ProveedorCarrito>
-      <div className="tema-tienda">
-        <Encabezado />
-        {children}
-        <PieDePagina />
-      </div>
-    </ProveedorCarrito>
+    <div className="tema-tienda">
+      <Encabezado />
+      {children}
+      <PieDePagina />
+    </div>
   );
 }

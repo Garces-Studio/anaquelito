@@ -21,6 +21,8 @@ export const metadata: Metadata = {
     "Mayoreo de dulces y botanas para tienditas, cafés y emprendedores en CDMX. Precios claros, margen visible en cada producto y reorden escaneando la bolsa vacía.",
 };
 
+import { ProveedorCarrito } from "@/componentes/carrito/ContextoCarrito";
+
 // Diseño raíz: solo fuentes y estilos globales. La portada (carrusel) va a
 // pantalla completa sin menús; las páginas de la tienda agregan su encabezado
 // y pie propios en src/app/(tienda)/layout.tsx.
@@ -31,7 +33,11 @@ export default function DisenoPrincipal({
 }>) {
   return (
     <html lang="es" className={`${anton.variable} ${inter.variable}`}>
-      <body>{children}</body>
+      <body>
+        <ProveedorCarrito>
+          {children}
+        </ProveedorCarrito>
+      </body>
     </html>
   );
 }

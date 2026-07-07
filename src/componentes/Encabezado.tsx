@@ -11,6 +11,7 @@ export default function Encabezado() {
           Anaquelito
         </Link>
         <nav className="navegacion">
+          <Link href="/">Inicio</Link>
           <Link href="/catalogo">Catálogo</Link>
           <Link href="/escaner">Escanear</Link>
           <EnlaceCarrito />
