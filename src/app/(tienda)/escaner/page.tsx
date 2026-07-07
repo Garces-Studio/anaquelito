@@ -109,7 +109,7 @@ export default function PaginaEscaner() {
               <span className="text-[11px] font-black uppercase tracking-[0.18em] text-[#6B5546]">Resurtido en 30 segundos</span>
             </motion.div>
 
-            <motion.h1 variants={aparecer} className="max-w-4xl font-podium text-[clamp(3.4rem,8.8vw,8rem)] uppercase leading-[0.84] tracking-normal">
+            <motion.h1 variants={aparecer} className="max-w-4xl font-podium !font-black text-[clamp(3.4rem,8.8vw,8rem)] uppercase leading-[0.84] tracking-normal">
               Se acabó. Escanéalo. Repónlo.
             </motion.h1>
 
@@ -132,7 +132,7 @@ export default function PaginaEscaner() {
                 ['0', 'Búsquedas'],
               ].map(([dato, texto]) => (
                 <div key={texto} className="rounded-lg border border-[#EBD9C3] bg-white/70 p-4 shadow-sm backdrop-blur">
-                  <strong className="block font-podium text-3xl leading-none">{dato}</strong>
+                  <strong className="block font-podium !font-black text-3xl leading-none">{dato}</strong>
                   <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B5546]">{texto}</span>
                 </div>
               ))}
@@ -150,7 +150,7 @@ export default function PaginaEscaner() {
               <div className="mb-4 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF5A5F]">Vista previa</p>
-                  <h2 className="font-podium text-3xl uppercase leading-none tracking-normal md:text-4xl">Cámara lista</h2>
+                  <h2 className="font-podium !font-black text-3xl uppercase leading-none tracking-normal md:text-4xl">Cámara lista</h2>
                 </div>
                 <span className="inline-flex items-center gap-2 rounded-full bg-[#00A699]/10 px-3 py-2 text-[10px] font-black uppercase tracking-[0.14em] text-[#007A70]">
                   <span className="h-2 w-2 rounded-full bg-[#00A699]" />
@@ -203,7 +203,7 @@ export default function PaginaEscaner() {
               <div className="flex items-center gap-3">
                 <Image src="/papas.png" alt="" width={58} height={58} className="blend-multiply rounded" />
                 <div>
-                  <p className="font-podium text-lg uppercase leading-none">Producto</p>
+                  <p className="font-podium !font-black text-lg uppercase leading-none">Producto</p>
                   <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#00A699]">Detectado</p>
                 </div>
               </div>
@@ -215,7 +215,7 @@ export default function PaginaEscaner() {
       <section className="border-b border-[#EBD9C3] bg-[#2B1B12] py-7 text-[#FFF6EC]">
         <div className="flex w-max animate-marquee-left items-center gap-10 whitespace-nowrap px-6">
           {['ESCANEA', 'CONFIRMA', 'REORDENA', 'SIN BUSCAR', 'SIN WHATSAPP MANUAL', 'MARGEN CLARO', 'ESCANEA', 'CONFIRMA', 'REORDENA'].map((item, index) => (
-            <span key={`${item}-${index}`} className="font-podium text-2xl uppercase tracking-[0.14em] text-white/65">
+            <span key={`${item}-${index}`} className="font-podium !font-black text-2xl uppercase tracking-[0.14em] text-white/65">
               {item}
             </span>
           ))}
@@ -228,7 +228,7 @@ export default function PaginaEscaner() {
             <span className="inline-flex items-center gap-2 rounded-full bg-[#FF5A5F]/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#FF5A5F]">
               <Sparkles size={14} /> Flujo de reorden
             </span>
-            <h2 className="mt-5 font-podium text-[clamp(3rem,8vw,7rem)] uppercase leading-[0.86] tracking-normal">
+            <h2 className="mt-5 font-podium !font-black text-[clamp(3rem,8vw,7rem)] uppercase leading-[0.86] tracking-normal">
               Del empaque vacío al carrito lleno.
             </h2>
           </div>
@@ -249,9 +249,9 @@ export default function PaginaEscaner() {
                     <span className="grid h-12 w-12 place-items-center rounded-lg border border-[#EBD9C3] bg-white text-[#FF5A5F]">
                       <Icono size={25} />
                     </span>
-                    <span className="font-podium text-5xl leading-none text-[#2B1B12]/10">0{index + 1}</span>
+                    <span className="font-podium !font-black text-5xl leading-none text-[#2B1B12]/10">0{index + 1}</span>
                   </div>
-                  <h3 className="font-podium text-3xl uppercase leading-none tracking-normal">{paso.titulo}</h3>
+                  <h3 className="font-podium !font-black text-3xl uppercase leading-none tracking-normal">{paso.titulo}</h3>
                   <p className="mt-4 text-sm font-medium leading-6 text-[#6B5546]">{paso.texto}</p>
                 </motion.article>
               );
@@ -264,7 +264,7 @@ export default function PaginaEscaner() {
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center">
           <div>
             <span className="text-xs font-black uppercase tracking-[0.2em] text-[#FF5A5F]">Resultado esperado</span>
-            <h2 className="mt-4 font-podium text-[clamp(3rem,7vw,6rem)] uppercase leading-[0.86] tracking-normal">
+            <h2 className="mt-4 font-podium !font-black text-[clamp(3rem,7vw,6rem)] uppercase leading-[0.86] tracking-normal">
               Tu carrito se arma sin buscar producto por producto
             </h2>
             <p className="mt-6 max-w-xl text-base font-semibold leading-7 text-[#6B5546]">
@@ -293,10 +293,10 @@ export default function PaginaEscaner() {
                       </span>
                       <span className="text-[10px] font-black uppercase tracking-[0.14em] text-[#6B5546]">{producto.codigo}</span>
                     </div>
-                    <h3 className="font-podium text-3xl uppercase leading-none tracking-normal">{producto.nombre}</h3>
+                    <h3 className="font-podium !font-black text-3xl uppercase leading-none tracking-normal">{producto.nombre}</h3>
                   </div>
                   <div className="hidden text-right sm:block">
-                    <strong className="font-podium text-3xl leading-none">{producto.precio}</strong>
+                    <strong className="font-podium !font-black text-3xl leading-none">{producto.precio}</strong>
                     <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#6B5546]">Mayoreo</p>
                   </div>
                 </div>
