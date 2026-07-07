@@ -4,7 +4,7 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 
 ## Para activar YA (rápidas)
 
-- [ ] **🔴 URGENTE — Revocar un token de GitHub expuesto.** Se encontró `[TOKEN-YA-REVOCADO-VER-BITACORA]` guardado en texto plano en `.git/config`. Ya se quitó del archivo, pero el token en sí sigue activo en GitHub hasta que lo revoques manualmente: [github.com/settings/tokens](https://github.com/settings/tokens) → busca ese token → Delete/Revoke.
+- [ ] **🔴 URGENTE — Revocar dos tokens de GitHub.** El original que quedó expuesto (empezaba `ghp_UxdU...`) y, por precaución, el más reciente (`ghp_xTrC...`) que también estuvo brevemente en texto plano en `.git/config`. Ambos ya se quitaron de los archivos, pero siguen activos en GitHub hasta que los revoques manualmente: [github.com/settings/tokens](https://github.com/settings/tokens) → busca cada uno → Delete/Revoke.
 - [x] ~~Llave `service_role` de Supabase~~ — ya la pasó Mauricio (2026-07-07), guardada en `.env.local`.
 - [ ] **Mercado Pago sigue en pausa a propósito.** Mauricio pidió explícitamente no activarlo todavía (2026-07-07). El código ya existe en `src/app/api/checkout/route.ts`; falta solo `MERCADOPAGO_ACCESS_TOKEN` cuando decidan seguir con esto.
 - [ ] **Número de WhatsApp del negocio**: confirmado como pendiente por Mauricio (2026-07-06, "por el momento no"). Cuando se tenga, configurarlo como `NEXT_PUBLIC_WHATSAPP_NUMERO` (formato internacional sin signos, ej. `5215512345678`) en `.env.local` y en Vercel. Con eso el botón "Enviar pedido por WhatsApp" del carrito queda funcionando y ya se pueden recibir pedidos reales.
