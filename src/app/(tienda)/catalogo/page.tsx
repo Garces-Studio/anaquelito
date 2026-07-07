@@ -69,8 +69,12 @@ export default function PaginaCatalogo() {
       position: 'absolute',
       aspectRatio: '0.6 / 1',
       transition:
-        'transform 650ms cubic-bezier(0.4,0,0.2,1), filter 650ms cubic-bezier(0.4,0,0.2,1), opacity 650ms cubic-bezier(0.4,0,0.2,1), left 650ms cubic-bezier(0.4,0,0.2,1)',
+        'transform 650ms cubic-bezier(0.4,0,0.2,1), filter 650ms cubic-bezier(0.4,0,0.2,1), opacity 650ms cubic-bezier(0.4,0,0.2,1), left 650ms cubic-bezier(0.4,0,0.2,1), background-color 650ms cubic-bezier(0.4,0,0.2,1)',
       willChange: 'transform, filter, opacity',
+      // El transform aísla el multiply de la imagen; le damos un fondo del MISMO
+      // color de la página para que el multiply funda el blanco de la foto contra
+      // ese color y el rectángulo quede invisible (coincide con el fondo).
+      backgroundColor: IMAGES[activeIndex].bg,
     };
 
     switch (rol) {
