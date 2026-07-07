@@ -1,22 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, RefreshCw, ArrowUpRight, Sparkle, Truck, Tag, ShieldCheck, Mail } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/client';
 import BotonAgregar from '@/componentes/carrito/BotonAgregar';
 
-// Categorías para la marquesina (misma info que EMOJI_CATEGORIA/NOMBRE_CATEGORIA,
-// duplicada abajo para que el scroll sea continuo)
-const CATEGORIAS_MARQUESINA = [
-  { emoji: '🥜', nombre: 'Frutos secos' },
-  { emoji: '🍬', nombre: 'Gomitas' },
-  { emoji: '🍫', nombre: 'Chocolates' },
-  { emoji: '🌻', nombre: 'Semillas' },
-  { emoji: '🍭', nombre: 'Dulces' },
-  { emoji: '🥔', nombre: 'Fritos' },
-];
-
-// Category metadata
 const EMOJI_CATEGORIA: Record<string, string> = {
   frutos_secos: '🥜',
   gomitas: '🍬',
@@ -44,17 +32,6 @@ const IMAGENES_PRODUCTOS: Record<string, string> = {
   'Papas Fritas Caseras': '/papas.png',
 };
 
-// Gradientes vivos de marca para el brillo/borde de cada tarjeta de producto
-// (se van rotando por índice, no por categoría, para que se vea variado).
-const GRADIENTES_TARJETA = [
-  'linear-gradient(137deg, #FF5A5F 0%, #FF9FAE 45%, #FFB400 100%)',
-  'linear-gradient(137deg, #FFB400 0%, #FFE066 45%, #FF5A5F 100%)',
-  'linear-gradient(137deg, #00A699 0%, #6EE7C8 45%, #FFB400 100%)',
-  'linear-gradient(137deg, #FF5A5F 0%, #C77DFF 45%, #FFB400 100%)',
-  'linear-gradient(137deg, #FF7A3D 0%, #FF5A5F 45%, #FFD700 100%)',
-  'linear-gradient(137deg, #00A699 0%, #FF5A5F 45%, #FFB400 100%)',
-];
-
 export default function PaginaCatalogo() {
   const [productos, setProductos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,7 +41,6 @@ export default function PaginaCatalogo() {
 
   const supabase = crearCliente();
 
-  // Load products dynamically on filter/search change
   useEffect(() => {
     async function cargarProductos() {
       setLoading(true);
@@ -94,307 +70,177 @@ export default function PaginaCatalogo() {
     cargarProductos();
   }, [categoriaFiltro, busqueda]);
 
-  const desplazarACatalogo = (e: React.MouseEvent) => {
-    e.preventDefault();
-    document.getElementById('productos-catalogo')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const categoriasDuplicadas = [...CATEGORIAS_MARQUESINA, ...CATEGORIAS_MARQUESINA];
-
   return (
-    <div className="bg-gradient-to-b from-[#2B1710] via-[#1A0F0A] to-[#0A0605] text-white font-inter antialiased min-h-screen">
+    <div className="contenedor py-10 sm:py-16 min-h-screen animate-fade-in flex flex-col gap-10">
+      
+      {/* Header Centralizado y Limpio */}
+      <header className="text-center max-w-3xl mx-auto flex flex-col gap-4">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-podium uppercase tracking-tight text-[#2B1B12]">
+          Catálogo Mayorista
+        </h1>
+        <p className="text-[#7A6455] text-base sm:text-lg leading-relaxed">
+          Surtido directo de distribuidor. Sin intermediarios, sin membresías y con el margen de ganancia de reventa claro en cada producto.
+        </p>
+      </header>
 
-      {/* ===== Vitrina de marca: mismo lenguaje visual (glass, ruido, marquesina)
-          que el resto del sitio, pero con contenido real de Anaquelito. ===== */}
-      <section className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-6 sm:py-8 md:py-10 lg:h-screen lg:max-h-[960px] flex flex-col justify-between gap-6 overflow-hidden">
-        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative z-10 w-full">
-          <div className="max-w-3xl flex flex-col gap-2">
-            <h1 className="text-[28px] sm:text-3xl md:text-4xl lg:text-[44px] leading-[1.15] font-normal tracking-tight text-white font-anton uppercase">
-              Catálogo mayorista
-            </h1>
-            <p className="text-sm md:text-[15px] leading-[1.6] text-white/60 max-w-2xl">
-              Dulces y botanas al mayoreo para tienditas, cafés y emprendedores. Precio de mayoreo real, con el margen de reventa ya calculado en cada producto.
-            </p>
-          </div>
-          <button
-            onClick={desplazarACatalogo}
-            className="liquid-glass rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white transition-transform hover:scale-[1.03] active:scale-[0.98] border border-white/10 shrink-0 self-start sm:self-center"
+      {/* Controles: Búsqueda y Filtros */}
+      <section className="flex flex-col md:flex-row justify-between items-center gap-6 bg-[#FFFFFF] p-4 sm:p-6 rounded-3xl shadow-sm border border-[#EBD9C3]">
+        {/* Filtros */}
+        <nav className="flex gap-2 flex-wrap items-center justify-center md:justify-start w-full md:w-auto" aria-label="Filtrar por categoría">
+          <button 
+            onClick={() => setCategoriaFiltro('')} 
+            className={`px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all border ${
+              !categoriaFiltro 
+                ? 'bg-[#FF5A5F] text-white border-[#FF5A5F] shadow-md' 
+                : 'bg-[#FFF6EC] text-[#7A6455] border-[#EBD9C3] hover:border-[#FF5A5F] hover:text-[#FF5A5F]'
+            }`}
           >
-            Ver todo el catálogo
+            Todos
           </button>
-        </header>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:flex-1 w-full my-auto z-10">
-
-          {/* Columna 1 — Surtido (video + diferenciadores reales) */}
-          <div className="relative rounded-2xl bg-black overflow-hidden flex flex-col justify-between p-5 md:p-6 min-h-[300px] lg:h-full border border-white/5 group shadow-2xl">
-            <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-60 z-0 transition-transform duration-700 group-hover:scale-105">
-              <source src="/dulces-loop.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 z-0 pointer-events-none" />
-
-            <div className="flex justify-center items-center gap-2 relative z-10 w-full">
-              <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
-              <span className="uppercase tracking-[0.22em] text-[11px] text-white/70 font-medium">NUESTRO SURTIDO</span>
-              <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
-            </div>
-
-            <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-3.5 relative z-10 w-full text-[11.5px] sm:text-xs text-white/80 font-medium">
-              <Truck className="h-4 w-4 text-white/60" strokeWidth={1.5} />
-              <span className="font-sans text-white/90">Entrega en 24h en CDMX y alrededores</span>
-              <Tag className="h-4 w-4 text-white/60" strokeWidth={1.5} />
-              <span className="font-sans text-white/90">Margen de reventa visible en cada producto</span>
-              <ShieldCheck className="h-4 w-4 text-white/60" strokeWidth={1.5} />
-              <span className="font-sans text-white/90">Precio de mayoreo real, sin membresías confusas</span>
-            </div>
-          </div>
-
-          {/* Columna 2 — Promesa + conteo real de productos */}
-          <div className="grid grid-rows-[auto_1fr] gap-4 md:gap-5 lg:h-full">
-            <div className="relative rounded-2xl bg-[#324444] p-5 md:p-6 overflow-hidden noise-overlay flex flex-col justify-between gap-4 border border-white/10 shadow-2xl">
-              <div className="flex justify-start items-center gap-2 relative z-10">
-                <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
-                <span className="uppercase tracking-[0.22em] text-[11px] text-white/70 font-semibold">NUESTRA PROMESA</span>
-              </div>
-              <p className="text-[13px] sm:text-[13.5px] leading-[1.6] text-white/85 italic relative z-10 font-normal">
-                "El precio que ves es el precio que pagas. Sin letras chiquitas, sin membresías escondidas — y ya calculamos cuánto le ganas a cada producto."
-              </p>
-              <div className="text-xs text-white/60 relative z-10 font-normal">
-                <strong className="text-white font-medium">Equipo Anaquelito</strong>
-              </div>
-            </div>
-
-            <div className="relative rounded-2xl bg-black overflow-hidden flex flex-col justify-center items-center p-6 border border-white/5 group shadow-2xl min-h-[160px]">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-0" />
-              <div className="relative z-10 flex flex-col justify-center items-center text-center">
-                <span className="text-5xl sm:text-6xl md:text-7xl lg:text-[88px] font-light tracking-tight text-white drop-shadow-md leading-none font-anton">
-                  {productos.length}+
-                </span>
-                <span className="text-xs sm:text-sm text-white/85 mt-2 tracking-wide font-normal">Productos disponibles hoy</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Columna 3 — Categorías (marquesina) + contacto real */}
-          <div className="grid grid-rows-[1fr_auto] lg:grid-rows-[auto_1fr] gap-4 md:gap-5 lg:h-full">
-            <div className="relative rounded-2xl bg-black overflow-hidden flex flex-col justify-between p-5 md:p-6 border border-white/5 group shadow-2xl min-h-[220px]">
-              <div className="flex justify-center items-center gap-2 relative z-10 w-full">
-                <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
-                <span className="uppercase tracking-[0.22em] text-[11px] text-white/70 font-semibold">NUESTRAS CATEGORÍAS</span>
-                <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
-              </div>
-
-              <div className="overflow-hidden w-full relative z-10 mt-6 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] flex flex-col gap-3">
-                <div className="flex gap-3 animate-marquee-left whitespace-nowrap w-max">
-                  {categoriasDuplicadas.map((cat, index) => (
-                    <div key={`c1-${index}`} className="liquid-glass h-14 w-14 md:h-16 md:w-16 rounded-xl flex items-center justify-center flex-shrink-0 border border-white/10 text-2xl">
-                      {cat.emoji}
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-3 animate-marquee-right whitespace-nowrap w-max">
-                  {[...categoriasDuplicadas].reverse().map((cat, index) => (
-                    <div key={`c2-${index}`} className="liquid-glass h-14 w-14 md:h-16 md:w-16 rounded-xl flex items-center justify-center flex-shrink-0 border border-white/10 text-2xl">
-                      {cat.emoji}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="relative rounded-2xl bg-[#324444] p-5 md:p-6 overflow-hidden noise-overlay flex flex-col justify-between gap-5 border border-white/10 shadow-2xl">
-              <div className="flex justify-between items-center w-full relative z-10">
-                <div className="flex items-center gap-2">
-                  <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
-                  <span className="uppercase tracking-[0.22em] text-[11px] text-white/70 font-semibold">CONTÁCTANOS</span>
-                </div>
-                <a
-                  href="mailto:hola@anaquelito.mx"
-                  className="h-9 w-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-all hover:scale-105 border border-white/10"
-                  aria-label="Escribir a hola@anaquelito.mx"
-                >
-                  <ArrowUpRight className="h-4 w-4 text-white" strokeWidth={1.5} />
-                </a>
-              </div>
-              <div className="relative z-10 flex flex-col gap-1">
-                <a href="mailto:hola@anaquelito.mx" className="text-[17px] sm:text-[19px] font-normal tracking-tight text-white hover:text-white/80 transition-colors flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-white/50" strokeWidth={1.5} />
-                  hola@anaquelito.mx
-                </a>
-                <span className="text-[14px] sm:text-[15px] text-white/50 font-mono tracking-tight">
-                  WhatsApp: próximamente
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="productos-catalogo" className="px-4 sm:px-6 md:px-10 lg:px-14 py-16 min-h-screen">
-        <div className="max-w-7xl mx-auto flex flex-col gap-10">
-          
-          {/* Header & Controls */}
-          <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-6 border-b border-white/5">
-            <div>
-              <h2 className="text-3xl font-normal uppercase tracking-tight text-white font-anton">
-                Catálogo Mayorista
-              </h2>
-              <p className="text-white/50 text-sm mt-1">
-                Directo de distribuidor. Margen visible en cada producto.
-              </p>
-            </div>
-            
-            {/* Search Input */}
-            <div className="relative flex items-center w-full md:w-80">
-              <input
-                type="search"
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-                placeholder="Buscar botanas, dulces..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-full bg-white/5 border border-white/10 text-white text-sm outline-none focus:border-white/30 focus:bg-white/[0.07] transition-all placeholder-white/40"
-              />
-              <Search className="absolute left-3.5 h-4 w-4 text-white/40" />
-            </div>
-          </header>
-
-          {/* Category Filter Chips */}
-          <nav className="flex gap-2 flex-wrap items-center" aria-label="Filtrar por categoría">
-            <button 
-              onClick={() => setCategoriaFiltro('')} 
-              className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium border transition-all ${
-                !categoriaFiltro 
-                  ? 'bg-white text-black border-white' 
-                  : 'bg-white/5 text-white/70 border-white/10 hover:text-white hover:border-white/30'
+          {Object.keys(NOMBRE_CATEGORIA).map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setCategoriaFiltro(cat)}
+              className={`px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all border ${
+                categoriaFiltro === cat 
+                  ? 'bg-[#FF5A5F] text-white border-[#FF5A5F] shadow-md' 
+                  : 'bg-[#FFF6EC] text-[#7A6455] border-[#EBD9C3] hover:border-[#FF5A5F] hover:text-[#FF5A5F]'
               }`}
             >
-              Todo
+              {EMOJI_CATEGORIA[cat] ?? '🛒'} {NOMBRE_CATEGORIA[cat]}
             </button>
-            {Object.keys(NOMBRE_CATEGORIA).map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setCategoriaFiltro(cat)}
-                className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium border transition-all ${
-                  categoriaFiltro === cat 
-                    ? 'bg-white text-black border-white' 
-                    : 'bg-white/5 text-white/70 border-white/10 hover:text-white hover:border-white/30'
-                }`}
-              >
-                {EMOJI_CATEGORIA[cat] ?? '🛒'} {NOMBRE_CATEGORIA[cat]}
-              </button>
-            ))}
-          </nav>
+          ))}
+        </nav>
 
-          {/* Error message */}
-          {error && (
-            <div className="flex flex-col items-center justify-center p-12 text-center text-red-400 bg-red-500/5 rounded-2xl border border-red-500/10">
-              <p className="font-semibold text-lg">Error al cargar productos</p>
-              <p className="text-sm opacity-80 mt-1">{error}</p>
-            </div>
-          )}
-
-          {/* Loading spinner */}
-          {loading && (
-            <div className="flex flex-col items-center justify-center p-20 text-white/40 gap-3">
-              <RefreshCw className="h-8 w-8 animate-spin" />
-              <p className="text-sm font-medium">Cargando productos...</p>
-            </div>
-          )}
-
-          {/* Empty state */}
-          {!loading && productos.length === 0 && (
-            <div className="flex flex-col items-center justify-center p-16 text-center text-white/40 bg-white/[0.02] border border-white/5 rounded-2xl">
-              <p className="font-medium">No se encontraron productos con ese filtro.</p>
-              <button 
-                onClick={() => { setCategoriaFiltro(''); setBusqueda(''); }}
-                className="text-xs text-white underline mt-2 hover:text-white/80"
-              >
-                Limpiar filtros
-              </button>
-            </div>
-          )}
-
-          {/* Grid of Product Cards — brillo + borde de gradiente por tarjeta */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
-            {productos.map((producto, i) => {
-              const margen = producto.precio_sugerido_reventa
-                ? Math.round(
-                    ((producto.precio_sugerido_reventa - producto.precio_mayoreo) /
-                      producto.precio_mayoreo) * 100
-                  )
-                : null;
-              const gradiente = GRADIENTES_TARJETA[i % GRADIENTES_TARJETA.length];
-
-              return (
-                <div
-                  key={producto.id}
-                  className={`relative group ${i < 4 ? `aparecer retraso-${i + 1}` : 'aparecer'}`}
-                >
-                  {/* Brillo detrás de la tarjeta */}
-                  <div
-                    className="absolute inset-0 rounded-[28px] opacity-50 group-hover:opacity-80 blur-[32px] pointer-events-none transition-opacity duration-500"
-                    style={{ background: gradiente }}
-                  />
-
-                  {/* Tarjeta con borde de gradiente (padding-box + border-box) */}
-                  <article
-                    className="relative rounded-[28px] p-[2px] transition-transform duration-300 group-hover:-translate-y-1"
-                    style={{ background: gradiente }}
-                  >
-                    <div className="rounded-[26px] bg-[#1A1A1C] h-full p-5 flex flex-col justify-between">
-                      <div className="flex flex-col">
-                        {/* Visual box (Image or Category emoji) */}
-                        <div className="relative h-40 bg-gradient-to-br from-white/5 to-transparent rounded-xl flex items-center justify-center text-4xl mb-4 overflow-hidden shadow-inner">
-                          {IMAGENES_PRODUCTOS[producto.nombre] ? (
-                            <img
-                              src={IMAGENES_PRODUCTOS[producto.nombre]}
-                              alt={producto.nombre}
-                              className="w-4/5 h-4/5 object-contain transition-transform duration-300 group-hover:scale-105 brightness-110"
-                            />
-                          ) : (
-                            <span className="text-5xl select-none">{EMOJI_CATEGORIA[producto.categoria ?? ''] ?? '🛒'}</span>
-                          )}
-                        </div>
-
-                        <h3 className="font-semibold text-[15px] sm:text-base text-white uppercase tracking-tight line-clamp-1">
-                          {producto.nombre}
-                        </h3>
-                        <p className="text-xs text-white/40 mt-0.5 mb-4">
-                          Por {producto.unidad} · {NOMBRE_CATEGORIA[producto.categoria ?? ''] ?? 'General'}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-col gap-3 mt-auto">
-                        {/* Prices row */}
-                        <div className="flex items-baseline justify-between gap-2">
-                          <span className="font-semibold text-xl text-white font-anton tracking-wide">
-                            ${producto.precio_mayoreo} <small className="text-[10px] font-sans font-medium text-white/40 uppercase tracking-wider ml-0.5">mayoreo</small>
-                          </span>
-                          {margen !== null && (
-                            <span className="bg-emerald-500/10 text-emerald-400 text-[10.5px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/10">
-                              le ganas ~{margen}%
-                            </span>
-                          )}
-                        </div>
-
-                        {producto.precio_sugerido_reventa && (
-                          <p className="text-[11.5px] text-white/50 leading-none">
-                            Sugerido de reventa: <span className="font-medium text-white/70">${producto.precio_sugerido_reventa}</span>
-                          </p>
-                        )}
-
-                        {/* Add to Cart button */}
-                        <div className="mt-1">
-                          <BotonAgregar producto={producto} />
-                        </div>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-              );
-            })}
-          </div>
+        {/* Búsqueda */}
+        <div className="relative w-full md:w-80 shrink-0">
+          <input
+            type="search"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            placeholder="Buscar por nombre..."
+            className="w-full pl-12 pr-5 py-3 rounded-full bg-[#FFF6EC] border border-[#EBD9C3] text-[#2B1B12] text-sm sm:text-base outline-none focus:border-[#FF5A5F] focus:ring-4 focus:ring-[#FF5A5F]/10 transition-all placeholder-[#7A6455]/70"
+          />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#7A6455]/70" />
         </div>
       </section>
+
+      {/* Estados: Error, Carga, Vacío */}
+      {error && (
+        <div className="flex flex-col items-center justify-center p-12 text-center text-[#D64545] bg-[#D64545]/5 rounded-3xl border border-[#D64545]/20">
+          <p className="font-bold text-lg">Hubo un problema</p>
+          <p className="text-sm mt-1">{error}</p>
+        </div>
+      )}
+
+      {loading && (
+        <div className="flex flex-col items-center justify-center p-24 text-[#7A6455] gap-4">
+          <RefreshCw className="h-10 w-10 animate-spin text-[#FF5A5F]" />
+          <p className="font-semibold text-lg animate-pulse">Abriendo cajas...</p>
+        </div>
+      )}
+
+      {!loading && productos.length === 0 && !error && (
+        <div className="flex flex-col items-center justify-center p-20 text-center text-[#7A6455] bg-[#FFFFFF] border border-[#EBD9C3] rounded-3xl shadow-sm">
+          <span className="text-6xl mb-4">📭</span>
+          <p className="font-semibold text-xl text-[#2B1B12]">No encontramos dulces aquí</p>
+          <p className="text-sm mt-2 max-w-md">Intenta cambiar los filtros o buscar con otras palabras.</p>
+          <button 
+            onClick={() => { setCategoriaFiltro(''); setBusqueda(''); }}
+            className="mt-6 px-6 py-2.5 bg-[#FFF6EC] text-[#FF5A5F] font-bold rounded-full border border-[#FF5A5F]/20 hover:bg-[#FF5A5F]/10 transition-colors"
+          >
+            Limpiar búsqueda
+          </button>
+        </div>
+      )}
+
+      {/* Grid de Productos (Mercado Moderno Premium) */}
+      {!loading && productos.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+          {productos.map((producto, i) => {
+            const margen = producto.precio_sugerido_reventa
+              ? Math.round(
+                  ((producto.precio_sugerido_reventa - producto.precio_mayoreo) /
+                    producto.precio_mayoreo) * 100
+                )
+              : null;
+
+            return (
+              <article
+                key={producto.id}
+                className={`flex flex-col bg-[#FFFFFF] border border-[#EBD9C3] rounded-[24px] p-5 shadow-[0_8px_24px_rgba(43,27,18,0.04)] hover:shadow-[0_20px_40px_rgba(43,27,18,0.08)] transition-all duration-300 hover:-translate-y-1.5 group ${i < 6 ? `aparecer retraso-${(i % 4) + 1}` : 'aparecer'}`}
+              >
+                {/* Imagen del Producto */}
+                <div className="relative h-48 bg-gradient-to-br from-[#FFF6EC] to-[#FFEFDD] rounded-2xl flex items-center justify-center text-6xl mb-5 overflow-hidden border border-[#EBD9C3]/50">
+                  {/* Decoración de fondo */}
+                  <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,transparent_70%)] mix-blend-overlay pointer-events-none" />
+                  
+                  {IMAGENES_PRODUCTOS[producto.nombre] ? (
+                    <img
+                      src={IMAGENES_PRODUCTOS[producto.nombre]}
+                      alt={producto.nombre}
+                      className="w-4/5 h-4/5 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-xl"
+                    />
+                  ) : (
+                    <span className="select-none transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 drop-shadow-md">
+                      {EMOJI_CATEGORIA[producto.categoria ?? ''] ?? '🛒'}
+                    </span>
+                  )}
+                </div>
+
+                {/* Información del Producto */}
+                <div className="flex flex-col flex-1">
+                  <div className="mb-4">
+                    <h3 className="font-anton text-xl text-[#2B1B12] uppercase tracking-wide leading-tight line-clamp-2">
+                      {producto.nombre}
+                    </h3>
+                    <p className="text-sm font-medium text-[#7A6455] mt-1">
+                      Por {producto.unidad} <span className="opacity-50 mx-1">•</span> {NOMBRE_CATEGORIA[producto.categoria ?? ''] ?? 'General'}
+                    </p>
+                  </div>
+
+                  <div className="mt-auto flex flex-col gap-4">
+                    {/* Precios */}
+                    <div className="bg-[#FFF6EC] rounded-xl p-3 border border-[#EBD9C3]/60 relative">
+                      {/* Margen Badge */}
+                      {margen !== null && (
+                        <div className="absolute -top-3 right-3 bg-[#1E9E6A] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm uppercase tracking-wider">
+                          Le ganas ~{margen}%
+                        </div>
+                      )}
+                      
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="font-anton text-[28px] leading-none text-[#2B1B12]">
+                          ${producto.precio_mayoreo}
+                        </span>
+                        <span className="text-[10px] font-bold text-[#7A6455] uppercase tracking-widest">
+                          Mayoreo
+                        </span>
+                      </div>
+
+                      {producto.precio_sugerido_reventa && (
+                        <div className="flex justify-between items-center mt-2 pt-2 border-t border-[#EBD9C3] border-dashed">
+                          <span className="text-[11px] font-semibold text-[#7A6455] uppercase tracking-wide">
+                            Reventa Sugerida
+                          </span>
+                          <span className="text-[13px] font-bold text-[#2B1B12]">
+                            ${producto.precio_sugerido_reventa}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Botón Agregar */}
+                    <div className="mt-1">
+                      <BotonAgregar producto={producto} />
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
