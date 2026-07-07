@@ -96,3 +96,10 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
   - Tarjeta de contacto con el correo real (`hola@anaquelito.mx`) y aviso honesto de "WhatsApp: próximamente" en vez de un teléfono inventado.
 - El botón "Ver todo el catálogo" baja con scroll suave a la cuadrícula real de productos (que sigue funcionando igual: filtros, búsqueda, margen, carrito).
 - Verificado en navegador (móvil): la vitrina se ve bien y el botón de scroll funciona.
+
+## 2026-07-07 (continuación — tarjetas con brillo y fondo cálido en vez de negro)
+
+- Mauricio pidió que el catálogo no tuviera fondo negro plano; que fuera cálido y vivo como el Home, y que las tarjetas de producto tuvieran un efecto de brillo con borde de gradiente (a partir de una referencia de tarjetas "feature card" con glow).
+- **Fondo de la página**: cambió de `bg-[#0a0a0a]` (negro plano) a un degradado cálido oscuro (`from-[#2B1710] via-[#1A0F0A] to-[#0A0605]`), en el mismo tono que usa la portada.
+- **Tarjetas de producto rediseñadas**: cada una tiene ahora un brillo difuminado detrás (`blur`) y un borde de gradiente de 2px (técnica padding-box), rotando entre 6 gradientes cálidos de marca (coral, ámbar, teal) según el índice del producto — no por categoría, para que se vea variado. El contenido (foto, título, precio, margen, botón de carrito) no cambió, solo el empaque visual.
+- Verificado en navegador: el gradiente se aplica correctamente (confirmado por estilo computado) y se ve la transición coral→ámbar en el borde de cada tarjeta.

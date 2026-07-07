@@ -44,6 +44,17 @@ const IMAGENES_PRODUCTOS: Record<string, string> = {
   'Papas Fritas Caseras': '/papas.png',
 };
 
+// Gradientes vivos de marca para el brillo/borde de cada tarjeta de producto
+// (se van rotando por índice, no por categoría, para que se vea variado).
+const GRADIENTES_TARJETA = [
+  'linear-gradient(137deg, #FF5A5F 0%, #FF9FAE 45%, #FFB400 100%)',
+  'linear-gradient(137deg, #FFB400 0%, #FFE066 45%, #FF5A5F 100%)',
+  'linear-gradient(137deg, #00A699 0%, #6EE7C8 45%, #FFB400 100%)',
+  'linear-gradient(137deg, #FF5A5F 0%, #C77DFF 45%, #FFB400 100%)',
+  'linear-gradient(137deg, #FF7A3D 0%, #FF5A5F 45%, #FFD700 100%)',
+  'linear-gradient(137deg, #00A699 0%, #FF5A5F 45%, #FFB400 100%)',
+];
+
 export default function PaginaCatalogo() {
   const [productos, setProductos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,7 +102,7 @@ export default function PaginaCatalogo() {
   const categoriasDuplicadas = [...CATEGORIAS_MARQUESINA, ...CATEGORIAS_MARQUESINA];
 
   return (
-    <div className="bg-[#0a0a0a] text-white font-inter antialiased min-h-screen">
+    <div className="bg-gradient-to-b from-[#2B1710] via-[#1A0F0A] to-[#0A0605] text-white font-inter antialiased min-h-screen">
 
       {/* ===== Vitrina de marca: mismo lenguaje visual (glass, ruido, marquesina)
           que el resto del sitio, pero con contenido real de Anaquelito. ===== */}
@@ -219,7 +230,7 @@ export default function PaginaCatalogo() {
         </div>
       </section>
 
-      <section id="productos-catalogo" className="px-4 sm:px-6 md:px-10 lg:px-14 py-16 bg-[#0a0a0a] min-h-screen">
+      <section id="productos-catalogo" className="px-4 sm:px-6 md:px-10 lg:px-14 py-16 min-h-screen">
         <div className="max-w-7xl mx-auto flex flex-col gap-10">
           
           {/* Header & Controls */}
@@ -302,8 +313,8 @@ export default function PaginaCatalogo() {
             </div>
           )}
 
-          {/* Grid of Product Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          {/* Grid of Product Cards — brillo + borde de gradiente por tarjeta */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
             {productos.map((producto, i) => {
               const margen = producto.precio_sugerido_reventa
                 ? Math.round(
@@ -311,59 +322,74 @@ export default function PaginaCatalogo() {
                       producto.precio_mayoreo) * 100
                   )
                 : null;
+              const gradiente = GRADIENTES_TARJETA[i % GRADIENTES_TARJETA.length];
 
               return (
-                <article
+                <div
                   key={producto.id}
-                  className="bg-white/[0.02] border border-white/5 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:bg-white/[0.04] hover:-translate-y-1 hover:border-white/10 shadow-lg group"
+                  className={`relative group ${i < 4 ? `aparecer retraso-${i + 1}` : 'aparecer'}`}
                 >
-                  <div className="flex flex-col">
-                    {/* Visual box (Image or Category emoji) */}
-                    <div className="relative h-40 bg-gradient-to-br from-white/5 to-transparent rounded-xl flex items-center justify-center text-4xl mb-4 overflow-hidden shadow-inner">
-                      {IMAGENES_PRODUCTOS[producto.nombre] ? (
-                        <img 
-                          src={IMAGENES_PRODUCTOS[producto.nombre]} 
-                          alt={producto.nombre} 
-                          className="w-4/5 h-4/5 object-contain transition-transform duration-300 group-hover:scale-105 brightness-110"
-                        />
-                      ) : (
-                        <span className="text-5xl select-none">{EMOJI_CATEGORIA[producto.categoria ?? ''] ?? '🛒'}</span>
-                      )}
+                  {/* Brillo detrás de la tarjeta */}
+                  <div
+                    className="absolute inset-0 rounded-[28px] opacity-50 group-hover:opacity-80 blur-[32px] pointer-events-none transition-opacity duration-500"
+                    style={{ background: gradiente }}
+                  />
+
+                  {/* Tarjeta con borde de gradiente (padding-box + border-box) */}
+                  <article
+                    className="relative rounded-[28px] p-[2px] transition-transform duration-300 group-hover:-translate-y-1"
+                    style={{ background: gradiente }}
+                  >
+                    <div className="rounded-[26px] bg-[#1A1A1C] h-full p-5 flex flex-col justify-between">
+                      <div className="flex flex-col">
+                        {/* Visual box (Image or Category emoji) */}
+                        <div className="relative h-40 bg-gradient-to-br from-white/5 to-transparent rounded-xl flex items-center justify-center text-4xl mb-4 overflow-hidden shadow-inner">
+                          {IMAGENES_PRODUCTOS[producto.nombre] ? (
+                            <img
+                              src={IMAGENES_PRODUCTOS[producto.nombre]}
+                              alt={producto.nombre}
+                              className="w-4/5 h-4/5 object-contain transition-transform duration-300 group-hover:scale-105 brightness-110"
+                            />
+                          ) : (
+                            <span className="text-5xl select-none">{EMOJI_CATEGORIA[producto.categoria ?? ''] ?? '🛒'}</span>
+                          )}
+                        </div>
+
+                        <h3 className="font-semibold text-[15px] sm:text-base text-white uppercase tracking-tight line-clamp-1">
+                          {producto.nombre}
+                        </h3>
+                        <p className="text-xs text-white/40 mt-0.5 mb-4">
+                          Por {producto.unidad} · {NOMBRE_CATEGORIA[producto.categoria ?? ''] ?? 'General'}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col gap-3 mt-auto">
+                        {/* Prices row */}
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className="font-semibold text-xl text-white font-anton tracking-wide">
+                            ${producto.precio_mayoreo} <small className="text-[10px] font-sans font-medium text-white/40 uppercase tracking-wider ml-0.5">mayoreo</small>
+                          </span>
+                          {margen !== null && (
+                            <span className="bg-emerald-500/10 text-emerald-400 text-[10.5px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/10">
+                              le ganas ~{margen}%
+                            </span>
+                          )}
+                        </div>
+
+                        {producto.precio_sugerido_reventa && (
+                          <p className="text-[11.5px] text-white/50 leading-none">
+                            Sugerido de reventa: <span className="font-medium text-white/70">${producto.precio_sugerido_reventa}</span>
+                          </p>
+                        )}
+
+                        {/* Add to Cart button */}
+                        <div className="mt-1">
+                          <BotonAgregar producto={producto} />
+                        </div>
+                      </div>
                     </div>
-
-                    <h3 className="font-semibold text-[15px] sm:text-base text-white uppercase tracking-tight line-clamp-1">
-                      {producto.nombre}
-                    </h3>
-                    <p className="text-xs text-white/40 mt-0.5 mb-4">
-                      Por {producto.unidad} · {NOMBRE_CATEGORIA[producto.categoria ?? ''] ?? 'General'}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col gap-3 mt-auto">
-                    {/* Prices row */}
-                    <div className="flex items-baseline justify-between gap-2">
-                      <span className="font-semibold text-xl text-white font-anton tracking-wide">
-                        ${producto.precio_mayoreo} <small className="text-[10px] font-sans font-medium text-white/40 uppercase tracking-wider ml-0.5">mayoreo</small>
-                      </span>
-                      {margen !== null && (
-                        <span className="bg-emerald-500/10 text-emerald-400 text-[10.5px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-500/10">
-                          le ganas ~{margen}%
-                        </span>
-                      )}
-                    </div>
-
-                    {producto.precio_sugerido_reventa && (
-                      <p className="text-[11.5px] text-white/50 leading-none">
-                        Sugerido de reventa: <span className="font-medium text-white/70">${producto.precio_sugerido_reventa}</span>
-                      </p>
-                    )}
-
-                    {/* Add to Cart button */}
-                    <div className="mt-1">
-                      <BotonAgregar producto={producto} />
-                    </div>
-                  </div>
-                </article>
+                  </article>
+                </div>
               );
             })}
           </div>
