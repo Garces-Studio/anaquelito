@@ -63,7 +63,7 @@ export default function Encabezado() {
               ANAQUELITO
             </Link>
             <div className="flex items-center gap-4">
-              <EnlaceCarrito />
+              {usuario && <EnlaceCarrito />}
               <button
                 onClick={() => setMenuOpen(true)}
                 className="p-1 cursor-pointer transition-transform duration-150 active:scale-90"
@@ -126,9 +126,11 @@ export default function Encabezado() {
               >
                 {enlaceCuenta.texto}
               </Link>
-              <div className="pl-2 border-l border-current/15 flex items-center">
-                <EnlaceCarrito />
-              </div>
+              {usuario && (
+                <div className="pl-2 border-l border-current/15 flex items-center">
+                  <EnlaceCarrito />
+                </div>
+              )}
             </div>
 
           </div>
