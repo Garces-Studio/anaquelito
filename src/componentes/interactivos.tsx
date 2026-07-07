@@ -73,9 +73,10 @@ export function Magnet({
 interface AnimatedTextProps {
   text: string;
   className?: string;
+  highlightClass?: string;
 }
 
-export function AnimatedText({ text, className = '' }: AnimatedTextProps) {
+export function AnimatedText({ text, className = '', highlightClass = 'text-[#D7E2EA]' }: AnimatedTextProps) {
   const containerRef = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -96,6 +97,7 @@ export function AnimatedText({ text, className = '' }: AnimatedTextProps) {
             char={char}
             progress={scrollYProgress}
             range={[start, end]}
+            highlightClass={highlightClass}
           />
         );
       })}
@@ -107,9 +109,10 @@ interface CharProps {
   char: string;
   progress: any;
   range: [number, number];
+  highlightClass?: string;
 }
 
-function Char({ char, progress, range }: CharProps) {
+function Char({ char, progress, range, highlightClass }: CharProps) {
   const opacity = useTransform(progress, range, [0.2, 1]);
   // Use non-breaking space for layout
   const displayChar = char === ' ' ? '\u00A0' : char;
@@ -119,7 +122,7 @@ function Char({ char, progress, range }: CharProps) {
       <span className="opacity-20">{displayChar}</span>
       <motion.span
         style={{ opacity }}
-        className="absolute left-0 top-0 text-[#D7E2EA]"
+        className={`absolute left-0 top-0 ${highlightClass}`}
       >
         {displayChar}
       </motion.span>

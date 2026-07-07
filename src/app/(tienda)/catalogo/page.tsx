@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, RefreshCw, Sparkles, ArrowRight, ArrowDown } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { crearCliente } from '@/lib/supabase/client';
 import BotonAgregar from '@/componentes/carrito/BotonAgregar';
 import {
@@ -38,6 +40,10 @@ const IMAGENES_PRODUCTOS: Record<string, string> = {
   'Semillas Enchiladas': '/semillas.png',
   'Palomitas Acarameladas': '/palomitas.png',
   'Papas Fritas Caseras': '/papas.png',
+  'Papas Crujientes Fuego': '/papas.png',
+  'Mazapán Tradicional': '/mazapan.png',
+  'Gomitas Enchiladas': '/gomitas.png',
+  'Paleta de Tamarindo': '/paleta.png',
 };
 
 // Candy tiles for the marquee rows
@@ -55,6 +61,7 @@ const MARQUEE_CANDIES = [
 ];
 
 export default function PaginaCatalogo() {
+  const router = useRouter();
   const [productos, setProductos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -102,6 +109,21 @@ export default function PaginaCatalogo() {
     cargarProductos();
   }, [categoriaFiltro, busqueda]);
 
+  // Find actual product ID by name to navigate on Click
+  const obtenerIdPorNombre = (nombre: string) => {
+    const prod = productos.find((p) => p.nombre.toLowerCase().includes(nombre.toLowerCase()));
+    return prod ? prod.id : '';
+  };
+
+  const irADetallePorNombre = (nombre: string) => {
+    const id = obtenerIdPorNombre(nombre);
+    if (id) {
+      router.push(`/catalogo/${id}`);
+    } else {
+      scrollToSection('pricing');
+    }
+  };
+
   // Handle scroll calculation for marquee
   useEffect(() => {
     const handleScroll = () => {
@@ -138,6 +160,8 @@ export default function PaginaCatalogo() {
       col1_img2: '/papas.png',
       col2_img: '/papas.png',
       desc: 'Papas fritas artesanales con el picor perfecto.',
+      borderColor: 'border-[#F4845F]',
+      badgeColor: 'bg-[#F4845F]/10 text-[#F4845F]',
     },
     {
       num: '02',
@@ -147,6 +171,8 @@ export default function PaginaCatalogo() {
       col1_img2: '/mazapan.png',
       col2_img: '/mazapan.png',
       desc: 'El dulce clásico de cacahuate suave y delicioso.',
+      borderColor: 'border-[#E8C07D]',
+      badgeColor: 'bg-[#E8C07D]/10 text-[#B3833B]',
     },
     {
       num: '03',
@@ -156,20 +182,26 @@ export default function PaginaCatalogo() {
       col1_img2: '/gomitas.png',
       col2_img: '/gomitas.png',
       desc: 'Gomitas cubiertas de auténtico chile en polvo.',
+      borderColor: 'border-[#6BBF7A]',
+      badgeColor: 'bg-[#6BBF7A]/10 text-[#3B834B]',
     },
   ];
 
   return (
-    <div className="bg-[#0C0C0C] text-white font-kanit w-full overflow-x-clip min-h-screen relative selection:bg-[#FF5A5F]/30 selection:text-white">
+    <div className="bg-[#FFF6EC] text-[#2B1B12] font-kanit w-full overflow-x-clip min-h-screen relative selection:bg-[#FF5A5F]/20 selection:text-[#2B1B12]">
       {/* Capa de ruido de fondo premium */}
-      <div className="grain-overlay opacity-[0.15]" />
+      <div className="grain-overlay opacity-[0.1]" />
+
+      {/* Dynamic Brand Gradients Floating in Background */}
+      <div className="absolute top-[10%] left-[-20%] w-[60vw] h-[60vw] bg-[#FF5A5F]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[-20%] w-[60vw] h-[60vw] bg-[#FFB400]/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* ==================== 1. HERO SECTION ==================== */}
       <section className="h-screen w-full relative flex flex-col justify-between overflow-hidden">
         {/* Local jump navbar */}
         <FadeIn y={-20} className="w-full z-30">
           <nav className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8 w-full max-w-7xl mx-auto">
-            <span className="font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[#D7E2EA] to-white/70 text-lg md:text-2xl select-none cursor-default font-podium">
+            <span className="font-extrabold tracking-wider text-[#2B1B12] text-lg md:text-2xl select-none cursor-default font-podium">
               ANAQUELITO
             </span>
             <div className="flex gap-4 sm:gap-6 md:gap-10">
@@ -183,7 +215,7 @@ export default function PaginaCatalogo() {
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
-                    className="text-[#D7E2EA] font-medium uppercase tracking-wider text-xs md:text-sm lg:text-[1.1rem] hover:text-[#FF5A5F] transition-colors duration-200 cursor-pointer"
+                    className="text-[#7A6455] font-semibold uppercase tracking-wider text-xs md:text-sm lg:text-[1.1rem] hover:text-[#FF5A5F] transition-colors duration-200 cursor-pointer"
                   >
                     {label}
                   </button>
@@ -197,11 +229,11 @@ export default function PaginaCatalogo() {
         <div className="absolute left-1/2 -translate-x-1/2 z-10 w-[240px] sm:w-[320px] md:w-[380px] lg:w-[460px] top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-12 pointer-events-auto">
           <FadeIn y={30} delay={0.6}>
             <Magnet padding={150} strength={4}>
-              <div className="relative w-full aspect-square flex items-center justify-center bg-gradient-to-br from-[#FF5A5F]/20 to-[#FFB400]/20 rounded-full p-8 md:p-12 shadow-[0_20px_50px_rgba(255,90,95,0.3)] backdrop-blur-sm border border-white/10 group">
+              <div className="relative w-full aspect-square flex items-center justify-center bg-gradient-to-br from-[#FF5A5F]/15 to-[#FFB400]/15 rounded-full p-8 md:p-12 shadow-[0_20px_50px_rgba(255,90,95,0.15)] backdrop-blur-sm border border-[#EBD9C3] group">
                 <img
                   src="/paleta.png"
                   alt="Dulce Gigante"
-                  className="w-5/6 h-5/6 object-contain select-none pointer-events-none drop-shadow-[0_15px_30px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-105"
+                  className="w-5/6 h-5/6 object-contain select-none pointer-events-none drop-shadow-[0_15px_30px_rgba(43,27,18,0.2)] transition-transform duration-500 group-hover:scale-105"
                   draggable={false}
                 />
               </div>
@@ -212,7 +244,14 @@ export default function PaginaCatalogo() {
         {/* Massive Hero Heading */}
         <div className="w-full flex-1 flex items-center justify-center z-20 relative pointer-events-none select-none overflow-hidden">
           <FadeIn y={40} delay={0.15} className="w-full text-center">
-            <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw] mt-6 sm:mt-4 md:-mt-5">
+            <h1 
+              style={{
+                background: 'linear-gradient(135deg, #FF5A5F 0%, #FFB400 50%, #7621B0 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+              className="font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[14vw] sm:text-[15vw] md:text-[16vw] lg:text-[17.5vw] mt-6 sm:mt-4 md:-mt-5"
+            >
               HOLA, SOY DULCE
             </h1>
           </FadeIn>
@@ -221,7 +260,7 @@ export default function PaginaCatalogo() {
         {/* Bottom Bar info */}
         <div className="w-full z-20 px-6 md:px-10 pb-7 sm:pb-8 md:pb-10 max-w-7xl mx-auto flex justify-between items-end gap-4 relative">
           <FadeIn y={20} delay={0.35}>
-            <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug text-left text-[11px] sm:text-xs md:text-sm lg:text-base max-w-[160px] sm:max-w-[220px] md:max-w-[260px] cursor-default select-none opacity-80">
+            <p className="text-[#7A6455] font-semibold uppercase tracking-wide leading-snug text-left text-[11px] sm:text-xs md:text-sm lg:text-base max-w-[160px] sm:max-w-[220px] md:max-w-[260px] cursor-default select-none opacity-80">
               un distribuidor de dulces impulsado por llevar sabor y margen a tu negocio
             </p>
           </FadeIn>
@@ -238,7 +277,7 @@ export default function PaginaCatalogo() {
       {/* ==================== 2. MARQUEE SECTION ==================== */}
       <section
         ref={marqueeSectionRef}
-        className="w-full bg-[#0C0C0C] pt-24 sm:pt-32 md:pt-40 pb-10 overflow-hidden flex flex-col gap-3"
+        className="w-full bg-[#FFF6EC] pt-24 sm:pt-32 md:pt-40 pb-10 overflow-hidden flex flex-col gap-3"
       >
         {/* Row 1 (Scrolls Right) */}
         <div className="w-full will-change-transform overflow-hidden relative py-1 [mask-image:linear-gradient(to_right,transparent_0%,black_10%,black_90%,transparent_100%)]">
@@ -248,25 +287,34 @@ export default function PaginaCatalogo() {
               transform: `translateX(${scrollOffset - 200}px) translateZ(0)`,
             }}
           >
-            {fila1.map((item, index) => (
-              <div
-                key={`r1-${index}`}
-                className="w-[400px] h-[250px] rounded-2xl flex-shrink-0 select-none shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-white/5 flex items-center justify-between p-6 relative overflow-hidden group"
-                style={{ background: `linear-gradient(135deg, ${item.bg}22 0%, #111 100%)` }}
-              >
-                <div className="flex flex-col justify-between h-full z-10">
-                  <span className="text-white/40 text-xs font-bold tracking-widest uppercase">Anaquelito</span>
-                  <span className="font-black text-2xl tracking-wide text-white uppercase">{item.nombre}</span>
+            {fila1.map((item, index) => {
+              const realId = obtenerIdPorNombre(item.nombre);
+              const cardContent = (
+                <div
+                  className="w-[400px] h-[250px] rounded-2xl flex-shrink-0 select-none shadow-[0_8px_30px_rgba(43,27,18,0.06)] border border-[#EBD9C3] bg-white flex items-center justify-between p-6 relative overflow-hidden group cursor-pointer"
+                >
+                  <div className="flex flex-col justify-between h-full z-10">
+                    <span className="text-[#7A6455]/40 text-xs font-bold tracking-widest uppercase">Anaquelito</span>
+                    <span className="font-black text-2xl tracking-wide text-[#2B1B12] uppercase">{item.nombre}</span>
+                  </div>
+                  <img
+                    src={item.src}
+                    alt={item.nombre}
+                    className="w-[180px] h-[180px] object-contain drop-shadow-[0_10px_20px_rgba(43,27,18,0.1)] transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                    draggable={false}
+                  />
                 </div>
-                <img
-                  src={item.src}
-                  alt={item.nombre}
-                  className="w-[180px] h-[180px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-110"
-                  loading="lazy"
-                  draggable={false}
-                />
-              </div>
-            ))}
+              );
+
+              return realId ? (
+                <Link key={`r1-${index}`} href={`/catalogo/${realId}`}>
+                  {cardContent}
+                </Link>
+              ) : (
+                <div key={`r1-${index}`}>{cardContent}</div>
+              );
+            })}
           </div>
         </div>
 
@@ -278,25 +326,34 @@ export default function PaginaCatalogo() {
               transform: `translateX(${-(scrollOffset - 200)}px) translateZ(0)`,
             }}
           >
-            {fila2.map((item, index) => (
-              <div
-                key={`r2-${index}`}
-                className="w-[400px] h-[250px] rounded-2xl flex-shrink-0 select-none shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-white/5 flex items-center justify-between p-6 relative overflow-hidden group"
-                style={{ background: `linear-gradient(135deg, ${item.bg}22 0%, #111 100%)` }}
-              >
-                <div className="flex flex-col justify-between h-full z-10">
-                  <span className="text-white/40 text-xs font-bold tracking-widest uppercase">Anaquelito</span>
-                  <span className="font-black text-2xl tracking-wide text-white uppercase">{item.nombre}</span>
+            {fila2.map((item, index) => {
+              const realId = obtenerIdPorNombre(item.nombre);
+              const cardContent = (
+                <div
+                  className="w-[400px] h-[250px] rounded-2xl flex-shrink-0 select-none shadow-[0_8px_30px_rgba(43,27,18,0.06)] border border-[#EBD9C3] bg-white flex items-center justify-between p-6 relative overflow-hidden group cursor-pointer"
+                >
+                  <div className="flex flex-col justify-between h-full z-10">
+                    <span className="text-[#7A6455]/40 text-xs font-bold tracking-widest uppercase">Anaquelito</span>
+                    <span className="font-black text-2xl tracking-wide text-[#2B1B12] uppercase">{item.nombre}</span>
+                  </div>
+                  <img
+                    src={item.src}
+                    alt={item.nombre}
+                    className="w-[180px] h-[180px] object-contain drop-shadow-[0_10px_20px_rgba(43,27,18,0.1)] transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                    draggable={false}
+                  />
                 </div>
-                <img
-                  src={item.src}
-                  alt={item.nombre}
-                  className="w-[180px] h-[180px] object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-110"
-                  loading="lazy"
-                  draggable={false}
-                />
-              </div>
-            ))}
+              );
+
+              return realId ? (
+                <Link key={`r2-${index}`} href={`/catalogo/${realId}`}>
+                  {cardContent}
+                </Link>
+              ) : (
+                <div key={`r2-${index}`}>{cardContent}</div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -353,7 +410,14 @@ export default function PaginaCatalogo() {
 
         {/* Heading */}
         <FadeIn y={40} delay={0}>
-          <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]">
+          <h2 
+            style={{
+              background: 'linear-gradient(135deg, #FF5A5F 0%, #FFB400 50%, #7621B0 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+            className="font-black uppercase leading-none tracking-tight text-center text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]"
+          >
             Nosotros
           </h2>
         </FadeIn>
@@ -361,8 +425,9 @@ export default function PaginaCatalogo() {
         {/* Animated paragraph */}
         <div className="max-w-[560px] text-center w-full z-20">
           <AnimatedText
+            highlightClass="text-[#FF5A5F]"
             text="Con más de cinco años de experiencia en el mercado de dulces, nos enfocamos en el mayoreo, logística rápida y el mejor servicio. Nos encanta trabajar con tienditas y negocios que buscan destacar y ofrecer calidad. ¡Hagamos algo dulce juntos!"
-            className="text-[#D7E2EA] font-medium leading-relaxed text-base sm:text-lg md:text-xl lg:text-2xl"
+            className="text-[#7A6455] font-semibold leading-relaxed text-base sm:text-lg md:text-xl lg:text-2xl"
           />
         </div>
 
@@ -376,16 +441,16 @@ export default function PaginaCatalogo() {
       </section>
 
       {/* ==================== 4. SERVICES SECTION ==================== */}
-      <section className="bg-white text-[#0C0C0C] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 relative z-20">
+      <section className="bg-white text-[#2B1B12] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32 relative z-20 border-t border-[#EBD9C3]">
         <div className="max-w-5xl mx-auto w-full">
           <FadeIn className="text-center w-full mb-16 sm:mb-20 md:mb-28">
-            <h2 className="font-black uppercase text-center text-[#0C0C0C] leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]">
+            <h2 className="font-black uppercase text-center text-[#2B1B12] leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]">
               Beneficios
             </h2>
           </FadeIn>
 
           {/* List of 5 services */}
-          <div className="flex flex-col border-t border-[#0C0C0C]/15 w-full">
+          <div className="flex flex-col border-t border-[#EBD9C3] w-full">
             {[
               {
                 num: '01',
@@ -416,19 +481,19 @@ export default function PaginaCatalogo() {
               <FadeIn
                 key={srv.num}
                 delay={index * 0.1}
-                className="flex flex-col md:flex-row items-start md:items-center justify-between py-8 sm:py-10 md:py-12 border-b border-[#0C0C0C]/15 gap-4 md:gap-8"
+                className="flex flex-col md:flex-row items-start md:items-center justify-between py-8 sm:py-10 md:py-12 border-b border-[#EBD9C3] gap-4 md:gap-8"
               >
                 {/* Number Left */}
-                <div className="font-black leading-none tracking-tighter text-[#0C0C0C] text-[3rem] sm:text-[5rem] md:text-[6.5rem] lg:text-[8rem]">
+                <div className="font-black leading-none tracking-tighter text-[#2B1B12]/80 text-[3rem] sm:text-[5rem] md:text-[6.5rem] lg:text-[8rem]">
                   {srv.num}
                 </div>
 
                 {/* Content Right */}
                 <div className="flex flex-col gap-2 md:max-w-2xl">
-                  <h3 className="font-semibold uppercase text-xl sm:text-2xl md:text-3xl text-[#0C0C0C]">
+                  <h3 className="font-semibold uppercase text-xl sm:text-2xl md:text-3xl text-[#2B1B12]">
                     {srv.title}
                   </h3>
-                  <p className="font-light leading-relaxed text-[#0C0C0C]/65 text-sm sm:text-base md:text-lg">
+                  <p className="font-light leading-relaxed text-[#7A6455] text-sm sm:text-base md:text-lg">
                     {srv.desc}
                   </p>
                 </div>
@@ -442,11 +507,18 @@ export default function PaginaCatalogo() {
       <section
         id="projects"
         ref={projectsContainerRef}
-        className="bg-[#0C0C0C] text-white rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 px-5 sm:px-8 md:px-10 pt-24 pb-20 relative z-30 overflow-hidden"
+        className="bg-[#FFF6EC] text-[#2B1B12] rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 sm:-mt-12 md:-mt-14 px-5 sm:px-8 md:px-10 pt-24 pb-20 relative z-30 overflow-hidden"
       >
         <div className="max-w-5xl mx-auto w-full">
           <FadeIn className="text-center w-full mb-16 sm:mb-20">
-            <h2 className="hero-heading font-black uppercase text-center leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]">
+            <h2 
+              style={{
+                background: 'linear-gradient(135deg, #FF5A5F 0%, #FFB400 50%, #7621B0 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+              className="font-black uppercase text-center leading-none tracking-tight text-[3rem] sm:text-[6rem] md:text-[9rem] lg:text-[10rem]"
+            >
               Destacados
             </h2>
           </FadeIn>
@@ -472,59 +544,64 @@ export default function PaginaCatalogo() {
                     style={{
                       scale,
                       top: `${index * 28}px`,
-                      boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
+                      boxShadow: '0 20px 50px rgba(43,27,18,0.06)',
                     }}
-                    className="w-full rounded-[40px] sm:rounded-[50px] md:rounded-[60px] border-2 border-[#D7E2EA] bg-[#0C0C0C] p-6 sm:p-8 md:p-10 flex flex-col justify-between h-[70vh] sm:h-[75vh]"
+                    className={`w-full rounded-[40px] sm:rounded-[50px] md:rounded-[60px] border-2 ${proj.borderColor} bg-white p-6 sm:p-8 md:p-10 flex flex-col justify-between h-[70vh] sm:h-[75vh]`}
                   >
                     {/* Top Row info */}
-                    <div className="flex justify-between items-center w-full border-b border-[#D7E2EA]/10 pb-4">
+                    <div className="flex justify-between items-center w-full border-b border-[#EBD9C3]/50 pb-4">
                       <div className="flex items-center gap-4">
-                        <span className="font-black text-3xl sm:text-4xl md:text-5xl text-[#D7E2EA] font-anton">
+                        <span className="font-black text-3xl sm:text-4xl md:text-5xl text-[#2B1B12] font-anton">
                           {proj.num}
                         </span>
                         <div className="flex flex-col">
-                          <span className="text-[10px] sm:text-xs uppercase tracking-widest text-[#D7E2EA]/50 font-medium">
+                          <span className={`text-[10px] sm:text-xs uppercase tracking-widest px-2.5 py-0.5 rounded-full font-bold ${proj.badgeColor}`}>
                             {proj.category}
                           </span>
-                          <span className="font-semibold text-sm sm:text-base md:text-lg text-white uppercase tracking-tight">
+                          <span className="font-semibold text-sm sm:text-base md:text-lg text-[#2B1B12] uppercase tracking-tight mt-1">
                             {proj.name}
                           </span>
                         </div>
                       </div>
-                      <LiveProjectButton label="Ver Producto" onClick={() => scrollToSection('pricing')} />
+                      
+                      {/* Navigate to detail page on button click */}
+                      <LiveProjectButton
+                        label="Ver Producto"
+                        onClick={() => irADetallePorNombre(proj.name)}
+                      />
                     </div>
 
                     {/* Bottom Row grid with Candy Assets */}
                     <div className="flex-1 grid grid-cols-10 gap-4 mt-6 h-full min-h-0">
                       {/* Left stack (40%) */}
                       <div className="col-span-4 flex flex-col gap-4 h-full justify-between">
-                        <div className="relative flex-1 rounded-[24px] sm:rounded-[36px] bg-gradient-to-br from-white/5 to-transparent border border-white/5 p-3 flex items-center justify-center h-[45%] overflow-hidden shadow-inner">
+                        <div className="relative flex-1 rounded-[24px] sm:rounded-[36px] bg-[#FFF6EC] border border-[#EBD9C3] p-3 flex items-center justify-center h-[45%] overflow-hidden shadow-inner">
                           <img
                             src={proj.col1_img1}
                             alt={`${proj.name} 1`}
-                            className="max-h-[85%] max-w-[85%] object-contain select-none pointer-events-none drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)] animate-[bounce_8s_infinite_ease-in-out]"
+                            className="max-h-[85%] max-w-[85%] object-contain select-none pointer-events-none drop-shadow-[0_10px_20px_rgba(43,27,18,0.1)] animate-[bounce_8s_infinite_ease-in-out]"
                           />
                         </div>
-                        <div className="relative flex-1 rounded-[24px] sm:rounded-[36px] bg-gradient-to-br from-white/5 to-transparent border border-white/5 p-3 flex items-center justify-center h-[45%] overflow-hidden shadow-inner">
+                        <div className="relative flex-1 rounded-[24px] sm:rounded-[36px] bg-[#FFF6EC] border border-[#EBD9C3] p-3 flex items-center justify-center h-[45%] overflow-hidden shadow-inner">
                           <img
                             src={proj.col1_img2}
                             alt={`${proj.name} 2`}
-                            className="max-h-[85%] max-w-[85%] object-contain select-none pointer-events-none drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)] animate-[bounce_6s_infinite_ease-in-out]"
+                            className="max-h-[85%] max-w-[85%] object-contain select-none pointer-events-none drop-shadow-[0_10px_20px_rgba(43,27,18,0.1)] animate-[bounce_6s_infinite_ease-in-out]"
                           />
                         </div>
                       </div>
                       {/* Right tall image (60%) */}
                       <div className="col-span-6 h-full">
-                        <div className="relative w-full h-full rounded-[24px] sm:rounded-[36px] bg-gradient-to-br from-[#FF5A5F]/10 to-transparent border border-white/5 p-6 flex flex-col justify-between items-center overflow-hidden shadow-md">
+                        <div className="relative w-full h-full rounded-[24px] sm:rounded-[36px] bg-gradient-to-br from-[#FFF6EC] to-[#FFEFDD] border border-[#EBD9C3] p-6 flex flex-col justify-between items-center overflow-hidden shadow-md">
                           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,transparent_70%)] pointer-events-none" />
                           <div className="text-center">
-                            <h4 className="font-anton text-2xl sm:text-3xl text-white uppercase tracking-wide">{proj.name}</h4>
-                            <p className="text-xs text-[#D7E2EA]/60 uppercase tracking-widest mt-1">{proj.desc}</p>
+                            <h4 className="font-anton text-2xl sm:text-3xl text-[#2B1B12] uppercase tracking-wide">{proj.name}</h4>
+                            <p className="text-xs text-[#7A6455] uppercase tracking-widest mt-1 font-semibold">{proj.desc}</p>
                           </div>
                           <img
                             src={proj.col2_img}
                             alt={`${proj.name} Main`}
-                            className="max-h-[60%] max-w-[80%] object-contain select-none pointer-events-none drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] animate-[pulse_5s_infinite_ease-in-out] my-auto"
+                            className="max-h-[60%] max-w-[80%] object-contain select-none pointer-events-none drop-shadow-[0_20px_40px_rgba(43,27,18,0.15)] animate-[pulse_5s_infinite_ease-in-out] my-auto"
                           />
                         </div>
                       </div>
@@ -540,20 +617,20 @@ export default function PaginaCatalogo() {
       {/* ==================== 6. COLORFUL SWEET CANDY SHOP ==================== */}
       <section
         id="pricing"
-        className="w-full bg-gradient-to-b from-[#0C0C0C] via-[#150117] to-[#0A000A] text-white pt-24 pb-32 px-4 sm:px-6 md:px-10 lg:px-14 border-t-2 border-[#FF5A5F]/20 z-40 relative"
+        className="w-full bg-gradient-to-b from-[#FFF6EC] via-[#FFEFDD] to-[#FFF6EC] text-[#2B1B12] pt-24 pb-32 px-4 sm:px-6 md:px-10 lg:px-14 border-t border-[#EBD9C3] z-40 relative"
       >
         <div className="max-w-7xl mx-auto flex flex-col gap-10 sm:gap-14">
           {/* Header del Catálogo */}
-          <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-6 border-b border-[#FF5A5F]/25">
+          <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-6 border-b border-[#EBD9C3]">
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2 text-[#FF5A5F] font-bold tracking-widest text-xs uppercase">
                 <Sparkles className="h-4 w-4 animate-pulse" />
                 Venta de Mayoreo Directa
               </div>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-podium uppercase tracking-tight text-white">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-podium uppercase tracking-tight text-[#2B1B12]">
                 Catálogo Dulce
               </h2>
-              <p className="text-[#D7E2EA]/70 text-sm max-w-lg mt-1 font-light">
+              <p className="text-[#7A6455] text-sm max-w-lg mt-1 font-semibold">
                 Directo de distribuidor. Margen visible en cada producto y reorden automatizado escaneando la bolsa vacía.
               </p>
             </div>
@@ -565,9 +642,9 @@ export default function PaginaCatalogo() {
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 placeholder="Buscar golosinas..."
-                className="w-full pl-12 pr-5 py-3 rounded-full bg-white/5 border border-white/10 text-white text-sm sm:text-base outline-none focus:border-[#FF5A5F] focus:bg-white/[0.08] transition-all placeholder-white/30 focus:ring-4 focus:ring-[#FF5A5F]/10"
+                className="w-full pl-12 pr-5 py-3 rounded-full bg-white border border-[#EBD9C3] text-[#2B1B12] text-sm sm:text-base outline-none focus:border-[#FF5A5F] focus:ring-4 focus:ring-[#FF5A5F]/10 transition-all placeholder-[#7A6455]/70"
               />
-              <Search className="absolute left-4 h-5 w-5 text-white/40" />
+              <Search className="absolute left-4 h-5 w-5 text-[#7A6455]/70" />
             </div>
           </header>
 
@@ -581,7 +658,7 @@ export default function PaginaCatalogo() {
               className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all border cursor-pointer ${
                 !categoriaFiltro
                   ? 'bg-gradient-to-r from-[#FF5A5F] to-[#FFB400] text-white border-transparent shadow-lg shadow-[#FF5A5F]/20'
-                  : 'bg-white/5 text-[#D7E2EA]/70 border-white/10 hover:text-white hover:border-white/30'
+                  : 'bg-white text-[#7A6455] border-[#EBD9C3] hover:border-[#FF5A5F] hover:text-[#FF5A5F]'
               }`}
             >
               🚀 Todo el surtido
@@ -593,7 +670,7 @@ export default function PaginaCatalogo() {
                 className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold tracking-wider uppercase transition-all border cursor-pointer ${
                   categoriaFiltro === cat
                     ? 'bg-gradient-to-r from-[#FF5A5F] to-[#FFB400] text-white border-transparent shadow-lg shadow-[#FF5A5F]/20'
-                    : 'bg-white/5 text-[#D7E2EA]/70 border-white/10 hover:text-white hover:border-[#FF5A5F]/50'
+                    : 'bg-white text-[#7A6455] border-[#EBD9C3] hover:border-[#FF5A5F] hover:text-[#FF5A5F]'
                 }`}
               >
                 {EMOJI_CATEGORIA[cat] ?? '🍬'} {NOMBRE_CATEGORIA[cat]}
@@ -603,7 +680,7 @@ export default function PaginaCatalogo() {
 
           {/* Error message */}
           {error && (
-            <div className="flex flex-col items-center justify-center p-12 text-center text-red-400 bg-red-500/5 rounded-3xl border border-red-500/10">
+            <div className="flex flex-col items-center justify-center p-12 text-center text-[#D64545] bg-[#D64545]/5 rounded-3xl border border-[#D64545]/20">
               <p className="font-semibold text-lg">Error al sincronizar inventario</p>
               <p className="text-sm opacity-80 mt-1">{error}</p>
             </div>
@@ -611,7 +688,7 @@ export default function PaginaCatalogo() {
 
           {/* Loading state */}
           {loading && (
-            <div className="flex flex-col items-center justify-center p-24 text-white/40 gap-4">
+            <div className="flex flex-col items-center justify-center p-24 text-[#7A6455] gap-4">
               <RefreshCw className="h-10 w-10 animate-spin text-[#FF5A5F]" />
               <p className="text-sm font-semibold tracking-widest uppercase animate-pulse">
                 Abriendo vitrinas...
@@ -621,15 +698,15 @@ export default function PaginaCatalogo() {
 
           {/* Empty state */}
           {!loading && productos.length === 0 && !error && (
-            <div className="flex flex-col items-center justify-center p-20 text-center text-white/40 bg-white/[0.02] border border-white/5 rounded-3xl">
+            <div className="flex flex-col items-center justify-center p-20 text-center text-[#7A6455] bg-white border border-[#EBD9C3] rounded-3xl shadow-sm">
               <span className="text-6xl mb-4 animate-bounce">🍬</span>
-              <p className="font-bold text-xl text-white">No hay existencias con estos filtros</p>
+              <p className="font-bold text-xl text-[#2B1B12]">No hay existencias con estos filtros</p>
               <button
                 onClick={() => {
                   setCategoriaFiltro('');
                   setBusqueda('');
                 }}
-                className="text-xs text-white underline mt-4 hover:text-[#FF5A5F] transition-colors font-medium uppercase tracking-wider cursor-pointer"
+                className="text-xs text-[#FF5A5F] underline mt-4 hover:text-[#FF5A5F]/85 transition-colors font-medium uppercase tracking-wider cursor-pointer"
               >
                 Resetear búsqueda
               </button>
@@ -649,49 +726,51 @@ export default function PaginaCatalogo() {
 
                 // Unique colorful accents per item index
                 const gradients = [
-                  'from-[#FF5A5F]/20 to-[#FFB400]/10 border-[#FF5A5F]/30 hover:shadow-[#FF5A5F]/15',
-                  'from-[#00A699]/20 to-[#FFB400]/10 border-[#00A699]/30 hover:shadow-[#00A699]/15',
-                  'from-[#B600A8]/20 to-[#7621B0]/10 border-[#B600A8]/30 hover:shadow-[#B600A8]/15',
-                  'from-[#BE4C00]/20 to-[#FFB400]/10 border-[#BE4C00]/30 hover:shadow-[#BE4C00]/15',
+                  'from-[#FF5A5F]/15 to-[#FFB400]/5 border-[#FF5A5F]/20 hover:shadow-[#FF5A5F]/10',
+                  'from-[#00A699]/15 to-[#FFB400]/5 border-[#00A699]/20 hover:shadow-[#00A699]/10',
+                  'from-[#B600A8]/15 to-[#7621B0]/5 border-[#B600A8]/20 hover:shadow-[#B600A8]/10',
+                  'from-[#BE4C00]/15 to-[#FFB400]/5 border-[#BE4C00]/20 hover:shadow-[#BE4C00]/10',
                 ];
                 const cardTheme = gradients[i % gradients.length];
 
                 return (
                   <article
                     key={producto.id}
-                    className={`flex flex-col bg-gradient-to-br ${cardTheme} border rounded-[30px] p-5 shadow-2xl transition-all duration-300 hover:-translate-y-1.5 group`}
+                    className={`flex flex-col bg-gradient-to-br ${cardTheme} border rounded-[30px] p-5 bg-white shadow-[0_8px_30px_rgba(43,27,18,0.02)] transition-all duration-300 hover:shadow-[0_20px_40px_rgba(43,27,18,0.06)] hover:-translate-y-1.5 group`}
                   >
-                    {/* Contenedor Visual de la Golosina */}
-                    <div className="relative h-44 bg-black/40 rounded-2xl flex items-center justify-center text-6xl mb-4 overflow-hidden border border-white/5">
+                    {/* Contenedor Visual de la Golosina - Enlace a detalle */}
+                    <Link href={`/catalogo/${producto.id}`} className="relative h-44 bg-[#FFF6EC] rounded-2xl flex items-center justify-center text-6xl mb-4 overflow-hidden border border-[#EBD9C3]/50 cursor-pointer">
                       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,transparent_70%)] pointer-events-none" />
 
                       {IMAGENES_PRODUCTOS[producto.nombre] ? (
                         <img
                           src={IMAGENES_PRODUCTOS[producto.nombre]}
                           alt={producto.nombre}
-                          className="w-4/5 h-4/5 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+                          className="w-4/5 h-4/5 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_10px_20px_rgba(43,27,18,0.15)]"
                         />
                       ) : (
                         <span className="select-none transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 drop-shadow-md">
                           {EMOJI_CATEGORIA[producto.categoria ?? ''] ?? '🍭'}
                         </span>
                       )}
-                    </div>
+                    </Link>
 
                     {/* Información e Identificación */}
                     <div className="flex flex-col flex-1">
                       <div className="mb-4">
-                        <h3 className="font-anton text-lg sm:text-xl text-white uppercase tracking-wide leading-tight line-clamp-1">
-                          {producto.nombre}
-                        </h3>
-                        <p className="text-xs font-semibold text-[#D7E2EA]/50 mt-1 uppercase tracking-wider">
+                        <Link href={`/catalogo/${producto.id}`} className="hover:text-[#FF5A5F] transition-colors cursor-pointer">
+                          <h3 className="font-anton text-lg sm:text-xl text-[#2B1B12] uppercase tracking-wide leading-tight line-clamp-1">
+                            {producto.nombre}
+                          </h3>
+                        </Link>
+                        <p className="text-xs font-bold text-[#7A6455]/60 mt-1 uppercase tracking-wider">
                           Por {producto.unidad} <span className="opacity-30 mx-1">•</span> {NOMBRE_CATEGORIA[producto.categoria ?? ''] ?? 'General'}
                         </p>
                       </div>
 
                       <div className="mt-auto flex flex-col gap-3">
                         {/* Cajón de precios y beneficios */}
-                        <div className="bg-black/60 rounded-xl p-3 border border-white/5 relative overflow-hidden">
+                        <div className="bg-[#FFF6EC] rounded-xl p-3 border border-[#EBD9C3] relative overflow-hidden">
                           {margen !== null && (
                             <div className="absolute -top-3 right-2 bg-gradient-to-r from-[#1E9E6A] to-emerald-600 text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full shadow-sm uppercase tracking-wider">
                               Ganancia ~{margen}%
@@ -699,20 +778,20 @@ export default function PaginaCatalogo() {
                           )}
 
                           <div className="flex items-baseline gap-1.5 mt-1">
-                            <span className="font-anton text-2xl leading-none text-white">
+                            <span className="font-anton text-2xl leading-none text-[#2B1B12]">
                               ${producto.precio_mayoreo}
                             </span>
-                            <span className="text-[9px] font-bold text-[#D7E2EA]/45 uppercase tracking-widest">
+                            <span className="text-[9px] font-bold text-[#7A6455]/50 uppercase tracking-widest">
                               Mayoreo
                             </span>
                           </div>
 
                           {producto.precio_sugerido_reventa && (
-                            <div className="flex justify-between items-center mt-2 pt-2 border-t border-white/10 border-dashed">
-                              <span className="text-[10px] font-bold text-[#D7E2EA]/45 uppercase tracking-widest">
+                            <div className="flex justify-between items-center mt-2 pt-2 border-t border-[#EBD9C3] border-dashed">
+                              <span className="text-[10px] font-bold text-[#7A6455]/50 uppercase tracking-widest">
                                 Sugerido
                               </span>
-                              <span className="text-[12px] font-bold text-[#D7E2EA]">
+                              <span className="text-[12px] font-bold text-[#2B1B12]">
                                 ${producto.precio_sugerido_reventa}
                               </span>
                             </div>
@@ -736,25 +815,25 @@ export default function PaginaCatalogo() {
       {/* ==================== FOOTER / CONTACT SECTION ==================== */}
       <footer
         id="contact"
-        className="w-full bg-[#070707] text-[#D7E2EA]/60 pt-20 pb-10 border-t border-white/5 z-40 relative"
+        className="w-full bg-[#FFF6EC] text-[#7A6455] pt-20 pb-10 border-t border-[#EBD9C3] z-40 relative animate-fade-in"
       >
         <div className="max-w-5xl mx-auto px-5 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start gap-8">
             <div className="flex flex-col gap-3">
-              <span className="font-extrabold font-podium tracking-widest text-2xl text-white">
+              <span className="font-extrabold font-podium tracking-widest text-2xl text-[#2B1B12]">
                 ANAQUELITO
               </span>
-              <p className="max-w-sm text-sm font-light leading-relaxed">
+              <p className="max-w-sm text-sm font-semibold leading-relaxed text-[#7A6455]/85">
                 Empoderando comercios locales y tienditas de abarrotes con el mejor surtido mayorista de dulces y botanas en México.
               </p>
             </div>
             <div className="flex flex-col gap-3">
-              <span className="text-white font-semibold uppercase tracking-wider text-sm">
+              <span className="text-[#2B1B12] font-bold uppercase tracking-wider text-sm">
                 Colaboración Directa
               </span>
               <a
                 href="mailto:hola@anaquelito.mx"
-                className="text-white hover:text-[#FF5A5F] transition-colors text-base font-medium flex items-center gap-2 group"
+                className="text-[#FF5A5F] hover:text-[#E0484D] transition-colors text-base font-semibold flex items-center gap-2 group cursor-pointer"
               >
                 hola@anaquelito.mx
                 <ArrowRight className="h-4 w-4 transform transition-transform group-hover:translate-x-1" />
@@ -762,10 +841,10 @@ export default function PaginaCatalogo() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-white/5 text-xs font-light tracking-wide gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center pt-8 border-t border-[#EBD9C3] text-xs font-semibold tracking-wide gap-4">
             <p>&copy; {new Date().getFullYear()} Anaquelito Mayoreo. Todos los derechos reservados.</p>
-            <p className="flex items-center gap-1.5 uppercase font-medium text-[#FF5A5F]">
-              Creado con dulzura <Sparkles className="h-3 w-3" />
+            <p className="flex items-center gap-1.5 uppercase font-bold text-[#FF5A5F]">
+              Creado con dulzura <Sparkles className="h-3 w-3 animate-pulse" />
             </p>
           </div>
         </div>
