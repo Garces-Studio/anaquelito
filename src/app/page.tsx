@@ -1,12 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, X, Sparkles, TrendingUp, CheckCircle, Package, Camera, ShoppingBag, Zap } from 'lucide-react';
 import Link from 'next/link';
 import Encabezado from '@/componentes/Encabezado';
-import PieDePagina from '@/componentes/PieDePagina';
-
-const DULCES = [
+import PieDePagina from '@/componentes/PieDePagina';const DULCES = [
   { 
     nombre: 'PAPAS CRUJIENTES FUEGO', 
     descripcion: 'Papas fritas con sal de grano y un toque de chile y limón. Crujientes al máximo, listas para activar las ventas de tu negocio.', 
@@ -378,6 +376,205 @@ export default function Inicio() {
           </div>
         </div>
       </main>
+
+      {/* SECCIÓN 1: ¿QUÉ ES ANAQUELITO? (SOBRE NOSOTROS & SURTIDO) */}
+      <section id="about" className="py-24 px-6 md:px-12 bg-[#FFF6EC] border-t border-[#EBD9C3] relative z-10 font-kanit">
+        <div className="max-w-6xl mx-auto flex flex-col gap-16">
+          <header className="text-center max-w-2xl mx-auto flex flex-col gap-3">
+            <span className="text-[#FF5A5F] text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
+              <Sparkles className="h-4 w-4 animate-pulse" /> Surtido Mayorista CDMX
+            </span>
+            <h2 className="text-4xl md:text-5xl font-podium uppercase tracking-tight text-[#2B1B12] leading-none">
+              Sabor, Variedad y Márgenes para tu Negocio
+            </h2>
+            <p className="text-[#7A6455] text-sm md:text-base font-semibold mt-2">
+              Surtimos tu tiendita, abarrotes, cafetería o negocio local de forma inteligente. Directo de distribuidor, sin compras mínimas absurdas y con entrega en tu puerta.
+            </p>
+          </header>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                emoji: '🥜',
+                title: 'Frutos Secos y Semillas',
+                desc: 'Cacahuates japoneses, pepitas, nueces y semillas enchiladas con calidad de selección.',
+                bg: 'from-[#FF5A5F]/10 to-transparent border-[#FF5A5F]/20',
+              },
+              {
+                emoji: '🍬',
+                title: 'Gomitas y Aciditos',
+                desc: 'Gomitas surtidas, lombrices enchiladas y las marcas que tus clientes buscan a diario.',
+                bg: 'from-[#00A699]/10 to-transparent border-[#00A699]/20',
+              },
+              {
+                emoji: '🍫',
+                title: 'Chocolates Premium',
+                desc: 'Chocolates de mesa tradicionales y golosinas dulces perfectas para elevar tus ventas.',
+                bg: 'from-[#B600A8]/10 to-transparent border-[#B600A8]/20',
+              },
+              {
+                emoji: '🥔',
+                title: 'Botanas y Fritos',
+                desc: 'Papas fritas artesanales y fritos crujientes con el picor exacto que genera reventa.',
+                bg: 'from-[#BE4C00]/10 to-transparent border-[#BE4C00]/20',
+              },
+            ].map((cat, idx) => (
+              <div
+                key={idx}
+                className={`bg-white rounded-[32px] border ${cat.bg} p-6 shadow-[0_8px_30px_rgba(43,27,18,0.02)] hover:shadow-[0_20px_40px_rgba(43,27,18,0.06)] hover:-translate-y-1 transition-all duration-300 group`}
+              >
+                <div className="text-4xl mb-4 group-hover:scale-105 transition-transform duration-300 select-none">
+                  {cat.emoji}
+                </div>
+                <h3 className="font-anton text-lg sm:text-xl text-[#2B1B12] uppercase tracking-wide mb-2">
+                  {cat.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#7A6455] leading-relaxed font-light">
+                  {cat.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN 2: SIMULADOR DE GANANCIAS */}
+      <section className="py-24 px-6 md:px-12 bg-gradient-to-b from-[#FFF6EC] to-[#FFEFDD] border-t border-[#EBD9C3] relative z-10 font-kanit">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          
+          <div className="lg:col-span-6 flex flex-col gap-6">
+            <span className="text-[#1E9E6A] text-xs font-bold tracking-widest uppercase flex items-center gap-1.5">
+              <TrendingUp className="h-4 w-4 animate-pulse" /> Multiplica tus ganancias
+            </span>
+            <h2 className="text-4xl md:text-5xl font-podium uppercase tracking-tight text-[#2B1B12] leading-none">
+              El Negocio del Dulce es de Alto Margen
+            </h2>
+            <p className="text-[#7A6455] text-base font-semibold leading-relaxed">
+              Mientras que otros productos básicos te dejan del 5% al 10%, las golosinas y botanas te ofrecen márgenes del <span className="text-[#FF5A5F] font-bold">40% al 65%</span> de ganancia neta.
+            </p>
+            <div className="flex flex-col gap-4 mt-2 font-light">
+              <div className="flex items-center gap-3">
+                <CheckCircle className="h-5 w-5 text-[#1E9E6A]" />
+                <p className="text-sm">Precios de mayoreo transparentes y publicados.</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle className="h-5 w-5 text-[#1E9E6A]" />
+                <p className="text-sm">Margen de ganancia calculado de forma automática en cada dulce.</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle className="h-5 w-5 text-[#1E9E6A]" />
+                <p className="text-sm">Precio sugerido de reventa para asegurar tu competitividad local.</p>
+              </div>
+            </div>
+            <div className="mt-4">
+              <Link 
+                href="/catalogo" 
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#FF5A5F] hover:bg-[#E0484D] text-white font-bold rounded-full transition-colors text-sm uppercase tracking-wider cursor-pointer"
+              >
+                Explorar Margen en Catálogo
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Tarjeta de ejemplo de factura */}
+          <div className="lg:col-span-6 flex justify-center">
+            <div className="w-full max-w-md bg-white border border-[#EBD9C3] rounded-[36px] p-6 sm:p-8 shadow-2xl relative overflow-hidden flex flex-col gap-4">
+              <div className="absolute top-0 right-0 bg-[#1E9E6A] text-white text-[10px] font-extrabold px-4 py-1.5 rounded-bl-2xl uppercase tracking-widest">
+                Ejemplo de Producto
+              </div>
+              
+              <div className="flex items-center gap-4 border-b border-[#EBD9C3]/50 pb-4">
+                <span className="text-4xl bg-[#FFF6EC] p-3 rounded-2xl select-none">🥔</span>
+                <div className="flex flex-col">
+                  <span className="text-xs uppercase tracking-widest text-[#7A6455] font-semibold">Botanas y Fritos</span>
+                  <span className="font-anton text-lg sm:text-xl text-[#2B1B12] uppercase tracking-wide">Papas Crujientes Fuego</span>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center py-2">
+                <span className="text-xs uppercase tracking-widest text-[#7A6455] font-semibold">Precio Mayoreo Anaquelito</span>
+                <span className="font-anton text-xl text-[#2B1B12]">$15.00 c/u</span>
+              </div>
+              <div className="flex justify-between items-center py-2 border-b border-[#EBD9C3]/50">
+                <span className="text-xs uppercase tracking-widest text-[#7A6455] font-semibold">Precio de Reventa Sugerido</span>
+                <span className="font-anton text-xl text-[#7A6455]">$25.00 c/u</span>
+              </div>
+
+              <div className="flex justify-between items-center pt-2">
+                <span className="text-xs uppercase tracking-widest text-[#7A6455] font-bold">Tu Margen de Ganancia</span>
+                <span className="font-anton text-2xl text-[#1E9E6A] uppercase flex items-center gap-1">
+                  <TrendingUp className="h-5 w-5" /> ~66%
+                </span>
+              </div>
+
+              <div className="mt-2 bg-[#1E9E6A]/5 border border-[#1E9E6A]/20 rounded-xl p-3.5 text-center">
+                <p className="text-xs sm:text-sm font-semibold text-[#2B1B12]">
+                  ¡Le ganas <span className="text-[#1E9E6A] font-bold">+$10.00 pesos</span> libres a cada bolsa que vendas!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN 3: CÓMO FUNCIONA */}
+      <section className="py-24 px-6 md:px-12 bg-[#FFF6EC] border-t border-[#EBD9C3] relative z-10 font-kanit">
+        <div className="max-w-6xl mx-auto flex flex-col gap-16">
+          <header className="text-center max-w-2xl mx-auto flex flex-col gap-3">
+            <span className="text-[#FF5A5F] text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-1.5">
+              <Zap className="h-4 w-4" /> Abastecimiento Inteligente
+            </span>
+            <h2 className="text-4xl md:text-5xl font-podium uppercase tracking-tight text-[#2B1B12] leading-none">
+              Surtir tu Tiendita Nunca Fue Tan Rápido
+            </h2>
+            <p className="text-[#7A6455] text-sm md:text-base font-semibold mt-2">
+              Diseñamos un flujo ágil pensado para comerciantes ocupados que no pueden perder tiempo viajando a la central de abastos.
+            </p>
+          </header>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                num: '01',
+                title: 'Elige tu Pedido',
+                desc: 'Entra al catálogo digital, revisa los márgenes sugeridos en tiempo real y llena tu carrito sin mínimos forzosos.',
+                icon: <ShoppingBag className="h-6 w-6 text-[#FF5A5F]" />,
+              },
+              {
+                num: '02',
+                title: 'Recibe en tu Local',
+                desc: 'Procesamos tu pedido y lo entregamos directo a tu negocio en la CDMX en tiempo récord.',
+                icon: <Package className="h-6 w-6 text-[#FF5A5F]" />,
+              },
+              {
+                num: '03',
+                title: 'Reordena Escaneando',
+                desc: 'Cuando se te acabe un dulce, escanea el código de barras de la bolsa vacía con la cámara de tu celular y agrégalo directo al carrito en segundos.',
+                icon: <Camera className="h-6 w-6 text-[#FF5A5F]" />,
+              },
+            ].map((step, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-[32px] border border-[#EBD9C3] p-8 flex flex-col gap-4 relative overflow-hidden shadow-sm"
+              >
+                <div className="absolute top-4 right-6 font-anton text-4xl text-[#EBD9C3]/50 select-none">
+                  {step.num}
+                </div>
+                <div className="w-12 h-12 rounded-2xl bg-[#FFF6EC] flex items-center justify-center mb-2">
+                  {step.icon}
+                </div>
+                <h3 className="font-anton text-lg sm:text-xl text-[#2B1B12] uppercase tracking-wide">
+                  {step.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#7A6455] leading-relaxed font-light">
+                  {step.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* SECCIÓN PIE DE PÁGINA */}
       <div className="tema-tienda" style={{ minHeight: 'auto' }}>
