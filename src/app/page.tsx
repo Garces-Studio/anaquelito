@@ -264,32 +264,6 @@ export default function Inicio() {
 
         <Encabezado />
 
-        {/* Texto Fantasma Gigante Detrás */}
-        <div 
-          className="font-anton"
-          style={{ 
-            position: 'absolute', 
-            insetInline: 0, 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            pointerEvents: 'none', 
-            userSelect: 'none', 
-            zIndex: 2, 
-            top: isMobile ? '38%' : '18%',
-            fontSize: 'clamp(90px, 28vw, 380px)',
-            fontWeight: 900,
-            color: '#FFFFFF',
-            opacity: 0.06,
-            lineHeight: 1,
-            textTransform: 'uppercase',
-            letterSpacing: '-0.02em',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          MAYOREO
-        </div>
-
         {/* CONTENIDO PRINCIPAL EN CUADRÍCULA SPLIT */}
         <div className="portada-grid">
           {/* Columna Izquierda: Información de Negocio */}

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowUpRight, X } from 'lucide-react';
+import { ArrowUpRight, X, Menu } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import EnlaceCarrito from './carrito/EnlaceCarrito';
 import { crearCliente } from '@/lib/supabase/client';
@@ -27,66 +27,97 @@ export default function Encabezado() {
   const enlaceCuenta = usuario
     ? { href: '/dashboard', texto: 'Mi cuenta' }
     : { href: '/iniciar-sesion', texto: 'Iniciar sesión' };
-  const colorTexto = esInicio ? '#FFFFFF' : '#2B1B12';
-  const colorEnlaceSuave = esInicio ? 'rgba(255, 255, 255, 0.8)' : '#7A6455';
 
   return (
     <>
-      {/* NAVBAR SUPERIOR */}
-      <nav
-        className="portada-nav animate-fade-in"
-        style={esInicio
-          ? { position: 'absolute', background: 'transparent', borderBottom: 'none' }
-          : { position: 'sticky', background: '#FFF6EC', borderBottom: '1px solid #EBD9C3', top: 0 }
-        }
-      >
-        <Link href="/" className="portada-logo font-podium" style={{ color: colorTexto }}>
-          ANAQUELITO
-        </Link>
-
-        {/* Enlaces centrales */}
-        <div className="portada-menu-links">
-          <Link href="/" className="portada-menu-link" style={{ color: colorEnlaceSuave }}>Inicio</Link>
-          <Link href="/catalogo" className="portada-menu-link" style={{ color: colorEnlaceSuave }}>Catálogo</Link>
-          <Link href="/escaner" className="portada-menu-link" style={{ color: colorEnlaceSuave }}>Escáner</Link>
-        </div>
-
-        {/* Enlace Carrito y cuenta */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-          <EnlaceCarrito />
-          {!usuario && (
-            <Link href="/crear-cuenta" className="portada-menu-link" style={{ color: colorEnlaceSuave }}>Crear cuenta</Link>
-          )}
-          <Link 
-            href={enlaceCuenta.href} 
-            className="portada-nav-cta"
-            style={esInicio 
-              ? { color: '#FFFFFF', borderColor: 'rgba(255, 255, 255, 0.25)' } 
-              : { color: '#FF5A5F', borderColor: '#FF5A5F', background: 'white' }
-            }
-          >
-            <span>{enlaceCuenta.texto}</span>
-            <ArrowUpRight size={14} />
-          </Link>
-        </div>
-
-        {/* Hamburguesa (móvil) */}
-        <button
-          className="portada-hamburger"
-          onClick={() => setMenuOpen(true)}
-          aria-label="Abrir menú"
+      {/* HEADER CONTENEDOR FLOTANTE */}
+      <header className="fixed top-4 left-0 right-0 z-50 px-4 w-full flex justify-center pointer-events-none select-none">
+        <div
+          className={`w-full max-w-4xl rounded-full backdrop-blur-md border px-6 py-2.5 sm:py-3.5 flex items-center justify-between shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 pointer-events-auto ${
+            esInicio
+              ? 'bg-white/10 border-white/20 text-white'
+              : 'bg-[#FFF6EC]/85 border-[#EBD9C3] text-[#2B1B12]'
+          }`}
         >
-          <span style={{ backgroundColor: colorTexto }} />
-          <span style={{ backgroundColor: colorTexto }} />
-          <span style={{ backgroundColor: colorTexto }} />
-        </button>
-      </nav>
+          {/* VISTA MÓVIL */}
+          <div className="flex md:hidden items-center justify-between w-full">
+            <Link href="/" className="font-podium text-base tracking-widest font-black uppercase hover:opacity-80 transition-opacity">
+              ANAQUELITO
+            </Link>
+            <div className="flex items-center gap-4">
+              <EnlaceCarrito />
+              <button
+                onClick={() => setMenuOpen(true)}
+                className="p-1 cursor-pointer transition-transform duration-150 active:scale-90"
+                aria-label="Abrir menú"
+              >
+                <Menu size={22} className="text-current" />
+              </button>
+            </div>
+          </div>
+
+          {/* VISTA ESCRITORIO (DISEÑO PILA SPLIT DE LA IMAGEN) */}
+          <div className="hidden md:flex items-center justify-between w-full">
+            {/* LADO IZQUIERDO: Enlaces de navegación */}
+            <nav className="flex gap-8 justify-start items-center w-1/3" aria-label="Menú principal izquierdo">
+              <Link
+                href="/catalogo"
+                className={`font-bold text-[11px] uppercase tracking-widest transition-colors duration-200 ${
+                  esInicio ? 'text-white/80 hover:text-white' : 'text-[#7A6455] hover:text-[#FF5A5F]'
+                }`}
+              >
+                Catálogo
+              </Link>
+              <Link
+                href="/escaner"
+                className={`font-bold text-[11px] uppercase tracking-widest transition-colors duration-200 ${
+                  esInicio ? 'text-white/80 hover:text-white' : 'text-[#7A6455] hover:text-[#FF5A5F]'
+                }`}
+              >
+                Escáner
+              </Link>
+            </nav>
+
+            {/* CENTRO: Marca / Logotipo */}
+            <div className="flex justify-center items-center w-1/3">
+              <Link href="/" className="font-podium text-xl tracking-widest font-black uppercase text-center hover:scale-105 transition-transform duration-300">
+                ANAQUELITO
+              </Link>
+            </div>
+
+            {/* LADO DERECHO: Carrito, Registro e Inicio de sesión */}
+            <div className="flex gap-6 justify-end items-center w-1/3">
+              {!usuario && (
+                <Link
+                  href="/crear-cuenta"
+                  className={`font-bold text-[11px] uppercase tracking-widest transition-colors duration-200 ${
+                    esInicio ? 'text-white/80 hover:text-white' : 'text-[#7A6455] hover:text-[#FF5A5F]'
+                  }`}
+                >
+                  Registrarse
+                </Link>
+              )}
+              <Link
+                href={enlaceCuenta.href}
+                className={`font-bold text-[10px] uppercase tracking-widest border-2 px-5 py-2 rounded-full transition-all duration-250 ${
+                  esInicio
+                    ? 'border-white/20 bg-white/5 hover:bg-white text-white hover:text-[#2B1B12]'
+                    : 'border-[#FF5A5F] text-[#FF5A5F] hover:bg-[#FF5A5F] hover:text-white'
+                }`}
+              >
+                {enlaceCuenta.texto}
+              </Link>
+              <EnlaceCarrito />
+            </div>
+          </div>
+        </div>
+      </header>
 
       {/* MENÚ MÓVIL OVERLAY */}
       <div className={`menu-movil-overlay ${menuOpen ? 'activo' : ''}`} style={{ position: 'fixed', zIndex: 999 }}>
         <div className="menu-movil-cabecera">
           <span className="portada-logo font-podium">ANAQUELITO</span>
-          <button onClick={() => setMenuOpen(false)} style={{ color: '#FFFFFF' }} aria-label="Cerrar menú">
+          <button onClick={() => setMenuOpen(false)} style={{ color: '#FFFFFF' }} aria-label="Cerrar menú" className="cursor-pointer">
             <X size={28} />
           </button>
         </div>
