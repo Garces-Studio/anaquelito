@@ -1,9 +1,20 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, RefreshCw } from 'lucide-react';
+import { Search, RefreshCw, ArrowUpRight, Sparkle, Truck, Tag, ShieldCheck, Mail } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/client';
 import BotonAgregar from '@/componentes/carrito/BotonAgregar';
+
+// Categorías para la marquesina (misma info que EMOJI_CATEGORIA/NOMBRE_CATEGORIA,
+// duplicada abajo para que el scroll sea continuo)
+const CATEGORIAS_MARQUESINA = [
+  { emoji: '🥜', nombre: 'Frutos secos' },
+  { emoji: '🍬', nombre: 'Gomitas' },
+  { emoji: '🍫', nombre: 'Chocolates' },
+  { emoji: '🌻', nombre: 'Semillas' },
+  { emoji: '🍭', nombre: 'Dulces' },
+  { emoji: '🥔', nombre: 'Fritos' },
+];
 
 // Category metadata
 const EMOJI_CATEGORIA: Record<string, string> = {
@@ -72,8 +83,142 @@ export default function PaginaCatalogo() {
     cargarProductos();
   }, [categoriaFiltro, busqueda]);
 
+  const desplazarACatalogo = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById('productos-catalogo')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const categoriasDuplicadas = [...CATEGORIAS_MARQUESINA, ...CATEGORIAS_MARQUESINA];
+
   return (
     <div className="bg-[#0a0a0a] text-white font-inter antialiased min-h-screen">
+
+      {/* ===== Vitrina de marca: mismo lenguaje visual (glass, ruido, marquesina)
+          que el resto del sitio, pero con contenido real de Anaquelito. ===== */}
+      <section className="relative px-4 sm:px-6 md:px-10 lg:px-14 py-6 sm:py-8 md:py-10 lg:h-screen lg:max-h-[960px] flex flex-col justify-between gap-6 overflow-hidden">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative z-10 w-full">
+          <div className="max-w-3xl flex flex-col gap-2">
+            <h1 className="text-[28px] sm:text-3xl md:text-4xl lg:text-[44px] leading-[1.15] font-normal tracking-tight text-white font-anton uppercase">
+              Catálogo mayorista
+            </h1>
+            <p className="text-sm md:text-[15px] leading-[1.6] text-white/60 max-w-2xl">
+              Dulces y botanas al mayoreo para tienditas, cafés y emprendedores. Precio de mayoreo real, con el margen de reventa ya calculado en cada producto.
+            </p>
+          </div>
+          <button
+            onClick={desplazarACatalogo}
+            className="liquid-glass rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white transition-transform hover:scale-[1.03] active:scale-[0.98] border border-white/10 shrink-0 self-start sm:self-center"
+          >
+            Ver todo el catálogo
+          </button>
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:flex-1 w-full my-auto z-10">
+
+          {/* Columna 1 — Surtido (video + diferenciadores reales) */}
+          <div className="relative rounded-2xl bg-black overflow-hidden flex flex-col justify-between p-5 md:p-6 min-h-[300px] lg:h-full border border-white/5 group shadow-2xl">
+            <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-60 z-0 transition-transform duration-700 group-hover:scale-105">
+              <source src="/dulces-loop.mp4" type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 z-0 pointer-events-none" />
+
+            <div className="flex justify-center items-center gap-2 relative z-10 w-full">
+              <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
+              <span className="uppercase tracking-[0.22em] text-[11px] text-white/70 font-medium">NUESTRO SURTIDO</span>
+              <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
+            </div>
+
+            <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-3.5 relative z-10 w-full text-[11.5px] sm:text-xs text-white/80 font-medium">
+              <Truck className="h-4 w-4 text-white/60" strokeWidth={1.5} />
+              <span className="font-sans text-white/90">Entrega en 24h en CDMX y alrededores</span>
+              <Tag className="h-4 w-4 text-white/60" strokeWidth={1.5} />
+              <span className="font-sans text-white/90">Margen de reventa visible en cada producto</span>
+              <ShieldCheck className="h-4 w-4 text-white/60" strokeWidth={1.5} />
+              <span className="font-sans text-white/90">Precio de mayoreo real, sin membresías confusas</span>
+            </div>
+          </div>
+
+          {/* Columna 2 — Promesa + conteo real de productos */}
+          <div className="grid grid-rows-[auto_1fr] gap-4 md:gap-5 lg:h-full">
+            <div className="relative rounded-2xl bg-[#324444] p-5 md:p-6 overflow-hidden noise-overlay flex flex-col justify-between gap-4 border border-white/10 shadow-2xl">
+              <div className="flex justify-start items-center gap-2 relative z-10">
+                <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
+                <span className="uppercase tracking-[0.22em] text-[11px] text-white/70 font-semibold">NUESTRA PROMESA</span>
+              </div>
+              <p className="text-[13px] sm:text-[13.5px] leading-[1.6] text-white/85 italic relative z-10 font-normal">
+                "El precio que ves es el precio que pagas. Sin letras chiquitas, sin membresías escondidas — y ya calculamos cuánto le ganas a cada producto."
+              </p>
+              <div className="text-xs text-white/60 relative z-10 font-normal">
+                <strong className="text-white font-medium">Equipo Anaquelito</strong>
+              </div>
+            </div>
+
+            <div className="relative rounded-2xl bg-black overflow-hidden flex flex-col justify-center items-center p-6 border border-white/5 group shadow-2xl min-h-[160px]">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-0" />
+              <div className="relative z-10 flex flex-col justify-center items-center text-center">
+                <span className="text-5xl sm:text-6xl md:text-7xl lg:text-[88px] font-light tracking-tight text-white drop-shadow-md leading-none font-anton">
+                  {productos.length}+
+                </span>
+                <span className="text-xs sm:text-sm text-white/85 mt-2 tracking-wide font-normal">Productos disponibles hoy</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Columna 3 — Categorías (marquesina) + contacto real */}
+          <div className="grid grid-rows-[1fr_auto] lg:grid-rows-[auto_1fr] gap-4 md:gap-5 lg:h-full">
+            <div className="relative rounded-2xl bg-black overflow-hidden flex flex-col justify-between p-5 md:p-6 border border-white/5 group shadow-2xl min-h-[220px]">
+              <div className="flex justify-center items-center gap-2 relative z-10 w-full">
+                <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
+                <span className="uppercase tracking-[0.22em] text-[11px] text-white/70 font-semibold">NUESTRAS CATEGORÍAS</span>
+                <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
+              </div>
+
+              <div className="overflow-hidden w-full relative z-10 mt-6 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)] flex flex-col gap-3">
+                <div className="flex gap-3 animate-marquee-left whitespace-nowrap w-max">
+                  {categoriasDuplicadas.map((cat, index) => (
+                    <div key={`c1-${index}`} className="liquid-glass h-14 w-14 md:h-16 md:w-16 rounded-xl flex items-center justify-center flex-shrink-0 border border-white/10 text-2xl">
+                      {cat.emoji}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-3 animate-marquee-right whitespace-nowrap w-max">
+                  {[...categoriasDuplicadas].reverse().map((cat, index) => (
+                    <div key={`c2-${index}`} className="liquid-glass h-14 w-14 md:h-16 md:w-16 rounded-xl flex items-center justify-center flex-shrink-0 border border-white/10 text-2xl">
+                      {cat.emoji}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="relative rounded-2xl bg-[#324444] p-5 md:p-6 overflow-hidden noise-overlay flex flex-col justify-between gap-5 border border-white/10 shadow-2xl">
+              <div className="flex justify-between items-center w-full relative z-10">
+                <div className="flex items-center gap-2">
+                  <Sparkle className="h-3 w-3 text-white/70" strokeWidth={1.5} />
+                  <span className="uppercase tracking-[0.22em] text-[11px] text-white/70 font-semibold">CONTÁCTANOS</span>
+                </div>
+                <a
+                  href="mailto:hola@anaquelito.mx"
+                  className="h-9 w-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-all hover:scale-105 border border-white/10"
+                  aria-label="Escribir a hola@anaquelito.mx"
+                >
+                  <ArrowUpRight className="h-4 w-4 text-white" strokeWidth={1.5} />
+                </a>
+              </div>
+              <div className="relative z-10 flex flex-col gap-1">
+                <a href="mailto:hola@anaquelito.mx" className="text-[17px] sm:text-[19px] font-normal tracking-tight text-white hover:text-white/80 transition-colors flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-white/50" strokeWidth={1.5} />
+                  hola@anaquelito.mx
+                </a>
+                <span className="text-[14px] sm:text-[15px] text-white/50 font-mono tracking-tight">
+                  WhatsApp: próximamente
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="productos-catalogo" className="px-4 sm:px-6 md:px-10 lg:px-14 py-16 bg-[#0a0a0a] min-h-screen">
         <div className="max-w-7xl mx-auto flex flex-col gap-10">
           

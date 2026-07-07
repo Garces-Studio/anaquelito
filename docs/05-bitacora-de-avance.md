@@ -85,3 +85,14 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - **Contenido equivocado eliminado del catálogo.** `src/app/(tienda)/catalogo/page.tsx` tenía pegado un bloque hero completo de una plantilla de portafolio ajena ("Hi, I'm Max Reed!", testimonio falso de "Elena Brooks", cifra "10M+ Raised for startups", contacto `hi@maxreed.com`, videos de Ninja Turtle del mismo CloudFront sospechoso de antes). Se eliminó por completo, dejando solo la sección real del catálogo (que ya funcionaba bien: carga productos de Supabase, filtros, búsqueda, margen visible, botón de carrito).
 - **Buena noticia encontrada de paso**: el video de fondo de la portada (`src/app/page.tsx`) ya no usa el CloudFront con el personaje con posible copyright — ahora usa `public/dulces-loop.mp4`, un archivo propio. El riesgo de propiedad intelectual de la portada quedó resuelto (el del catálogo se resolvió al borrar esa sección).
 - **Verificado visualmente en navegador** (ya sin el problema de memoria de la ronda anterior): portada, catálogo completo (con fotos reales de producto) y escáner — los tres se ven y funcionan correctamente.
+
+## 2026-07-07 (continuación — vitrina del catálogo con el estilo "glass" real)
+
+- **Aclaración de Mauricio**: el bloque "Max Reed" no fue un error — es un molde de estilo (glass, fondo oscuro, marquesina, textura de ruido) que él quería reutilizar para el catálogo. El Home se queda tal cual (solo la animación/carrusel, sin catálogo). Se reconstruyó una vitrina con ese mismo lenguaje visual pero con contenido honesto de Anaquelito en vez del contenido de plantilla:
+  - "Nuestro surtido" (video + 3 diferenciadores reales: envío 24h, margen visible, precio de mayoreo real).
+  - "Nuestra promesa": frase de valor firmada por "Equipo Anaquelito" — **no** un testimonio de cliente inventado (eso no se fabrica).
+  - Conteo de productos calculado en vivo (`productos.length`), no una cifra inventada tipo "10M+".
+  - Marquesina con las categorías reales del catálogo (emoji), en vez de iconos de Figma/Framer.
+  - Tarjeta de contacto con el correo real (`hola@anaquelito.mx`) y aviso honesto de "WhatsApp: próximamente" en vez de un teléfono inventado.
+- El botón "Ver todo el catálogo" baja con scroll suave a la cuadrícula real de productos (que sigue funcionando igual: filtros, búsqueda, margen, carrito).
+- Verificado en navegador (móvil): la vitrina se ve bien y el botón de scroll funciona.
