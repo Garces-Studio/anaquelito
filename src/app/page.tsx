@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, X, Search } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Crown, X } from 'lucide-react';
 import Link from 'next/link';
-import { crearCliente } from '@/lib/supabase/client';
-import BotonAgregar from '@/componentes/carrito/BotonAgregar';
 import EnlaceCarrito from '@/componentes/carrito/EnlaceCarrito';
 import PieDePagina from '@/componentes/PieDePagina';
 
@@ -72,15 +70,6 @@ export default function Inicio() {
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Estados del catálogo
-  const [productos, setProductos] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [categoriaFiltro, setCategoriaFiltro] = useState<string>('');
-  const [busqueda, setBusqueda] = useState<string>('');
-
-  const supabase = crearCliente();
-
   // Detectar si es móvil
   useEffect(() => {
     const handleResize = () => {
@@ -99,36 +88,6 @@ export default function Inicio() {
     });
   }, []);
 
-  // Cargar productos desde Supabase
-  useEffect(() => {
-    async function cargarProductos() {
-      setLoading(true);
-      try {
-        let query = supabase
-          .from('productos')
-          .select('id, nombre, categoria, unidad, precio_mayoreo, precio_sugerido_reventa')
-          .eq('activo', true)
-          .order('creado_en', { ascending: true });
-
-        if (categoriaFiltro) {
-          query = query.eq('categoria', categoriaFiltro);
-        }
-        if (busqueda) {
-          query = query.ilike('nombre', `%${busqueda}%`);
-        }
-
-        const { data, error: err } = await query;
-        if (err) throw err;
-        setProductos(data || []);
-      } catch (e: any) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-    cargarProductos();
-  }, [categoriaFiltro, busqueda]);
-
   const navegar = (direccion: 'next' | 'prev') => {
     if (isAnimating) return;
     setIsAnimating(true);
@@ -144,14 +103,6 @@ export default function Inicio() {
     setTimeout(() => {
       setIsAnimating(false);
     }, 650);
-  };
-
-  const desplazarACatalogo = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const elem = document.getElementById('catalogo-section');
-    if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   // Roles de posición del carrusel
@@ -321,7 +272,7 @@ export default function Inicio() {
           {/* Enlaces centrales */}
           <div className="portada-menu-links">
             <Link href="/" className="portada-menu-link">Inicio</Link>
-            <a href="#catalogo-section" onClick={desplazarACatalogo} className="portada-menu-link">Catálogo</a>
+            <Link href="/catalogo" className="portada-menu-link">Catálogo</Link>
             <Link href="/escaner" className="portada-menu-link">Escáner</Link>
           </div>
 
@@ -363,14 +314,14 @@ export default function Inicio() {
             >
               Inicio
             </Link>
-            <a 
-              href="#catalogo-section" 
+            <Link 
+              href="/catalogo" 
               className="menu-movil-enlace font-podium"
               style={{ transitionDelay: '180ms' }}
-              onClick={(e) => { setMenuOpen(false); desplazarACatalogo(e); }}
+              onClick={() => setMenuOpen(false)}
             >
               Catálogo
-            </a>
+            </Link>
             <Link 
               href="/escaner" 
               className="menu-movil-enlace font-podium"
@@ -439,10 +390,10 @@ export default function Inicio() {
 
             {/* Botones de acción */}
             <div className="fila-cta-hero animate-fade-up-delay-3">
-              <a href="#catalogo-section" onClick={desplazarACatalogo} className="boton-cta-negro">
+              <Link href="/catalogo" className="boton-cta-negro">
                 <span>VER CATÁLOGO</span>
                 <ArrowUpRight size={14} />
-              </a>
+              </Link>
               <Link href="/escaner" className="boton-cta-cristal">
                 <span>ESCANEAR PRODUCTO</span>
                 <ArrowRight size={14} />
@@ -529,139 +480,8 @@ export default function Inicio() {
         </div>
       </main>
 
-      {/* SECCIÓN CATÁLOGO (MERCADO MODERNO STYLE) */}
-      <div className="tema-tienda" id="catalogo-section" style={{ minHeight: 'auto' }}>
-        <section className="contenedor seccion">
-          <header style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            flexWrap: 'wrap',
-            gap: '1.5rem',
-            marginBottom: '2.5rem',
-          }}>
-            <div>
-              <h2 className="seccion-titulo">Catálogo mayorista en vivo</h2>
-              <p style={{ color: 'var(--tinta-suave)', marginTop: '0.2rem' }}>
-                Precio directo de distribuidor + margen de ganancia sugerido para reventa.
-              </p>
-            </div>
-            
-            {/* Buscador reactivo */}
-            <div className="buscador" style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-              <input
-                type="search"
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-                placeholder="Buscar dulces, papas, chocolates..."
-                style={{
-                  padding: '0.75rem 1.25rem 0.75rem 2.6rem',
-                  borderRadius: '999px',
-                  border: '1.5px solid var(--borde)',
-                  outline: 'none',
-                  fontSize: '0.95rem',
-                  width: '280px',
-                  backgroundColor: 'var(--papel)',
-                  color: 'var(--tinta)'
-                }}
-              />
-              <Search size={18} style={{ position: 'absolute', left: '0.95rem', color: 'var(--tinta-suave)' }} />
-            </div>
-          </header>
-
-          {/* Filtros por categorías */}
-          <nav className="filtros-categorias" style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2.5rem' }} aria-label="Filtrar por categoría">
-            <button 
-              onClick={() => setCategoriaFiltro('')} 
-              className={`chip ${!categoriaFiltro ? 'chip-activo' : ''}`}
-            >
-              Todo
-            </button>
-            {['gomitas', 'chocolates', 'frutos_secos', 'semillas', 'dulces', 'fritos'].map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setCategoriaFiltro(cat)}
-                className={`chip ${categoriaFiltro === cat ? 'chip-activo' : ''}`}
-              >
-                {EMOJI_CATEGORIA[cat] ?? '🛒'} {NOMBRE_CATEGORIA[cat] ?? cat}
-              </button>
-            ))}
-          </nav>
-
-          {error && (
-            <p style={{ color: 'var(--peligro)', padding: '2rem 0', textAlign: 'center' }}>
-              No se pudo cargar el catálogo: {error}
-            </p>
-          )}
-
-          {loading && (
-            <p style={{ color: 'var(--tinta-suave)', padding: '4rem 0', textAlign: 'center' }}>
-              Cargando catálogo de productos...
-            </p>
-          )}
-
-          {!loading && productos.length === 0 && (
-            <p style={{ color: 'var(--tinta-suave)', padding: '4rem 0', textAlign: 'center' }}>
-              No encontramos productos con ese filtro.
-            </p>
-          )}
-
-          {/* Rejilla de tarjetas de producto */}
-          <div className="rejilla-productos">
-            {productos.map((producto, i) => {
-              const margen = producto.precio_sugerido_reventa
-                ? Math.round(
-                    ((producto.precio_sugerido_reventa - producto.precio_mayoreo) /
-                      producto.precio_mayoreo) * 100
-                  )
-                : null;
-
-              return (
-                <article
-                  key={producto.id}
-                  className={`tarjeta-producto aparecer ${i < 4 ? `retraso-${i + 1}` : ''}`}
-                >
-                  <div className="foto" aria-hidden="true" style={{ overflow: 'hidden' }}>
-                    {IMAGENES_PRODUCTOS[producto.nombre] ? (
-                      <img 
-                        src={IMAGENES_PRODUCTOS[producto.nombre]} 
-                        alt={producto.nombre} 
-                        style={{ 
-                          width: '85%', 
-                          height: '85%', 
-                          objectFit: 'contain',
-                          transition: 'transform var(--suave)'
-                        }}
-                        className="foto-producto-img"
-                      />
-                    ) : (
-                      EMOJI_CATEGORIA[producto.categoria ?? ''] ?? '🛒'
-                    )}
-                  </div>
-                  <h3>{producto.nombre}</h3>
-                  <p className="unidad">
-                    Por {producto.unidad} · {NOMBRE_CATEGORIA[producto.categoria ?? ''] ?? 'General'}
-                  </p>
-                  <div className="precios">
-                    <span className="precio-mayoreo">
-                      ${producto.precio_mayoreo} <small>mayoreo</small>
-                    </span>
-                    {margen !== null && (
-                      <span className="etiqueta-margen">le ganas ~{margen}%</span>
-                    )}
-                  </div>
-                  {producto.precio_sugerido_reventa && (
-                    <p className="sugerido" style={{ marginBottom: '1.2rem' }}>
-                      Sugerido de reventa: ${producto.precio_sugerido_reventa}
-                    </p>
-                  )}
-                  <BotonAgregar producto={producto} />
-                </article>
-              );
-            })}
-          </div>
-        </section>
-
+      {/* SECCIÓN PIE DE PÁGINA */}
+      <div className="tema-tienda" style={{ minHeight: 'auto' }}>
         {/* PIE DE PÁGINA */}
         <PieDePagina />
       </div>
