@@ -5,10 +5,11 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 ## Para activar YA (rápidas)
 
 - [ ] **🔴 URGENTE — Revocar un token de GitHub expuesto.** Se encontró `[TOKEN-YA-REVOCADO-VER-BITACORA]` guardado en texto plano en `.git/config`. Ya se quitó del archivo, pero el token en sí sigue activo en GitHub hasta que lo revoques manualmente: [github.com/settings/tokens](https://github.com/settings/tokens) → busca ese token → Delete/Revoke.
-- [ ] **Credenciales para que el checkout cobre de verdad**: faltan `SUPABASE_SERVICE_ROLE_KEY` (Supabase → Project Settings → API → service_role) y `MERCADOPAGO_ACCESS_TOKEN` (developers.mercadopago.com.mx → Tus integraciones → Credenciales; usar las de **prueba** primero). Van en `.env.local` y luego en Vercel.
+- [x] ~~Llave `service_role` de Supabase~~ — ya la pasó Mauricio (2026-07-07), guardada en `.env.local`.
+- [ ] **Mercado Pago sigue en pausa a propósito.** Mauricio pidió explícitamente no activarlo todavía (2026-07-07). El código ya existe en `src/app/api/checkout/route.ts`; falta solo `MERCADOPAGO_ACCESS_TOKEN` cuando decidan seguir con esto.
 - [ ] **Número de WhatsApp del negocio**: confirmado como pendiente por Mauricio (2026-07-06, "por el momento no"). Cuando se tenga, configurarlo como `NEXT_PUBLIC_WHATSAPP_NUMERO` (formato internacional sin signos, ej. `5215512345678`) en `.env.local` y en Vercel. Con eso el botón "Enviar pedido por WhatsApp" del carrito queda funcionando y ya se pueden recibir pedidos reales.
 - [ ] **Licencia de la tipografía PODIUM Sharp**: la versión importada en `globals.css` es un "DEMO" servido por un CDN de terceros (onlinewebfonts.com). Antes de lanzar hay que comprar la licencia comercial y servir la fuente desde nuestro propio proyecto, o elegir una fuente libre equivalente. Usar una fuente demo en un negocio real es una violación de licencia.
-- [ ] **⚠️ Revisar el video de fondo de la portada por posible infracción de propiedad intelectual.** Parece mostrar una Tortuga Ninja (personaje registrado de Paramount/Nickelodeon). Si no hay licencia explícita para ese clip, hay que reemplazarlo antes de mostrar el sitio a nadie fuera del equipo — el riesgo no es de diseño, es legal (derechos de autor/marca).
+- [x] ~~Video de fondo de la portada con posible personaje con copyright~~ — ya se reemplazó por `public/dulces-loop.mp4` (video propio). Resuelto.
 
 ## Decisiones de negocio (necesitan a tu socio)
 
