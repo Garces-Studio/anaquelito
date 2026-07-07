@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Anton, Inter } from "next/font/google";
+import { Anton, Inter, Kanit } from "next/font/google";
 import "./globals.css";
 
 // Tipografía de títulos: display condensada con energía de cartel de mercado
@@ -15,8 +15,15 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+// Tipografía Kanit para el portafolio premium de Jack
+const kanit = Kanit({
+  variable: "--font-kanit",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Anaquelito — Surte tu tiendita con dulces y botanas de alto margen",
+  title: "Jack -- 3D Creator",
   description:
     "Mayoreo de dulces y botanas para tienditas, cafés y emprendedores en CDMX. Precios claros, margen visible en cada producto y reorden escaneando la bolsa vacía.",
 };
@@ -32,7 +39,7 @@ export default function DisenoPrincipal({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${anton.variable} ${inter.variable}`}>
+    <html lang="es" className={`${anton.variable} ${inter.variable} ${kanit.variable}`}>
       <body>
         <ProveedorCarrito>
           {children}
