@@ -85,7 +85,7 @@ export default function PaginaDetalleDulce() {
         if (prodData) {
           const { data: relData } = await supabase
             .from('productos')
-            .select('id, nombre, categoria, unidad, precio_mayoreo, precio_sugerido_reventa')
+            .select('id, nombre, categoria, unidad, precio_mayoreo, precio_sugerido_reventa, imagen_url')
             .eq('categoria', prodData.categoria)
             .eq('activo', true)
             .neq('id', prodData.id)
@@ -170,9 +170,9 @@ export default function PaginaDetalleDulce() {
                 <div className="w-full aspect-square bg-gradient-to-br from-[#FF5A5F]/15 to-[#FFB400]/10 rounded-[40px] p-8 sm:p-12 flex items-center justify-center shadow-xl border border-[#EBD9C3] relative group overflow-hidden">
                   <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,transparent_70%)] pointer-events-none" />
                   
-                  {IMAGENES_PRODUCTOS[producto.nombre] ? (
+                  {(producto.imagen_url || IMAGENES_PRODUCTOS[producto.nombre]) ? (
                     <img
-                      src={IMAGENES_PRODUCTOS[producto.nombre]}
+                      src={producto.imagen_url || IMAGENES_PRODUCTOS[producto.nombre]}
                       alt={producto.nombre}
                       className="w-5/6 h-5/6 object-contain select-none pointer-events-none drop-shadow-[0_15px_35px_rgba(43,27,18,0.25)] transition-transform duration-500 group-hover:scale-105"
                       draggable={false}
@@ -311,9 +311,9 @@ export default function PaginaDetalleDulce() {
                     className="flex flex-col bg-white border border-[#EBD9C3] rounded-2xl p-4 hover:shadow-md transition-shadow group text-[#2B1B12]"
                   >
                     <div className="relative aspect-[4/3] bg-[#FFF6EC] rounded-xl flex items-center justify-center text-4xl mb-3 overflow-hidden">
-                      {IMAGENES_PRODUCTOS[rel.nombre] ? (
+                      {(rel.imagen_url || IMAGENES_PRODUCTOS[rel.nombre]) ? (
                         <img
-                          src={IMAGENES_PRODUCTOS[rel.nombre]}
+                          src={rel.imagen_url || IMAGENES_PRODUCTOS[rel.nombre]}
                           alt={rel.nombre}
                           className="w-4/5 h-4/5 object-contain transition-transform duration-300 group-hover:scale-105"
                         />
