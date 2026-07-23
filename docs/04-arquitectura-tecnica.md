@@ -2,8 +2,8 @@
 
 ## Stack actual
 
-- **Framework:** Next.js 16.2.10 (App Router). Ver `AGENTS.md` en la raíz — esta versión tiene cambios importantes respecto a versiones anteriores de Next.js; antes de tocar convenciones de rutas/archivos, revisar `node_modules/next/dist/docs/`.
-- **UI:** React 19.2.4, sin librería de componentes todavía (estilos inline + variables CSS en `globals.css`).
+- **Framework:** Next.js 16.2.10 (App Router), estándar — documentación oficial en https://nextjs.org/docs.
+- **UI:** React 19.2.4 + Tailwind CSS 4, combinado con estilos inline y clases custom en `globals.css` para las páginas más visuales (portada, carrusel).
 - **Backend/datos:** Supabase (`@supabase/ssr`, `@supabase/supabase-js`). Cliente para browser en `src/lib/supabase/client.ts`, cliente para servidor (cookies) en `src/lib/supabase/server.ts`.
 - **Lint:** ESLint 9 + `eslint-config-next`.
 - **Tipado:** TypeScript 5.
@@ -75,4 +75,8 @@ supabase/
 
 - Todo el código, comentarios (cuando los haya) y contenido de cara al usuario va en español.
 - Todo lo que se agrega a este manual (`docs/`) también va en español.
-- Antes de escribir código nuevo en este Next.js, revisar `AGENTS.md` — esta versión de Next.js puede diferir de lo que el modelo "sabe" por entrenamiento.
+- El manual técnico página por página (para entender qué hace cada pantalla del sitio) vive en [`docs/manual/`](manual/README.md).
+
+## Nota de vigencia (2026-07-23)
+
+Este documento describe el estado del proyecto en una etapa temprana y **ya no refleja la estructura actual completa** (por ejemplo: ya existen carrito, checkout, cuentas, dashboard, escáner y panel de administrador bajo `src/app/(tienda)/`, y sí se usa Tailwind). Para el estado real y detallado de cada página, ver [`docs/manual/`](manual/README.md). Este archivo se debe actualizar o dividir pronto para no quedar desactualizado otra vez.

@@ -1,5 +1,5 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# Notas para agentes / programadores
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+Este proyecto usa **Next.js 16.2.10 con App Router**, estándar (no hay una carpeta local de documentación especial: `node_modules/next/dist/docs/` no existe en este repo). Si tienes dudas sobre convenciones de rutas o APIs, consulta la documentación oficial en https://nextjs.org/docs.
+
+El manual técnico completo del proyecto (arquitectura, páginas, negocio) vive en [`docs/MANUAL.md`](docs/MANUAL.md) — léelo antes de tocar código.

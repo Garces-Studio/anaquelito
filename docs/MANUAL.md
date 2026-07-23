@@ -15,6 +15,7 @@ Este es el documento maestro del proyecto **Anaquelito**. Aquí se centraliza to
 | [05-bitacora-de-avance.md](05-bitacora-de-avance.md) | Registro cronológico de qué se ha construido, sesión por sesión |
 | [06-pendientes-y-decisiones.md](06-pendientes-y-decisiones.md) | Lista viva de lo que falta decidir o construir, con dueño y prioridad |
 | [07-legal-y-cumplimiento.md](07-legal-y-cumplimiento.md) | Sociedad, PROFECO, protección de datos, NOM-051 — lo mínimo indispensable |
+| [manual/README.md](manual/README.md) | Manual técnico página por página del sitio (qué hace cada pantalla, con qué código) — empieza en [manual/01-home.md](manual/01-home.md) |
 
 ## Estado actual en una frase
 
@@ -26,3 +27,4 @@ Anaquelito es una plataforma B2B de venta de dulces y botanas al mayoreo para ti
 - Cuando termines una implementación, se agrega una entrada en [05-bitacora-de-avance.md](05-bitacora-de-avance.md).
 - Si cambia una decisión de negocio (precios, segmentos, crédito), se actualiza [03-modelo-de-negocio.md](03-modelo-de-negocio.md), no se deja solo en el chat.
 - Las decisiones de marca y estrategia ya tomadas (nombre, identidad visual, propuesta de valor) están fijadas en [01-vision-y-estrategia.md](01-vision-y-estrategia.md) — no se vuelven a debatir sin razón de peso.
+- Si modificas una página del sitio de forma importante, actualiza su archivo en [manual/](manual/README.md).
