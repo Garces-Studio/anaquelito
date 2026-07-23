@@ -28,6 +28,7 @@ export const viewport: Viewport = {
 };
 
 import { ProveedorCarrito } from "@/componentes/carrito/ContextoCarrito";
+import CajonCarrito from "@/componentes/carrito/CajonCarrito";
 import Encabezado from "@/componentes/Encabezado";
 
 export default function DisenoPrincipal({
@@ -41,6 +42,7 @@ export default function DisenoPrincipal({
         <ProveedorCarrito>
           <Encabezado />
           {children}
+          <CajonCarrito />
         </ProveedorCarrito>
       </body>
     </html>

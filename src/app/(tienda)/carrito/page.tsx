@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Minus, Plus, ShoppingBag, Trash2, Truck } from 'lucide-react';
-import { usarCarrito } from '@/componentes/carrito/ContextoCarrito';
+import { ENVIO_GRATIS_DESDE, usarCarrito } from '@/componentes/carrito/ContextoCarrito';
 
 const NUMERO_WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMERO;
 
@@ -77,10 +77,20 @@ export default function PaginaCarrito() {
                 className="grid gap-4 rounded-lg border border-[#EBD9C3] bg-white/86 p-4 shadow-[0_14px_36px_rgba(43,27,18,0.06)] backdrop-blur md:grid-cols-[1fr_auto] md:items-center"
                 style={{ animation: `fade-up 0.55s ease-out ${Math.min(index * 0.06, 0.24)}s both` }}
               >
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#FF5A5F]">{articulo.unidad}</p>
-                  <h2 className="font-titulo !font-black text-3xl uppercase leading-none">{articulo.nombre}</h2>
-                  <p className="mt-2 text-sm font-semibold text-[#6B5546]">${articulo.precio_mayoreo} por {articulo.unidad}</p>
+                <div className="flex items-center gap-4">
+                  <span className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-lg bg-[#FFF6EC]">
+                    {articulo.imagen ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={articulo.imagen} alt={articulo.nombre} className="blend-multiply h-16 w-16 object-contain" />
+                    ) : (
+                      <ShoppingBag size={26} className="text-[#FF5A5F]" />
+                    )}
+                  </span>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#FF5A5F]">{articulo.unidad}</p>
+                    <h2 className="font-titulo !font-black text-3xl uppercase leading-none">{articulo.nombre}</h2>
+                    <p className="mt-2 text-sm font-semibold text-[#6B5546]">${articulo.precio_mayoreo} por {articulo.unidad}</p>
+                  </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-3 md:justify-end">
                   <div className="inline-flex items-center rounded-full border border-[#EBD9C3] bg-[#FFF6EC] p-1">
@@ -109,9 +119,28 @@ export default function PaginaCarrito() {
                 <h2 className="font-titulo !font-black text-3xl uppercase leading-none">Pedido</h2>
               </div>
             </div>
+            <div className="mb-5 rounded-lg border border-dashed border-[#EBD9C3] bg-[#FFF6EC] p-4">
+              <p className="text-[11px] font-black uppercase tracking-[0.1em] text-[#6B5546]">
+                {subtotal >= ENVIO_GRATIS_DESDE
+                  ? '¡Envío gratis desbloqueado!'
+                  : `Faltan $${(ENVIO_GRATIS_DESDE - subtotal).toFixed(0)} para envío gratis`}
+              </p>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#EBD9C3]/70">
+                <div
+                  className="h-full rounded-full transition-all duration-700"
+                  style={{
+                    width: `${Math.min(100, (subtotal / ENVIO_GRATIS_DESDE) * 100)}%`,
+                    background:
+                      subtotal >= ENVIO_GRATIS_DESDE
+                        ? '#1E9E6A'
+                        : 'linear-gradient(90deg, #FF5A5F 0%, #FFB400 100%)',
+                  }}
+                />
+              </div>
+            </div>
             <div className="grid gap-3 border-y border-[#EBD9C3] py-5">
               <div className="flex justify-between text-sm font-bold text-[#6B5546]"><span>Subtotal</span><strong className="text-[#2B1B12]">${subtotal.toFixed(2)}</strong></div>
-              <div className="flex justify-between text-sm font-bold text-[#6B5546]"><span>Envío</span><strong className="text-[#2B1B12]">Por confirmar</strong></div>
+              <div className="flex justify-between text-sm font-bold text-[#6B5546]"><span>Envío</span><strong className={subtotal >= ENVIO_GRATIS_DESDE ? 'text-[#1E9E6A]' : 'text-[#2B1B12]'}>{subtotal >= ENVIO_GRATIS_DESDE ? 'Gratis' : 'Por confirmar'}</strong></div>
               <div className="flex justify-between text-sm font-bold text-[#6B5546]"><span>Descuento volumen</span><strong className="text-[#00A699]">Al confirmar</strong></div>
             </div>
             <div className="mt-5 flex items-baseline justify-between">

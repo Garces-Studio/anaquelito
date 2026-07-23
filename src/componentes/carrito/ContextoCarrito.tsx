@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 /** Un producto dentro del carrito. */
 export type ArticuloCarrito = {
@@ -9,16 +9,33 @@ export type ArticuloCarrito = {
   unidad: string;
   precio_mayoreo: number;
   cantidad: number;
+  imagen?: string;
 };
+
+/** Aviso flotante que se muestra al agregar un dulce. */
+export type AvisoCarrito = {
+  clave: number;
+  nombre: string;
+  imagen?: string;
+  cantidad: number;
+};
+
+/** Monto a partir del cual el envío es gratis (regla comercial provisional). */
+export const ENVIO_GRATIS_DESDE = 1500;
 
 type EstadoCarrito = {
   articulos: ArticuloCarrito[];
-  agregar: (articulo: Omit<ArticuloCarrito, 'cantidad'>) => void;
+  agregar: (articulo: Omit<ArticuloCarrito, 'cantidad'>, cantidad?: number) => void;
   cambiarCantidad: (id: string, cantidad: number) => void;
   quitar: (id: string) => void;
   vaciar: () => void;
   totalArticulos: number;
   subtotal: number;
+  cajonAbierto: boolean;
+  abrirCajon: () => void;
+  cerrarCajon: () => void;
+  aviso: AvisoCarrito | null;
+  descartarAviso: () => void;
 };
 
 const ContextoCarrito = createContext<EstadoCarrito | null>(null);
@@ -26,10 +43,14 @@ const ContextoCarrito = createContext<EstadoCarrito | null>(null);
 const LLAVE_ALMACEN = 'anaquelito-carrito';
 
 /** Proveedor del carrito: guarda el estado en localStorage para que el
- *  pedido no se pierda si el cliente cierra la pestaña. */
+ *  pedido no se pierda si el cliente cierra la pestaña. También controla
+ *  el cajón lateral y los avisos al agregar productos. */
 export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
   const [articulos, setArticulos] = useState<ArticuloCarrito[]>([]);
   const [hidratado, setHidratado] = useState(false);
+  const [cajonAbierto, setCajonAbierto] = useState(false);
+  const [aviso, setAviso] = useState<AvisoCarrito | null>(null);
+  const temporizadorAviso = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Cargar el carrito guardado al abrir la página
   useEffect(() => {
@@ -47,16 +68,29 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
     if (hidratado) localStorage.setItem(LLAVE_ALMACEN, JSON.stringify(articulos));
   }, [articulos, hidratado]);
 
-  const agregar: EstadoCarrito['agregar'] = (articulo) => {
+  useEffect(() => {
+    return () => {
+      if (temporizadorAviso.current) clearTimeout(temporizadorAviso.current);
+    };
+  }, []);
+
+  const mostrarAviso = (articulo: Omit<ArticuloCarrito, 'cantidad'>, cantidad: number) => {
+    if (temporizadorAviso.current) clearTimeout(temporizadorAviso.current);
+    setAviso({ clave: Date.now(), nombre: articulo.nombre, imagen: articulo.imagen, cantidad });
+    temporizadorAviso.current = setTimeout(() => setAviso(null), 3200);
+  };
+
+  const agregar: EstadoCarrito['agregar'] = (articulo, cantidad = 1) => {
     setArticulos((previos) => {
       const existente = previos.find((a) => a.id === articulo.id);
       if (existente) {
         return previos.map((a) =>
-          a.id === articulo.id ? { ...a, cantidad: a.cantidad + 1 } : a
+          a.id === articulo.id ? { ...a, ...articulo, cantidad: a.cantidad + cantidad } : a
         );
       }
-      return [...previos, { ...articulo, cantidad: 1 }];
+      return [...previos, { ...articulo, cantidad }];
     });
+    mostrarAviso(articulo, cantidad);
   };
 
   const cambiarCantidad: EstadoCarrito['cambiarCantidad'] = (id, cantidad) => {
@@ -72,6 +106,13 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
 
   const vaciar = () => setArticulos([]);
 
+  const abrirCajon = () => {
+    setAviso(null);
+    setCajonAbierto(true);
+  };
+  const cerrarCajon = () => setCajonAbierto(false);
+  const descartarAviso = () => setAviso(null);
+
   const totalArticulos = articulos.reduce((suma, a) => suma + a.cantidad, 0);
   const subtotal = articulos.reduce(
     (suma, a) => suma + a.cantidad * a.precio_mayoreo,
@@ -80,7 +121,20 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
 
   return (
     <ContextoCarrito.Provider
-      value={{ articulos, agregar, cambiarCantidad, quitar, vaciar, totalArticulos, subtotal }}
+      value={{
+        articulos,
+        agregar,
+        cambiarCantidad,
+        quitar,
+        vaciar,
+        totalArticulos,
+        subtotal,
+        cajonAbierto,
+        abrirCajon,
+        cerrarCajon,
+        aviso,
+        descartarAviso,
+      }}
     >
       {children}
     </ContextoCarrito.Provider>

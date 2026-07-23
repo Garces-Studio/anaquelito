@@ -7,7 +7,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Barcode,
-  Check,
   Grid3X3,
   PackageCheck,
   RefreshCw,
@@ -17,7 +16,7 @@ import {
   Sparkles,
   TrendingUp,
 } from 'lucide-react';
-import { usarCarrito } from '@/componentes/carrito/ContextoCarrito';
+import BotonAgregar from '@/componentes/carrito/BotonAgregar';
 import { crearCliente } from '@/lib/supabase/client';
 
 /** Fila real de la tabla `productos` en Supabase. */
@@ -163,35 +162,6 @@ function margen(producto: ProductoCatalogo) {
 
 function ganancia(producto: ProductoCatalogo) {
   return producto.precio_sugerido_reventa - producto.precio_mayoreo;
-}
-
-function BotonAgregarCatalogo({ producto }: { producto: ProductoCatalogo }) {
-  const { agregar } = usarCarrito();
-  const [agregado, setAgregado] = useState(false);
-
-  const manejarClick = () => {
-    agregar({
-      id: producto.id,
-      nombre: producto.nombre,
-      unidad: producto.unidad,
-      precio_mayoreo: producto.precio_mayoreo,
-    });
-    setAgregado(true);
-    setTimeout(() => setAgregado(false), 1200);
-  };
-
-  return (
-    <button
-      type="button"
-      onClick={manejarClick}
-      className={`group inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-[11px] font-black uppercase tracking-[0.16em] text-white transition duration-200 active:scale-95 ${
-        agregado ? 'bg-[#00A699]' : 'bg-[#2B1B12] hover:bg-[#FF5A5F]'
-      }`}
-    >
-      {agregado ? <Check size={16} /> : <ShoppingBag size={16} />}
-      {agregado ? 'Agregado' : 'Agregar'}
-    </button>
-  );
 }
 
 /** Tarjeta fantasma mientras carga el catálogo (se siente más rápido). */
@@ -651,7 +621,7 @@ export default function PaginaCatalogo() {
                     </div>
 
                     <div className="mt-4">
-                      <BotonAgregarCatalogo producto={producto} />
+                      <BotonAgregar producto={producto} />
                     </div>
                   </div>
                 </article>

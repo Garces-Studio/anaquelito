@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/server';
 import BotonCerrarSesion from '@/componentes/BotonCerrarSesion';
+import PestanasPanel from '@/componentes/PestanasPanel';
 
 const ESTADO_ETIQUETA: Record<string, string> = {
   pendiente: 'Pendiente',
@@ -178,17 +179,24 @@ export default async function PaginaDashboard() {
           </article>
         </div>
 
-        <section className="mt-16">
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#FF5A5F]">Historial</span>
-              <h2 className="mt-2 text-4xl !font-black uppercase leading-none md:text-5xl">Tus pedidos</h2>
-            </div>
-            <Link href="/catalogo" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition hover:text-[#FF5A5F]">
-              Comprar más <ArrowRight size={15} />
-            </Link>
-          </div>
-          {!pedidos || pedidos.length === 0 ? (
+        <PestanasPanel
+          pestanas={[
+            {
+              id: 'pedidos',
+              titulo: 'Pedidos',
+              conteo: pedidos?.length ?? 0,
+              contenido: (
+                <div>
+                  <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+                    <div>
+                      <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#FF5A5F]">Historial</span>
+                      <h2 className="mt-2 text-4xl !font-black uppercase leading-none md:text-5xl">Tus pedidos</h2>
+                    </div>
+                    <Link href="/catalogo" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition hover:text-[#FF5A5F]">
+                      Comprar más <ArrowRight size={15} />
+                    </Link>
+                  </div>
+                  {!pedidos || pedidos.length === 0 ? (
             <div className="rounded-lg border border-dashed border-[#EBD9C3] bg-white/78 p-8 text-center">
               <ShoppingBag className="mx-auto text-[#FF5A5F]" size={32} />
               <p className="mt-4 text-2xl !font-black uppercase">Todavía no hay pedidos</p>
@@ -225,16 +233,21 @@ export default async function PaginaDashboard() {
               ))}
             </div>
           )}
-        </section>
-
-        <section className="mt-16 grid gap-5 lg:grid-cols-2">
-          <div>
-            <div className="mb-5 flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-[#00A699]/12 text-[#007A70]">
-                <MapPin size={18} />
-              </span>
-              <h2 className="text-4xl !font-black uppercase leading-none">Tus direcciones</h2>
-            </div>
+                </div>
+              ),
+            },
+            {
+              id: 'direcciones',
+              titulo: 'Direcciones',
+              conteo: direcciones?.length ?? 0,
+              contenido: (
+                <div>
+                  <div className="mb-5 flex items-center gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-full bg-[#00A699]/12 text-[#007A70]">
+                      <MapPin size={18} />
+                    </span>
+                    <h2 className="text-4xl !font-black uppercase leading-none">Tus direcciones</h2>
+                  </div>
             {!direcciones || direcciones.length === 0 ? (
               <p className="rounded-lg border border-dashed border-[#EBD9C3] bg-white/70 p-6 text-sm font-semibold text-[#6B5546]">
                 No tienes direcciones guardadas todavía.
@@ -257,15 +270,21 @@ export default async function PaginaDashboard() {
                 ))}
               </div>
             )}
-          </div>
-
-          <div>
-            <div className="mb-5 flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-[#FF5A5F]/12 text-[#FF5A5F]">
-                <Ticket size={18} />
-              </span>
-              <h2 className="text-4xl !font-black uppercase leading-none">Tus cupones</h2>
-            </div>
+                </div>
+              ),
+            },
+            {
+              id: 'cupones',
+              titulo: 'Cupones',
+              conteo: cupones?.length ?? 0,
+              contenido: (
+                <div>
+                  <div className="mb-5 flex items-center gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-full bg-[#FF5A5F]/12 text-[#FF5A5F]">
+                      <Ticket size={18} />
+                    </span>
+                    <h2 className="text-4xl !font-black uppercase leading-none">Tus cupones</h2>
+                  </div>
             {!cupones || cupones.length === 0 ? (
               <p className="rounded-lg border border-dashed border-[#EBD9C3] bg-white/70 p-6 text-sm font-semibold text-[#6B5546]">
                 Todavía no hay cupones disponibles. Cuando activemos promociones, aparecerán aquí.
@@ -288,8 +307,11 @@ export default async function PaginaDashboard() {
                 ))}
               </div>
             )}
-          </div>
-        </section>
+                </div>
+              ),
+            },
+          ]}
+        />
       </section>
     </main>
   );

@@ -269,7 +269,7 @@ export default function PaginaDetalleDulce() {
 
               {/* Add to Cart button box */}
               <div className="mt-2 w-full">
-                <BotonAgregar producto={producto} />
+                <BotonAgregar producto={{ ...producto, imagen: producto.imagen_url || IMAGENES_PRODUCTOS[producto.nombre] }} />
               </div>
             </FadeIn>
 

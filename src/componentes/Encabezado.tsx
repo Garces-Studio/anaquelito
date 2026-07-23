@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, ScanLine, X } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import EnlaceCarrito from './carrito/EnlaceCarrito';
+import { usarCarrito } from './carrito/ContextoCarrito';
 import { crearCliente } from '@/lib/supabase/client';
 
 const enlaces = [
@@ -22,6 +23,7 @@ export default function Encabezado() {
   const [oculto, setOculto] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
+  const { subtotal, totalArticulos } = usarCarrito();
 
   useEffect(() => {
     setMounted(true);
@@ -85,7 +87,7 @@ export default function Encabezado() {
         }}
       >
         <div
-          className={`pointer-events-auto flex w-full max-w-5xl items-center justify-between rounded-full border px-4 py-2.5 backdrop-blur-2xl transition-all duration-300 sm:px-5 ${
+          className={`nav-brillo pointer-events-auto flex w-full max-w-5xl items-center justify-between rounded-full border px-4 py-2.5 backdrop-blur-2xl transition-all duration-300 sm:px-5 ${
             scrolled
               ? 'border-[#EBD9C3] bg-[#FFF6EC]/92 shadow-[0_18px_55px_rgba(43,27,18,0.13)]'
               : 'border-white/65 bg-white/55 shadow-[0_12px_40px_rgba(43,27,18,0.08)]'
@@ -138,8 +140,13 @@ export default function Encabezado() {
             >
               {enlaceCuenta.texto}
             </Link>
-            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] bg-white text-[#2B1B12]" style={{ backgroundColor: '#FFFFFF', color: '#2B1B12' }}>
+            <span className="flex items-center gap-1 rounded-full border border-[#EBD9C3] bg-white pl-1 text-[#2B1B12]" style={{ backgroundColor: '#FFFFFF', color: '#2B1B12' }}>
               <EnlaceCarrito />
+              {totalArticulos > 0 && (
+                <span className="pr-3 text-xs font-black tabular-nums text-[#2B1B12]">
+                  ${subtotal.toFixed(0)}
+                </span>
+              )}
             </span>
           </div>
 

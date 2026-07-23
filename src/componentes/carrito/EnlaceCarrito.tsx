@@ -1,19 +1,26 @@
 'use client';
 
-import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 import { usarCarrito } from './ContextoCarrito';
 
-/** Enlace al carrito en el encabezado, con contador de artículos. */
+/** Botón del carrito en el encabezado: abre el cajón lateral (sin cambiar de
+ *  página) y muestra el contador con una animación "pop" cada vez que cambia. */
 export default function EnlaceCarrito() {
-  const { totalArticulos } = usarCarrito();
+  const { totalArticulos, abrirCajon } = usarCarrito();
 
   return (
-    <Link href="/carrito" className="enlace-carrito" aria-label="Ver carrito">
+    <button
+      type="button"
+      onClick={abrirCajon}
+      className="enlace-carrito"
+      aria-label={`Abrir carrito (${totalArticulos} artículos)`}
+    >
       <ShoppingBag size={20} strokeWidth={2} />
       {totalArticulos > 0 && (
-        <span className="contador-carrito">{totalArticulos}</span>
+        <span key={totalArticulos} className="contador-carrito contador-pop">
+          {totalArticulos}
+        </span>
       )}
-    </Link>
+    </button>
   );
 }
