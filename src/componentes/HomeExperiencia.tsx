@@ -6,10 +6,12 @@ import { useEffect, useState, type CSSProperties } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Boxes, Camera, CheckCircle2, Crown, PackageCheck, ScanLine, Sparkles, Store, TrendingUp, Truck } from 'lucide-react';
 
 const ESCENAS = [
-  { nombre: 'Gomitas que sí se mueven', descripcion: 'Un surtido inicial pensado para mostrador, dulcería, eventos y reventa.', src: '/gomitas.png', color: '#00A699' },
-  { nombre: 'Dulces para tu anaquel', descripcion: 'Compra por caja y consulta la presentación real antes de cerrar tu pedido.', src: '/mazapan.png', color: '#FFB400' },
-  { nombre: 'Botanas para completar', descripcion: 'Anaquelito crecerá con productos elegidos por rotación, no por llenar el catálogo.', src: '/papas.png', color: '#FF5A5F' },
-  { nombre: 'Reordena en segundos', descripcion: 'Cuando un producto se termine, podrás volver a pedirlo desde tu celular.', src: '/paleta.png', color: '#E882B4' },
+  { nombre: 'Gomilocas Pingüinos', descripcion: 'Bolsa de gomitas Ricolino para mostrador, dulcería, eventos y reventa.', src: '/productos/gomita-pinguino.jpg', color: '#eb168a' },
+  { nombre: 'Gomilocas Dientes', descripcion: 'Una presentación llamativa para darle variedad y color a tu anaquel.', src: '/productos/gomita-diente.jpg', color: '#08aeda' },
+  { nombre: 'Panditas Clásicos', descripcion: 'El formato de un kilogramo de una gomita reconocida por el consumidor.', src: '/productos/gomita-oso.jpg', color: '#20a83a' },
+  { nombre: 'Gomilocas Lombrices', descripcion: 'Surtido de figuras y sabores en una presentación pensada para reventa.', src: '/productos/gomita-lombriz.jpg', color: '#a40ab7' },
+  { nombre: 'Gomilocas Huevitos', descripcion: 'Gomitas en forma de huevito para complementar un surtido más divertido.', src: '/productos/huevito-pinto.jpg', color: '#ed1688' },
+  { nombre: 'Bubulubu Ice', descripcion: 'Caja de 300 piezas para negocios que quieren comprar por volumen.', src: '/productos/bubulubu-ice.jpg', color: '#078ee8' },
 ];
 
 export default function HomeExperiencia() {

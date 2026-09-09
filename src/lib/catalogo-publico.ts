@@ -29,6 +29,7 @@ export const obtenerCatalogo = cache(async (): Promise<{ productos: ProductoMayo
         ...borrador,
         ...fila,
         slug: fila.slug || borrador.slug,
+        imagen_url: fila.imagen_url || borrador.imagen_url,
         precio_mayoreo: Number(fila.precio_mayoreo) > 0 ? Number(fila.precio_mayoreo) : null,
         stock: fila.stock !== null && fila.stock !== undefined && Number.isSafeInteger(Number(fila.stock)) && Number(fila.stock) >= 0 ? Number(fila.stock) : null,
         cantidad_minima: fila.cantidad_minima !== null && fila.cantidad_minima !== undefined && Number.isSafeInteger(Number(fila.cantidad_minima)) && Number(fila.cantidad_minima) > 0 ? Number(fila.cantidad_minima) : null,

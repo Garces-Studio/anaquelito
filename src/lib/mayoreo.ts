@@ -20,7 +20,7 @@ export const SELECCION_INICIAL: ProductoMayoreo[] = [
   unidad: slug === 'bubulubu-ice' ? 'caja' : null,
   piezas_por_caja: slug === 'bubulubu-ice' ? 300 : null,
   bolsas_por_caja: null, peso_por_bolsa_g: null,
-  precio_mayoreo: null, imagen_url: null, stock: null,
+  precio_mayoreo: null, imagen_url: `/productos/${slug}.jpg`, stock: null,
   cantidad_minima: null, disponibilidad: 'por_confirmar',
 }));
 

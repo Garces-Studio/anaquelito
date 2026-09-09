@@ -2,6 +2,12 @@
 
 Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fecha + resumen) cada vez que se cierre un bloque de trabajo relevante — no hace falta registrar cada commit, sí cada hito.
 
+## 2026-09-09 (fotografías del catálogo)
+
+- Se integraron las seis fotografías oficiales entregadas por Mauricio en el catálogo, las fichas y el carrusel del Home.
+- Se optimizaron a un tamaño apropiado para web y se asociaron por slug mediante la migración `0011_imagenes_catalogo.sql`.
+- La revisión visual detectó y corrigió que el contenedor del carrusel colapsaba a altura cero en escritorio.
+
 ## 2026-07-07 (continuación — estándar visual para cuenta, dashboard, carrito y catálogo)
 
 - **Encabezado rediseñado** con navegación flotante, cápsula translúcida cálida, acceso a cuenta/carrito y menú móvil de pantalla completa; se eliminó el color anterior que no convencía y se dejó una presencia más profesional para la tienda.

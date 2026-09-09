@@ -3,6 +3,8 @@
 /* Home de marca: movimiento, color y una narrativa distinta del catálogo. */
 .home-vivo { overflow: clip; background: #fff6ec; color: #2b1b12; font-family: var(--font-principal), sans-serif; }
 .home-hero { --color-escena: #ff5a5f; position: relative; min-height: 100svh; overflow: hidden; isolation: isolate; background: var(--color-escena); transition: background-color 650ms cubic-bezier(.4,0,.2,1); }
+.home-hero .portada-grid { min-height: 100svh; }
+.home-hero .portada-col-carrusel { height: 100svh; }
 .home-hero::after { content: ''; position: absolute; inset: auto -12vw -35vh 35vw; height: 75vh; border-radius: 50%; background: var(--color-escena); filter: blur(110px); opacity: .62; z-index: 3; transition: background-color 650ms ease; }
 .home-hero-sombra { position: absolute; inset: 0; z-index: 2; background: linear-gradient(90deg, rgba(17,8,4,.91) 0%, rgba(26,12,7,.76) 43%, rgba(18,8,5,.32) 100%); }
 .home-hero .grain-overlay { z-index: 4; opacity: .42; }
@@ -14,7 +16,7 @@
 .home-promesas svg { color: #ffb400; }
 .home-halo { position: absolute; width: min(38vw, 520px); aspect-ratio: 1; left: 50%; top: 47%; transform: translate(-50%,-50%); border: 1px solid rgba(255,255,255,.22); border-radius: 50%; box-shadow: 0 0 0 45px rgba(255,255,255,.035), 0 0 0 95px rgba(255,255,255,.025); }
 .home-producto { position: absolute; left: 50%; bottom: 19%; width: min(25vw, 345px); aspect-ratio: .75; transition: transform 650ms cubic-bezier(.4,0,.2,1), opacity 650ms ease, filter 650ms ease; will-change: transform, opacity; }
-.home-producto img { object-fit: contain; filter: drop-shadow(0 30px 34px rgba(0,0,0,.5)); }
+.home-producto img { object-fit: contain; border-radius: 18px; filter: drop-shadow(0 30px 34px rgba(0,0,0,.5)); }
 .home-producto--centro { z-index: 20; opacity: 1; transform: translateX(-50%) scale(1.12) rotate(2deg); animation: home-flotar 4.6s ease-in-out infinite; }
 .home-producto--izquierda { z-index: 10; opacity: .6; filter: blur(2px); transform: translateX(-118%) scale(.64) rotate(-11deg); }
 .home-producto--derecha { z-index: 10; opacity: .6; filter: blur(2px); transform: translateX(18%) scale(.64) rotate(11deg); }
