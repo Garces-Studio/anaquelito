@@ -32,6 +32,15 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 
 ## Construcción pendiente (frontend/producto)
 
+### Propuesta de siguiente iteración — claridad de compra (pendiente de aprobación)
+
+- Simplificar la navegación superior a Inicio, Productos, Cómo comprar, Ingresar y Carrito; mantener enlaces legales y contacto en el pie. El logo ya funciona como acceso a Inicio, por lo que la decisión es si se desea además el texto visible “Inicio”.
+- Retirar temporalmente del recorrido comercial los accesos a escáner, crédito, membresías, puntos, distribuidores y portal B2B avanzado. Permanecen como arquitectura futura, no como promesa de lanzamiento.
+- Completar por producto las presentaciones comerciales reales (tipo de empaque, bolsas o piezas por caja, peso y mínimo) y, cuando se definan, precios de venta. El frontend ya calcula costo por pieza o bolsa desde los datos; no se deben escribir esos valores a mano en tarjetas.
+- Confirmar el modelo de disponibilidad operativo: inventario propio, disponible con proveedor, pocas existencias o agotado. No debe mostrarse una cantidad física que no exista.
+- Mantener compra como invitado y carrito persistente; activar WhatsApp y Mercado Pago Checkout Pro únicamente al confirmar teléfono, precios, envío y credenciales del negocio.
+- Implementar después analítica de embudo (vista de producto, agregar/eliminar carrito, checkout, pago, WhatsApp, inicio de sesión y registro) antes de hacer campañas pagadas.
+
 - [ ] Landings específicas por segmento ("Soy tiendita", "Soy café/restaurante", "Soy emprendedor").
 - [ ] Carrito y checkout completo (tablas `pedidos`/`pedido_items` ya existen, falta la lógica y la UI).
 - [ ] Escáner de código de barras funcional (hoy es solo una animación visual).
