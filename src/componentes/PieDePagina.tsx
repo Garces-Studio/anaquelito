@@ -23,8 +23,8 @@ export default function PieDePagina() {
             <h4>Tienda</h4>
             <ul>
               <li><Link href="/catalogo">Catálogo mayorista</Link></li>
-              <li><Link href="/escaner">Reordenar con escáner</Link></li>
-              <li><Link href="/">Portada</Link></li>
+              <li><Link href="/mayoreo">Cómo funciona el mayoreo</Link></li>
+              <li><Link href="/#como-comprar">Cómo comprar</Link></li>
             </ul>
           </div>
           <div>
@@ -32,7 +32,7 @@ export default function PieDePagina() {
             <ul>
               <li><Link href="/catalogo?categoria=gomitas">Gomitas</Link></li>
               <li><Link href="/catalogo?categoria=chocolates">Chocolates</Link></li>
-              <li><Link href="/catalogo?categoria=frutos_secos">Frutos secos</Link></li>
+              <li><Link href="/mayoreo#preguntas">Preguntas frecuentes</Link></li>
             </ul>
           </div>
           <div>
@@ -45,7 +45,7 @@ export default function PieDePagina() {
         </div>
         <div className="pie-legal">
           <span>© {new Date().getFullYear()} Anaquelito · México</span>
-          <span>Términos, privacidad y política de envíos: en preparación</span>
+          <span className="pie-legal-enlaces"><Link href="/legal/terminos">Términos</Link><Link href="/legal/privacidad">Privacidad</Link><Link href="/legal/envios">Envíos</Link><Link href="/legal/devoluciones">Cambios y devoluciones</Link><Link href="/legal/facturacion">Facturación</Link></span>
         </div>
       </div>
     </footer>

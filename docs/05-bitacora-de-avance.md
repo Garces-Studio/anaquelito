@@ -140,3 +140,12 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - **Barra de navegación premium (`Encabezado.tsx`)**: efecto de brillo que recorre la píldora (`.nav-brillo`), contador del carrito con animación "pop" al cambiar (`.contador-pop`), y subtotal en pesos visible junto al ícono del carrito en escritorio. El botón del carrito ahora abre el cajón en vez de navegar.
 - **Panel del cliente por pestañas (`PestanasPanel.tsx` + `dashboard/page.tsx`)**: Pedidos, Direcciones y Cupones se reorganizaron en pestañas animadas con contadores y barra fija al hacer scroll, sin recargar la página.
 - **Verificado**: `tsc --noEmit` limpio y `next build` completo (compila, TypeScript en 21.4s, 20 páginas generadas) sin errores.
+## 2026-09-09 — Primera etapa de la tienda mayorista
+
+- Se cambió el enfoque principal a venta B2B con el mensaje “Surtimos tu negocio, no tu antojo”, home comercial, catálogo ligero, fichas de producto y página `/mayoreo`.
+- Supabase quedó con los seis productos acordados activos; los seis registros de demostración anteriores se conservaron inactivos. Los datos comerciales desconocidos siguen en `null` para no inventarlos.
+- Bubulubu Ice conserva únicamente la presentación confirmada (caja con 300 piezas). Su costo provisional de proveedor se guardó en `privado.producto_costos`, sin acceso público.
+- Se prepararon presentación, SKU, stock, disponibilidad, mínimos y escalas por volumen. El panel administrativo acepta información pendiente y ya no representa precios vacíos como `$0.00`.
+- Se reforzó la creación de pedidos para impedir que el navegador fije precios o estados, se añadieron validaciones de entrada y encabezados de seguridad, y se actualizó Next.js a 16.3.4.
+- Se añadieron SEO de producto/organización/preguntas frecuentes, navegación B2B y borradores claramente marcados para términos, privacidad, envíos, devoluciones y facturación.
+- Validación final: lint, TypeScript, 5 pruebas, build de producción y auditoría de dependencias sin vulnerabilidades de producción.

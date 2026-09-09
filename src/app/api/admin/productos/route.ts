@@ -6,12 +6,20 @@ const CATEGORIAS_VALIDAS = ['frutos_secos', 'gomitas', 'chocolates', 'semillas',
 
 type CamposProducto = {
   nombre?: string;
+  slug?: string | null;
+  sku?: string | null;
   descripcion?: string | null;
   categoria?: string | null;
-  unidad?: string;
-  precio_mayoreo?: number;
+  unidad?: string | null;
+  precio_mayoreo?: number | null;
   precio_menudeo?: number | null;
   precio_sugerido_reventa?: number | null;
+  piezas_por_caja?: number | null;
+  bolsas_por_caja?: number | null;
+  peso_por_bolsa_g?: number | null;
+  stock?: number | null;
+  cantidad_minima?: number | null;
+  disponibilidad?: 'por_confirmar' | 'disponible' | 'agotado';
   imagen_url?: string | null;
   activo?: boolean;
 };
@@ -19,35 +27,54 @@ type CamposProducto = {
 function validarCampos(campos: CamposProducto, esCreacion: boolean): string | null {
   if (esCreacion) {
     if (!campos.nombre?.trim()) return 'El nombre es obligatorio';
-    if (typeof campos.precio_mayoreo !== 'number' || campos.precio_mayoreo <= 0) {
-      return 'El precio de mayoreo debe ser un número mayor a 0';
-    }
   }
-  if (campos.precio_mayoreo !== undefined && (typeof campos.precio_mayoreo !== 'number' || campos.precio_mayoreo <= 0)) {
-    return 'El precio de mayoreo debe ser un número mayor a 0';
+  if (campos.nombre !== undefined && (!campos.nombre || campos.nombre.length > 160)) return 'El nombre no es válido';
+  if (campos.slug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(campos.slug)) return 'El slug solo admite minúsculas, números y guiones';
+  if (campos.precio_mayoreo !== undefined && campos.precio_mayoreo !== null && (!Number.isFinite(campos.precio_mayoreo) || campos.precio_mayoreo <= 0)) {
+    return 'El precio de mayoreo debe ser mayor a 0 o quedar vacío';
   }
   for (const clave of ['precio_menudeo', 'precio_sugerido_reventa'] as const) {
     const valor = campos[clave];
-    if (valor !== undefined && valor !== null && (typeof valor !== 'number' || valor <= 0)) {
+    if (valor !== undefined && valor !== null && (typeof valor !== 'number' || !Number.isFinite(valor) || valor <= 0)) {
       return `${clave} debe ser un número mayor a 0 (o vacío)`;
     }
   }
   if (campos.categoria && !CATEGORIAS_VALIDAS.includes(campos.categoria)) {
     return `Categoría inválida. Usa: ${CATEGORIAS_VALIDAS.join(', ')}`;
   }
+  for (const clave of ['piezas_por_caja', 'bolsas_por_caja', 'cantidad_minima'] as const) {
+    const valor = campos[clave];
+    if (valor !== undefined && valor !== null && (!Number.isSafeInteger(valor) || valor <= 0)) return `${clave} debe ser un entero mayor a 0`;
+  }
+  if (campos.stock !== undefined && campos.stock !== null && (!Number.isSafeInteger(campos.stock) || campos.stock < 0)) return 'El stock debe ser un entero igual o mayor a 0';
+  if (campos.peso_por_bolsa_g !== undefined && campos.peso_por_bolsa_g !== null && (!Number.isFinite(campos.peso_por_bolsa_g) || campos.peso_por_bolsa_g <= 0)) return 'El peso por bolsa debe ser mayor a 0';
+  if (campos.disponibilidad && !['por_confirmar', 'disponible', 'agotado'].includes(campos.disponibilidad)) return 'Disponibilidad inválida';
   return null;
+}
+
+function numeroOpcional(valor: unknown): number | null {
+  if (valor === null || valor === undefined || valor === '') return null;
+  return Number(valor);
 }
 
 // Extrae solo los campos permitidos (evita que el cuerpo meta columnas extra).
 function extraerCampos(cuerpo: Record<string, unknown>): CamposProducto {
   const campos: CamposProducto = {};
   if ('nombre' in cuerpo) campos.nombre = String(cuerpo.nombre ?? '').trim();
+  if ('slug' in cuerpo) campos.slug = cuerpo.slug ? String(cuerpo.slug).trim().toLowerCase() : null;
+  if ('sku' in cuerpo) campos.sku = cuerpo.sku ? String(cuerpo.sku).trim() : null;
   if ('descripcion' in cuerpo) campos.descripcion = cuerpo.descripcion ? String(cuerpo.descripcion) : null;
   if ('categoria' in cuerpo) campos.categoria = cuerpo.categoria ? String(cuerpo.categoria) : null;
-  if ('unidad' in cuerpo) campos.unidad = String(cuerpo.unidad ?? 'pieza');
-  if ('precio_mayoreo' in cuerpo) campos.precio_mayoreo = Number(cuerpo.precio_mayoreo);
-  if ('precio_menudeo' in cuerpo) campos.precio_menudeo = cuerpo.precio_menudeo == null || cuerpo.precio_menudeo === '' ? null : Number(cuerpo.precio_menudeo);
-  if ('precio_sugerido_reventa' in cuerpo) campos.precio_sugerido_reventa = cuerpo.precio_sugerido_reventa == null || cuerpo.precio_sugerido_reventa === '' ? null : Number(cuerpo.precio_sugerido_reventa);
+  if ('unidad' in cuerpo) campos.unidad = cuerpo.unidad ? String(cuerpo.unidad).trim() : null;
+  if ('precio_mayoreo' in cuerpo) campos.precio_mayoreo = numeroOpcional(cuerpo.precio_mayoreo);
+  if ('precio_menudeo' in cuerpo) campos.precio_menudeo = numeroOpcional(cuerpo.precio_menudeo);
+  if ('precio_sugerido_reventa' in cuerpo) campos.precio_sugerido_reventa = numeroOpcional(cuerpo.precio_sugerido_reventa);
+  if ('piezas_por_caja' in cuerpo) campos.piezas_por_caja = numeroOpcional(cuerpo.piezas_por_caja);
+  if ('bolsas_por_caja' in cuerpo) campos.bolsas_por_caja = numeroOpcional(cuerpo.bolsas_por_caja);
+  if ('peso_por_bolsa_g' in cuerpo) campos.peso_por_bolsa_g = numeroOpcional(cuerpo.peso_por_bolsa_g);
+  if ('stock' in cuerpo) campos.stock = numeroOpcional(cuerpo.stock);
+  if ('cantidad_minima' in cuerpo) campos.cantidad_minima = numeroOpcional(cuerpo.cantidad_minima);
+  if ('disponibilidad' in cuerpo) campos.disponibilidad = String(cuerpo.disponibilidad) as CamposProducto['disponibilidad'];
   if ('imagen_url' in cuerpo) campos.imagen_url = cuerpo.imagen_url ? String(cuerpo.imagen_url) : null;
   if ('activo' in cuerpo) campos.activo = Boolean(cuerpo.activo);
   return campos;
@@ -113,7 +140,7 @@ export async function GET() {
   const supabase = await crearCliente();
   const { data: productos, error } = await supabase
     .from('productos')
-    .select('id, nombre, descripcion, categoria, unidad, precio_mayoreo, precio_menudeo, precio_sugerido_reventa, imagen_url, activo, creado_en, codigos_barra(codigo)')
+    .select('id, slug, sku, nombre, descripcion, categoria, unidad, precio_mayoreo, precio_menudeo, precio_sugerido_reventa, piezas_por_caja, bolsas_por_caja, peso_por_bolsa_g, stock, cantidad_minima, disponibilidad, imagen_url, activo, creado_en, codigos_barra(codigo)')
     .order('creado_en', { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -139,7 +166,7 @@ export async function POST(solicitud: NextRequest) {
   const supabase = await crearCliente();
   const { data: producto, error } = await supabase
     .from('productos')
-    .insert({ activo: true, unidad: 'pieza', ...campos })
+    .insert({ activo: true, disponibilidad: 'por_confirmar', ...campos })
     .select('id')
     .single();
 

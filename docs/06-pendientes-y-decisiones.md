@@ -39,4 +39,4 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 - [ ] Panel simple para dar de alta productos sin tocar SQL directamente.
 - [ ] Página de "cómo funciona el crédito" con condiciones sin ambigüedad.
 - [ ] Plan mínimo de contenido (blog/redes) para los primeros 90 días.
-- [ ] Reemplazar los 6 productos de ejemplo por el catálogo curado real, una vez definido.
+- [x] Reemplazar los 6 productos de ejemplo por el catálogo inicial acordado (Pingüino, Diente, Oso, Lombriz, Huevito Pinto y Bubulubu Ice). Las muestras anteriores se conservaron inactivas.

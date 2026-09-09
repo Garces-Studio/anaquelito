@@ -11,8 +11,8 @@ import { crearCliente } from '@/lib/supabase/client';
 
 const enlaces = [
   { href: '/mayoreo', texto: 'Mayoreo' },
-  { href: '/catalogo', texto: 'Catálogo' },
-  { href: '/escaner', texto: 'Escáner' },
+  { href: '/catalogo', texto: 'Productos' },
+  { href: '/#como-comprar', texto: 'Cómo comprar' },
 ];
 
 export default function Encabezado() {
@@ -97,7 +97,7 @@ export default function Encabezado() {
 
           <nav className="hidden items-center gap-2 md:flex" aria-label="Navegación principal">
             {enlaces.map((enlace) => {
-              const activo = pathname.startsWith(enlace.href);
+              const activo = enlace.href.startsWith('/#') ? false : pathname.startsWith(enlace.href);
               return (
                 <Link
                   key={enlace.href}

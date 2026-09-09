@@ -4,7 +4,9 @@ export type ProductoMayoreo = {
   descripcion: string | null; unidad: string | null;
   piezas_por_caja: number | null; bolsas_por_caja: number | null;
   peso_por_bolsa_g: number | null; precio_mayoreo: number | null;
-  imagen_url: string | null;
+  imagen_url: string | null; stock: number | null;
+  cantidad_minima: number | null;
+  disponibilidad: 'por_confirmar' | 'disponible' | 'agotado';
 };
 export const SELECCION_INICIAL: ProductoMayoreo[] = [
   ['gomita-pinguino', 'Gomita Pingüino', 'gomitas'],
@@ -18,8 +20,17 @@ export const SELECCION_INICIAL: ProductoMayoreo[] = [
   unidad: slug === 'bubulubu-ice' ? 'caja' : null,
   piezas_por_caja: slug === 'bubulubu-ice' ? 300 : null,
   bolsas_por_caja: null, peso_por_bolsa_g: null,
-  precio_mayoreo: null, imagen_url: null,
+  precio_mayoreo: null, imagen_url: null, stock: null,
+  cantidad_minima: null, disponibilidad: 'por_confirmar',
 }));
+
+export function textoDisponibilidad(p: ProductoMayoreo): string {
+  if (p.disponibilidad === 'agotado') return 'Agotado';
+  if (p.disponibilidad === 'disponible') {
+    return p.stock === null ? 'Disponible' : `${p.stock} ${p.stock === 1 ? 'caja disponible' : 'cajas disponibles'}`;
+  }
+  return 'Disponibilidad por confirmar';
+}
 export function presentacion(p: ProductoMayoreo): string {
   if (p.piezas_por_caja) return `Caja con ${p.piezas_por_caja} piezas`;
   if (p.bolsas_por_caja && p.peso_por_bolsa_g) return `Caja con ${p.bolsas_por_caja} bolsas de ${p.peso_por_bolsa_g / 1000} kg`;

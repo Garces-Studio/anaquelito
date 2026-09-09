@@ -5,14 +5,22 @@ import { Eye, EyeOff, ImagePlus, Pencil, Plus, RefreshCw, Trash2, X } from 'luci
 
 type Producto = {
   id: string;
+  slug: string | null;
+  sku: string | null;
   nombre: string;
   descripcion: string | null;
   categoria: string | null;
-  unidad: string;
-  precio_mayoreo: number;
+  unidad: string | null;
+  precio_mayoreo: number | null;
   precio_menudeo: number | null;
   precio_sugerido_reventa: number | null;
   imagen_url: string | null;
+  piezas_por_caja: number | null;
+  bolsas_por_caja: number | null;
+  peso_por_bolsa_g: number | null;
+  stock: number | null;
+  cantidad_minima: number | null;
+  disponibilidad: 'por_confirmar' | 'disponible' | 'agotado';
   activo: boolean;
   creado_en: string;
   codigos_barra?: { codigo: string }[];
@@ -29,22 +37,38 @@ const CATEGORIAS: { valor: string; texto: string }[] = [
 
 type Formulario = {
   nombre: string;
+  slug: string;
+  sku: string;
   descripcion: string;
   categoria: string;
   unidad: string;
   precio_mayoreo: string;
   precio_sugerido_reventa: string;
+  piezas_por_caja: string;
+  bolsas_por_caja: string;
+  peso_por_bolsa_g: string;
+  stock: string;
+  cantidad_minima: string;
+  disponibilidad: Producto['disponibilidad'];
   imagen_url: string;
   codigo_barras: string;
 };
 
 const FORMULARIO_VACIO: Formulario = {
   nombre: '',
+  slug: '',
+  sku: '',
   descripcion: '',
   categoria: 'dulces',
-  unidad: 'pieza',
+  unidad: '',
   precio_mayoreo: '',
   precio_sugerido_reventa: '',
+  piezas_por_caja: '',
+  bolsas_por_caja: '',
+  peso_por_bolsa_g: '',
+  stock: '',
+  cantidad_minima: '',
+  disponibilidad: 'por_confirmar',
   imagen_url: '',
   codigo_barras: '',
 };
@@ -98,11 +122,19 @@ export default function PaginaAdminProductos() {
     setEditandoId(producto.id);
     setFormulario({
       nombre: producto.nombre,
+      slug: producto.slug ?? '',
+      sku: producto.sku ?? '',
       descripcion: producto.descripcion ?? '',
       categoria: producto.categoria ?? 'dulces',
-      unidad: producto.unidad,
-      precio_mayoreo: String(producto.precio_mayoreo),
+      unidad: producto.unidad ?? '',
+      precio_mayoreo: producto.precio_mayoreo ? String(producto.precio_mayoreo) : '',
       precio_sugerido_reventa: producto.precio_sugerido_reventa ? String(producto.precio_sugerido_reventa) : '',
+      piezas_por_caja: producto.piezas_por_caja ? String(producto.piezas_por_caja) : '',
+      bolsas_por_caja: producto.bolsas_por_caja ? String(producto.bolsas_por_caja) : '',
+      peso_por_bolsa_g: producto.peso_por_bolsa_g ? String(producto.peso_por_bolsa_g) : '',
+      stock: producto.stock === null ? '' : String(producto.stock),
+      cantidad_minima: producto.cantidad_minima ? String(producto.cantidad_minima) : '',
+      disponibilidad: producto.disponibilidad,
       imagen_url: producto.imagen_url ?? '',
       codigo_barras: producto.codigos_barra?.[0]?.codigo ?? '',
     });
@@ -136,11 +168,19 @@ export default function PaginaAdminProductos() {
       const cuerpo = {
         ...(editandoId ? { id: editandoId } : {}),
         nombre: formulario.nombre,
+        slug: formulario.slug || null,
+        sku: formulario.sku || null,
         descripcion: formulario.descripcion || null,
         categoria: formulario.categoria || null,
-        unidad: formulario.unidad || 'pieza',
-        precio_mayoreo: Number(formulario.precio_mayoreo),
+        unidad: formulario.unidad || null,
+        precio_mayoreo: formulario.precio_mayoreo ? Number(formulario.precio_mayoreo) : null,
         precio_sugerido_reventa: formulario.precio_sugerido_reventa ? Number(formulario.precio_sugerido_reventa) : null,
+        piezas_por_caja: formulario.piezas_por_caja ? Number(formulario.piezas_por_caja) : null,
+        bolsas_por_caja: formulario.bolsas_por_caja ? Number(formulario.bolsas_por_caja) : null,
+        peso_por_bolsa_g: formulario.peso_por_bolsa_g ? Number(formulario.peso_por_bolsa_g) : null,
+        stock: formulario.stock === '' ? null : Number(formulario.stock),
+        cantidad_minima: formulario.cantidad_minima ? Number(formulario.cantidad_minima) : null,
+        disponibilidad: formulario.disponibilidad,
         imagen_url: formulario.imagen_url || null,
         codigo_barras: formulario.codigo_barras.trim(),
       };
@@ -299,6 +339,26 @@ export default function PaginaAdminProductos() {
               </label>
 
               <label className={ETIQUETA}>
+                Slug para la URL
+                <input
+                  className={CAMPO}
+                  value={formulario.slug}
+                  onChange={(e) => setFormulario({ ...formulario, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })}
+                  placeholder="gomita-pinguino"
+                />
+              </label>
+
+              <label className={ETIQUETA}>
+                SKU
+                <input
+                  className={CAMPO}
+                  value={formulario.sku}
+                  onChange={(e) => setFormulario({ ...formulario, sku: e.target.value })}
+                  placeholder="Pendiente"
+                />
+              </label>
+
+              <label className={ETIQUETA}>
                 Categoría
                 <select
                   className={CAMPO}
@@ -325,14 +385,47 @@ export default function PaginaAdminProductos() {
                 Precio mayoreo (MXN)
                 <input
                   className={CAMPO}
-                  required
                   type="number"
                   min="0.01"
                   step="0.01"
                   value={formulario.precio_mayoreo}
                   onChange={(e) => setFormulario({ ...formulario, precio_mayoreo: e.target.value })}
-                  placeholder="75.00"
+                  placeholder="Pendiente"
                 />
+              </label>
+
+              <label className={ETIQUETA}>
+                Disponibilidad
+                <select className={CAMPO} value={formulario.disponibilidad} onChange={(e) => setFormulario({ ...formulario, disponibilidad: e.target.value as Producto['disponibilidad'] })}>
+                  <option value="por_confirmar">Por confirmar</option>
+                  <option value="disponible">Disponible</option>
+                  <option value="agotado">Agotado</option>
+                </select>
+              </label>
+
+              <label className={ETIQUETA}>
+                Piezas por caja
+                <input className={CAMPO} type="number" min="1" step="1" value={formulario.piezas_por_caja} onChange={(e) => setFormulario({ ...formulario, piezas_por_caja: e.target.value })} placeholder="Pendiente" />
+              </label>
+
+              <label className={ETIQUETA}>
+                Bolsas por caja
+                <input className={CAMPO} type="number" min="1" step="1" value={formulario.bolsas_por_caja} onChange={(e) => setFormulario({ ...formulario, bolsas_por_caja: e.target.value })} placeholder="Pendiente" />
+              </label>
+
+              <label className={ETIQUETA}>
+                Peso por bolsa (g)
+                <input className={CAMPO} type="number" min="0.01" step="0.01" value={formulario.peso_por_bolsa_g} onChange={(e) => setFormulario({ ...formulario, peso_por_bolsa_g: e.target.value })} placeholder="Pendiente" />
+              </label>
+
+              <label className={ETIQUETA}>
+                Stock en cajas
+                <input className={CAMPO} type="number" min="0" step="1" value={formulario.stock} onChange={(e) => setFormulario({ ...formulario, stock: e.target.value })} placeholder="Pendiente" />
+              </label>
+
+              <label className={ETIQUETA}>
+                Pedido mínimo (cajas)
+                <input className={CAMPO} type="number" min="1" step="1" value={formulario.cantidad_minima} onChange={(e) => setFormulario({ ...formulario, cantidad_minima: e.target.value })} placeholder="Pendiente" />
               </label>
 
               <label className={ETIQUETA}>
@@ -424,7 +517,7 @@ export default function PaginaAdminProductos() {
 
               <h3 className="text-lg !font-black uppercase leading-tight">{producto.nombre}</h3>
               <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#6B5546]">
-                {CATEGORIAS.find((c) => c.valor === producto.categoria)?.texto ?? 'Sin categoría'} · {producto.unidad}
+                {CATEGORIAS.find((c) => c.valor === producto.categoria)?.texto ?? 'Sin categoría'} · {producto.unidad || 'presentación pendiente'}
               </p>
               {producto.codigos_barra?.[0] ? (
                 <p className="mt-1 text-[10px] font-black tracking-[0.1em] text-[#7621B0]">
@@ -436,14 +529,17 @@ export default function PaginaAdminProductos() {
                 </p>
               )}
 
-              <div className="mt-3 flex items-baseline gap-2">
-                <strong className="text-2xl !font-black">${Number(producto.precio_mayoreo).toFixed(2)}</strong>
+              <div className="mt-3 flex flex-wrap items-baseline gap-2">
+                <strong className="text-2xl !font-black">{producto.precio_mayoreo ? `$${Number(producto.precio_mayoreo).toFixed(2)}` : 'Precio pendiente'}</strong>
                 {producto.precio_sugerido_reventa && (
                   <span className="text-xs font-bold text-[#1E9E6A]">
                     reventa ${Number(producto.precio_sugerido_reventa).toFixed(2)}
                   </span>
                 )}
               </div>
+              <p className="mt-2 text-xs font-bold text-[#6B5546]">
+                {producto.piezas_por_caja ? `${producto.piezas_por_caja} piezas por caja` : producto.bolsas_por_caja ? `${producto.bolsas_por_caja} bolsas por caja` : 'Contenido por confirmar'} · {producto.disponibilidad.replace('_', ' ')}
+              </p>
 
               <div className="mt-4 flex gap-2 border-t border-[#EBD9C3]/70 pt-3">
                 <button
