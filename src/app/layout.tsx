@@ -12,9 +12,9 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Anaquelito -- Tu Aliado Dulcero B2B",
+  title: "Dulces y botanas al mayoreo para tu negocio | Anaquelito",
   description:
-    "Mayoreo de dulces y botanas para tienditas, cafés y emprendedores en CDMX. Precios claros, margen visible en cada producto y reorden escaneando la bolsa vacía.",
+    "Compra dulces por caja para surtir tu tiendita, dulcería o negocio de reventa. Consulta presentaciones, precios y entrega según cobertura en Anaquelito.",
 };
 
 // Ajustes de pantalla para móvil (enfoque iPhone): ocupa hasta el borde del

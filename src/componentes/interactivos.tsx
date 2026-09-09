@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 
 // 1. MAGNET COMPONENT
 interface MagnetProps {
@@ -107,7 +107,7 @@ export function AnimatedText({ text, className = '', highlightClass = 'text-[#D7
 
 interface CharProps {
   char: string;
-  progress: any;
+  progress: MotionValue<number>;
   range: [number, number];
   highlightClass?: string;
 }
@@ -137,7 +137,7 @@ interface FadeInProps {
   duration?: number;
   x?: number;
   y?: number;
-  as?: string;
+  as?: 'div' | 'section' | 'article';
   className?: string;
 }
 
@@ -151,7 +151,7 @@ export function FadeIn({
   className = '',
 }: FadeInProps) {
   // Use standard framer-motion components dynamically
-  const Component = (motion as any)[as] || motion.div;
+  const Component = { div: motion.div, section: motion.section, article: motion.article }[as];
 
   return (
     <Component

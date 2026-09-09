@@ -36,7 +36,7 @@ export default function EscanerCamara({ onCodigo, activo }: Props) {
   const controlesRef = useRef<IScannerControls | null>(null);
   // El callback vive en un ref para no reiniciar la cámara en cada render.
   const onCodigoRef = useRef(onCodigo);
-  onCodigoRef.current = onCodigo;
+  useEffect(() => { onCodigoRef.current = onCodigo; }, [onCodigo]);
 
   const [estado, setEstado] = useState<'iniciando' | 'listo' | 'error'>('iniciando');
   const [mensajeError, setMensajeError] = useState('');
@@ -48,8 +48,6 @@ export default function EscanerCamara({ onCodigo, activo }: Props) {
     const hints = new Map();
     hints.set(DecodeHintType.POSSIBLE_FORMATS, FORMATOS);
     const lector = new BrowserMultiFormatReader(hints);
-
-    setEstado('iniciando');
 
     lector
       .decodeFromConstraints(

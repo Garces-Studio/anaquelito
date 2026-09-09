@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, Minus, Plus, ShoppingBag, Trash2, Truck, X } from 'lucide-react';
-import { ENVIO_GRATIS_DESDE, usarCarrito } from './ContextoCarrito';
+import { usarCarrito } from './ContextoCarrito';
 
 /** Cajón lateral del carrito (sin modales que bloqueen): se desliza desde la
  *  derecha, deja ver el pedido completo con cantidades editables y muestra
@@ -43,8 +43,6 @@ export default function CajonCarrito() {
     return () => window.removeEventListener('keydown', alTeclear);
   }, [cajonAbierto, cerrarCajon]);
 
-  const faltaEnvioGratis = Math.max(0, ENVIO_GRATIS_DESDE - subtotal);
-  const progresoEnvio = Math.min(100, (subtotal / ENVIO_GRATIS_DESDE) * 100);
 
   return (
     <>
@@ -132,28 +130,8 @@ export default function CajonCarrito() {
           </button>
         </header>
 
-        {/* Barra de envío gratis */}
-        <div className="border-b border-[#EBD9C3] bg-white/50 px-5 py-3">
-          <div className="flex items-center justify-between gap-3 text-[11px] font-black uppercase tracking-[0.1em]">
-            <span className="inline-flex items-center gap-1.5 text-[#6B5546]">
-              <Truck size={14} className={faltaEnvioGratis === 0 ? 'text-[#1E9E6A]' : 'text-[#FF8A3D]'} />
-              {faltaEnvioGratis === 0 ? '¡Envío gratis desbloqueado!' : `Faltan $${faltaEnvioGratis.toFixed(0)} para envío gratis`}
-            </span>
-            <span className="text-[#2B1B12]">${ENVIO_GRATIS_DESDE}</span>
-          </div>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#EBD9C3]/60">
-            <div
-              className="h-full rounded-full transition-all duration-700"
-              style={{
-                width: `${progresoEnvio}%`,
-                background:
-                  faltaEnvioGratis === 0
-                    ? '#1E9E6A'
-                    : 'linear-gradient(90deg, #FF5A5F 0%, #FFB400 100%)',
-              }}
-            />
-          </div>
-        </div>
+        <p className="border-b border-[#EBD9C3] px-5 py-3 text-sm text-[#6B5546]"><Truck size={14} className="inline mr-2" />Envío y cobertura por confirmar.</p>
+
 
         {/* Lista de artículos */}
         {articulos.length === 0 ? (

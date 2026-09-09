@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, ScanLine, X } from 'lucide-react';
@@ -10,6 +10,7 @@ import { usarCarrito } from './carrito/ContextoCarrito';
 import { crearCliente } from '@/lib/supabase/client';
 
 const enlaces = [
+  { href: '/mayoreo', texto: 'Mayoreo' },
   { href: '/catalogo', texto: 'Catálogo' },
   { href: '/escaner', texto: 'Escáner' },
 ];
@@ -17,36 +18,31 @@ const enlaces = [
 export default function Encabezado() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [usuario, setUsuario] = useState<User | null>(null);
-  const [esAdmin, setEsAdmin] = useState(false);
+  const [adminUserId, setAdminUserId] = useState<string | null>(null);
+  const esAdmin = Boolean(usuario && adminUserId === usuario.id);
   const [scrolled, setScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [oculto, setOculto] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
   const pathname = usePathname();
   const { subtotal, totalArticulos } = usarCarrito();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const manejarScroll = () => {
       const currentScrollY = window.scrollY;
       setScrolled(currentScrollY > 18);
       
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
         setOculto(true);
-      } else if (currentScrollY < lastScrollY) {
+      } else if (currentScrollY < lastScrollY.current) {
         setOculto(false);
       }
       
-      setLastScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
     };
     
-    manejarScroll();
     window.addEventListener('scroll', manejarScroll, { passive: true });
     return () => window.removeEventListener('scroll', manejarScroll);
-  }, [lastScrollY]);
+  }, []);
 
   useEffect(() => {
     const supabase = crearCliente();
@@ -60,7 +56,6 @@ export default function Encabezado() {
   // ¿La sesión actual es de un administrador? (RLS solo deja ver la fila propia)
   useEffect(() => {
     if (!usuario) {
-      setEsAdmin(false);
       return;
     }
     const supabase = crearCliente();
@@ -69,7 +64,7 @@ export default function Encabezado() {
       .select('auth_user_id')
       .eq('auth_user_id', usuario.id)
       .maybeSingle()
-      .then(({ data }) => setEsAdmin(Boolean(data)));
+      .then(({ data }) => setAdminUserId(data ? usuario.id : null));
   }, [usuario]);
 
   const enlaceCuenta = usuario
@@ -81,8 +76,8 @@ export default function Encabezado() {
       <header
         className="fixed left-0 right-0 top-4 z-50 flex w-full justify-center px-4 pointer-events-none"
         style={{
-          opacity: mounted && !oculto ? 1 : 0,
-          transform: mounted && !oculto ? 'translateY(0)' : 'translateY(-120px)',
+          opacity: !oculto ? 1 : 0,
+          transform: !oculto ? 'translateY(0)' : 'translateY(-120px)',
           transition: 'opacity 520ms ease, transform 520ms cubic-bezier(0.22,1,0.36,1)',
         }}
       >

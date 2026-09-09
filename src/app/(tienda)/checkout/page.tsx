@@ -52,7 +52,9 @@ export default function PaginaCheckout() {
 
       // Al pagador se le redirige a Mercado Pago; el carrito se vacía
       // hasta que vuelva a la página de confirmación (pago aprobado).
-      window.location.href = datos.urlPago;
+      const destino = new URL(datos.urlPago);
+      if (destino.protocol !== 'https:' || !['www.mercadopago.com.mx', 'sandbox.mercadopago.com.mx'].includes(destino.hostname)) throw new Error('No se recibió un enlace de pago válido');
+      window.location.assign(destino.href);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ocurrió un error inesperado');
       setEnviando(false);

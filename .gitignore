@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/.dependencias-respaldo/
+/.respaldo-local/
 /.pnp
 .pnp.*
 .yarn/*
@@ -15,6 +17,7 @@
 
 # next.js
 /.next/
+/.next-respaldo-20260908/
 /out/
 
 # production

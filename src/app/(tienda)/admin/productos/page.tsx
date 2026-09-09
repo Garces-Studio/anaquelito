@@ -68,10 +68,9 @@ export default function PaginaAdminProductos() {
   const inputImagen = useRef<HTMLInputElement>(null);
 
   const cargar = async () => {
-    setCargando(true);
-    setError(null);
     try {
       const respuesta = await fetch('/api/admin/productos');
+      setError(null);
       const datos = await respuesta.json();
       if (!respuesta.ok) throw new Error(datos.error ?? 'No se pudieron cargar los productos');
       setProductos(datos.productos ?? []);
@@ -83,6 +82,8 @@ export default function PaginaAdminProductos() {
   };
 
   useEffect(() => {
+    // Sincronización asíncrona con API externa; las actualizaciones siguen a fetch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     cargar();
   }, []);
 

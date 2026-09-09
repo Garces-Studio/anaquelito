@@ -43,10 +43,9 @@ export default function PaginaAdminPedidos() {
   const [filtroEstado, setFiltroEstado] = useState('');
 
   const cargar = async () => {
-    setCargando(true);
-    setError(null);
     try {
       const respuesta = await fetch('/api/admin/pedidos');
+      setError(null);
       const datos = await respuesta.json();
       if (!respuesta.ok) throw new Error(datos.error ?? 'No se pudieron cargar los pedidos');
       setPedidos(datos.pedidos ?? []);
@@ -58,6 +57,8 @@ export default function PaginaAdminPedidos() {
   };
 
   useEffect(() => {
+    // Sincronización asíncrona con API externa; las actualizaciones siguen a fetch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     cargar();
   }, []);
 

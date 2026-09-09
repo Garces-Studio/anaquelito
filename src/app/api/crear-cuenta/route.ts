@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { crearClienteAdmin } from '@/lib/supabase/admin';
+import { esObjeto, textoValido } from '@/lib/validacion';
 
 type CuerpoCrearCuenta = {
   email: string;
@@ -21,6 +22,9 @@ type CuerpoCrearCuenta = {
  * y su primera dirección guardada.
  */
 export async function POST(solicitud: NextRequest) {
+  if (solicitud.headers.get('origin') !== solicitud.nextUrl.origin) {
+    return NextResponse.json({ error: 'Origen no permitido' }, { status: 403 });
+  }
   let cuerpo: CuerpoCrearCuenta;
   try {
     cuerpo = await solicitud.json();
@@ -28,6 +32,13 @@ export async function POST(solicitud: NextRequest) {
     return NextResponse.json({ error: 'Cuerpo de la solicitud inválido' }, { status: 400 });
   }
 
+  if (!esObjeto(cuerpo) || !textoValido(cuerpo.email, 254) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cuerpo.email) ||
+      !textoValido(cuerpo.password, 128, 8) || !textoValido(cuerpo.nombre_negocio, 160) ||
+      !textoValido(cuerpo.telefono, 30, 8) || !textoValido(cuerpo.calle_numero, 300) ||
+      !['tiendita', 'cafe', 'emprendedor'].includes(cuerpo.tipo_negocio) ||
+      (['colonia', 'municipio', 'estado', 'codigo_postal'] as const).some((clave) => cuerpo[clave] != null && !textoValido(cuerpo[clave], 160, 0))) {
+    return NextResponse.json({ error: 'Revisa los datos del formulario' }, { status: 400 });
+  }
   const {
     email, password, nombre_negocio, tipo_negocio, telefono,
     calle_numero, colonia, municipio, estado, codigo_postal,
@@ -53,7 +64,7 @@ export async function POST(solicitud: NextRequest) {
     const yaExiste = errorUsuario.message.toLowerCase().includes('already been registered') ||
       errorUsuario.message.toLowerCase().includes('already registered');
     return NextResponse.json(
-      { error: yaExiste ? 'Ya existe una cuenta con ese correo. Inicia sesión.' : errorUsuario.message },
+      { error: yaExiste ? 'No se pudo crear la cuenta. Si ya te registraste, intenta iniciar sesión.' : 'No se pudo crear la cuenta. Revisa tus datos.' },
       { status: 400 }
     );
   }
@@ -79,7 +90,7 @@ export async function POST(solicitud: NextRequest) {
     // Si esto falla, no dejamos un usuario de auth huérfano sin registro de negocio
     await supabaseAdmin.auth.admin.deleteUser(usuarioCreado.user.id);
     return NextResponse.json(
-      { error: `No se pudo registrar el negocio: ${errorCliente.message}` },
+      { error: 'No se pudo registrar el negocio. Intenta nuevamente más tarde.' },
       { status: 500 }
     );
   }

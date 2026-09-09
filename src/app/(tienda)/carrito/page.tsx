@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Minus, Plus, ShoppingBag, Trash2, Truck } from 'lucide-react';
-import { ENVIO_GRATIS_DESDE, usarCarrito } from '@/componentes/carrito/ContextoCarrito';
+import { usarCarrito } from '@/componentes/carrito/ContextoCarrito';
 
 const NUMERO_WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMERO;
 
@@ -15,7 +15,7 @@ export default function PaginaCarrito() {
       articulos
         .map((a) => `• ${a.cantidad} × ${a.nombre} (${a.unidad}) — $${(a.cantidad * a.precio_mayoreo).toFixed(2)}`)
         .join('\n') +
-      `\n\nSubtotal: $${subtotal.toFixed(2)}`
+      `\n\nSubtotal estimado: ${subtotal.toFixed(2)}\nQuedo atento a disponibilidad y envío.`
   );
 
   if (articulos.length === 0) {
@@ -27,7 +27,7 @@ export default function PaginaCarrito() {
             <ShoppingBag size={14} /> Carrito vacío
           </span>
           <h1 className="mx-auto max-w-4xl font-titulo !font-black text-[clamp(3.4rem,9vw,8rem)] uppercase leading-[0.84]">
-            Llénalo con dulces de alto margen.
+            Arma el surtido de tu negocio.
           </h1>
           <p className="mx-auto max-w-xl text-base font-semibold leading-7 text-[#6B5546]">
             Agrega productos del catálogo y arma tu pedido para tienda, café o reventa.
@@ -119,29 +119,11 @@ export default function PaginaCarrito() {
                 <h2 className="font-titulo !font-black text-3xl uppercase leading-none">Pedido</h2>
               </div>
             </div>
-            <div className="mb-5 rounded-lg border border-dashed border-[#EBD9C3] bg-[#FFF6EC] p-4">
-              <p className="text-[11px] font-black uppercase tracking-[0.1em] text-[#6B5546]">
-                {subtotal >= ENVIO_GRATIS_DESDE
-                  ? '¡Envío gratis desbloqueado!'
-                  : `Faltan $${(ENVIO_GRATIS_DESDE - subtotal).toFixed(0)} para envío gratis`}
-              </p>
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#EBD9C3]/70">
-                <div
-                  className="h-full rounded-full transition-all duration-700"
-                  style={{
-                    width: `${Math.min(100, (subtotal / ENVIO_GRATIS_DESDE) * 100)}%`,
-                    background:
-                      subtotal >= ENVIO_GRATIS_DESDE
-                        ? '#1E9E6A'
-                        : 'linear-gradient(90deg, #FF5A5F 0%, #FFB400 100%)',
-                  }}
-                />
-              </div>
-            </div>
+            <p className="mb-5 text-sm text-[#6B5546]">Confirma cobertura y costo de envío antes de cerrar tu compra.</p>
             <div className="grid gap-3 border-y border-[#EBD9C3] py-5">
               <div className="flex justify-between text-sm font-bold text-[#6B5546]"><span>Subtotal</span><strong className="text-[#2B1B12]">${subtotal.toFixed(2)}</strong></div>
-              <div className="flex justify-between text-sm font-bold text-[#6B5546]"><span>Envío</span><strong className={subtotal >= ENVIO_GRATIS_DESDE ? 'text-[#1E9E6A]' : 'text-[#2B1B12]'}>{subtotal >= ENVIO_GRATIS_DESDE ? 'Gratis' : 'Por confirmar'}</strong></div>
-              <div className="flex justify-between text-sm font-bold text-[#6B5546]"><span>Descuento volumen</span><strong className="text-[#00A699]">Al confirmar</strong></div>
+              <div className="flex justify-between text-sm font-bold text-[#6B5546]"><span>Envío</span><strong className="text-[#2B1B12]">Por confirmar</strong></div>
+              <div className="flex justify-between text-sm font-bold text-[#6B5546]"><span>Descuento volumen</span><strong className="text-[#2B1B12]">No aplicado</strong></div>
             </div>
             <div className="mt-5 flex items-baseline justify-between">
               <span className="text-sm font-black uppercase tracking-[0.14em] text-[#6B5546]">Total base</span>
@@ -152,7 +134,7 @@ export default function PaginaCarrito() {
             </Link>
             {NUMERO_WHATSAPP && (
               <a href={`https://wa.me/${NUMERO_WHATSAPP}?text=${mensajePedido}`} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-[#EBD9C3] bg-[#FFF6EC] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-[#2B1B12]">
-                Enviar por WhatsApp
+                Finalizar pedido por WhatsApp
               </a>
             )}
             <button type="button" onClick={vaciar} className="mt-4 w-full text-center text-sm font-black text-[#6B5546] transition hover:text-[#D64545]">

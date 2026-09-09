@@ -1,8 +1,10 @@
 import Link from 'next/link';
+import { enlaceWhatsApp } from '@/lib/mayoreo';
 
 /** Pie de página compartido. Las páginas legales son obligatorias antes de
  *  vender en serio (PROFECO) — ver docs/07-legal-y-cumplimiento.md. */
 export default function PieDePagina() {
+  const whatsapp = enlaceWhatsApp('Hola, quiero consultar productos de mayoreo.');
   return (
     <footer className="pie">
       <div className="contenedor">
@@ -14,7 +16,7 @@ export default function PieDePagina() {
             </Link>
             <p style={{ color: 'var(--tinta-suave)', fontSize: '0.92rem', marginTop: '0.75rem' }}>
               Surtimos tu tiendita, café o punto de venta con dulces y botanas
-              de alto margen. Sin letras chiquitas.
+              por caja. Consulta presentación, precio y entrega.
             </p>
           </div>
           <div>
@@ -36,13 +38,13 @@ export default function PieDePagina() {
           <div>
             <h4>Contacto</h4>
             <ul>
-              <li><a href="https://wa.me/">WhatsApp (próximamente)</a></li>
+              <li>{whatsapp ? <a href={whatsapp}>Atención por WhatsApp</a> : 'WhatsApp próximamente'}</li>
               <li><a href="mailto:hola@anaquelito.mx">hola@anaquelito.mx</a></li>
             </ul>
           </div>
         </div>
         <div className="pie-legal">
-          <span>© {new Date().getFullYear()} Anaquelito · CDMX, México</span>
+          <span>© {new Date().getFullYear()} Anaquelito · México</span>
           <span>Términos, privacidad y política de envíos: en preparación</span>
         </div>
       </div>

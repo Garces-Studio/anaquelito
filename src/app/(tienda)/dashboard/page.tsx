@@ -219,7 +219,7 @@ export default async function PaginaDashboard() {
                       </p>
                       <h3 className="mt-2 text-2xl !font-black uppercase leading-none">Pedido #{pedido.id.slice(0, 8)}</h3>
                       <p className="mt-3 text-sm font-semibold leading-6 text-[#6B5546]">
-                        {(pedido.pedido_items ?? []).map((item: any) => `${item.cantidad}x ${item.productos?.nombre ?? 'Producto'}`).join(', ')}
+                        {(pedido.pedido_items ?? []).map((item) => `${item.cantidad}x ${(Array.isArray(item.productos) ? item.productos[0]?.nombre : (item.productos as { nombre: string } | null)?.nombre) ?? 'Producto'}`).join(', ')}
                       </p>
                     </div>
                     <div className="text-right">

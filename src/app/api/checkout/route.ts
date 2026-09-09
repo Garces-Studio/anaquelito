@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Preference } from 'mercadopago';
 import { crearClienteAdmin } from '@/lib/supabase/admin';
 import { crearClienteMercadoPago } from '@/lib/mercadopago/cliente';
+import { validarCheckout } from '@/lib/validacion';
 
 type ArticuloRecibido = {
   id: string;
@@ -31,12 +32,23 @@ type CuerpoCheckout = {
  * tiene sesión — el registro se crea desde el servidor a su nombre.
  */
 export async function POST(solicitud: NextRequest) {
+  // Mientras no estén listos webhook, envío y cierre transaccional, no crear
+  // clientes/pedidos huérfanos ni intentar cobrar con credenciales ausentes.
+  if (process.env.CHECKOUT_HABILITADO !== 'true' || !process.env.MERCADOPAGO_ACCESS_TOKEN?.trim()) {
+    return NextResponse.json({ error: 'El pago web aún no está habilitado. Conservamos tu carrito para continuar después o cotizar por WhatsApp.' }, { status: 503 });
+  }
+  if (solicitud.headers.get('origin') !== solicitud.nextUrl.origin) {
+    return NextResponse.json({ error: 'Origen no permitido' }, { status: 403 });
+  }
   let cuerpo: CuerpoCheckout;
   try {
     cuerpo = await solicitud.json();
   } catch {
     return NextResponse.json({ error: 'Cuerpo de la solicitud inválido' }, { status: 400 });
   }
+
+  const errorValidacion = validarCheckout(cuerpo);
+  if (errorValidacion) return NextResponse.json({ error: errorValidacion }, { status: 400 });
 
   const { articulos, negocio } = cuerpo;
 
@@ -70,7 +82,7 @@ export async function POST(solicitud: NextRequest) {
     .in('id', [...cantidadPorId.keys()]);
 
   if (errorProductos) {
-    return NextResponse.json({ error: `No se pudieron verificar los productos: ${errorProductos.message}` }, { status: 500 });
+    return NextResponse.json({ error: 'No se pudieron verificar los productos' }, { status: 503 });
   }
 
   const disponibles = (productosDb ?? []).filter((p) => p.activo);
@@ -101,7 +113,7 @@ export async function POST(solicitud: NextRequest) {
     .single();
 
   if (errorCliente) {
-    return NextResponse.json({ error: `No se pudo registrar el negocio: ${errorCliente.message}` }, { status: 500 });
+    return NextResponse.json({ error: 'No se pudo registrar el negocio' }, { status: 500 });
   }
 
   const total = lineas.reduce((suma, linea) => suma + linea.cantidad * linea.precio_unitario, 0);
@@ -119,7 +131,7 @@ export async function POST(solicitud: NextRequest) {
     .single();
 
   if (errorPedido) {
-    return NextResponse.json({ error: `No se pudo crear el pedido: ${errorPedido.message}` }, { status: 500 });
+    return NextResponse.json({ error: 'No se pudo crear el pedido' }, { status: 500 });
   }
 
   // 3. Artículos del pedido (con los precios verificados de la base de datos)
@@ -133,7 +145,7 @@ export async function POST(solicitud: NextRequest) {
   );
 
   if (errorItems) {
-    return NextResponse.json({ error: `No se pudieron guardar los artículos: ${errorItems.message}` }, { status: 500 });
+    return NextResponse.json({ error: 'No se pudieron guardar los artículos' }, { status: 500 });
   }
 
   // 4. Preferencia de pago en Mercado Pago
@@ -165,10 +177,9 @@ export async function POST(solicitud: NextRequest) {
     const urlPago = esCredencialDePrueba ? preferencia.sandbox_init_point : preferencia.init_point;
 
     return NextResponse.json({ urlPago, pedidoId: pedido.id });
-  } catch (error) {
-    const mensaje = error instanceof Error ? error.message : 'Error desconocido';
+  } catch {
     return NextResponse.json(
-      { error: `No se pudo generar el cobro con Mercado Pago: ${mensaje}` },
+      { error: 'No se pudo generar el cobro. Contacta al negocio antes de volver a intentarlo.' },
       { status: 500 }
     );
   }

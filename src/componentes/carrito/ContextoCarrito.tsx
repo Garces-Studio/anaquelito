@@ -20,8 +20,8 @@ export type AvisoCarrito = {
   cantidad: number;
 };
 
-/** Monto a partir del cual el envío es gratis (regla comercial provisional). */
-export const ENVIO_GRATIS_DESDE = 1500;
+/** Sin promoción de envío hasta confirmar cobertura y condiciones comerciales. */
+export const ENVIO_GRATIS_DESDE = Number.POSITIVE_INFINITY;
 
 type EstadoCarrito = {
   articulos: ArticuloCarrito[];
@@ -56,7 +56,17 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const guardado = localStorage.getItem(LLAVE_ALMACEN);
-      if (guardado) setArticulos(JSON.parse(guardado));
+      if (guardado) {
+        const datos: unknown = JSON.parse(guardado);
+        // Hidratación desde almacenamiento externo; requiere una actualización al montar.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        if (Array.isArray(datos)) setArticulos(datos.filter((a): a is ArticuloCarrito =>
+          a && typeof a.id === 'string' && typeof a.nombre === 'string' &&
+          typeof a.unidad === 'string' && Number.isFinite(a.precio_mayoreo) &&
+          a.precio_mayoreo > 0 && Number.isSafeInteger(a.cantidad) &&
+          a.cantidad > 0 && a.cantidad <= 10000
+        ).slice(0, 100));
+      }
     } catch {
       // Si el JSON guardado está dañado, se empieza con carrito vacío
     }
@@ -65,7 +75,9 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
 
   // Guardar cada cambio (solo después de hidratar, para no pisar lo guardado)
   useEffect(() => {
-    if (hidratado) localStorage.setItem(LLAVE_ALMACEN, JSON.stringify(articulos));
+    if (hidratado) {
+      try { localStorage.setItem(LLAVE_ALMACEN, JSON.stringify(articulos)); } catch { /* Navegación privada o almacenamiento lleno: conservar estado en memoria. */ }
+    }
   }, [articulos, hidratado]);
 
   useEffect(() => {
@@ -81,11 +93,12 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
   };
 
   const agregar: EstadoCarrito['agregar'] = (articulo, cantidad = 1) => {
+    if (!Number.isSafeInteger(cantidad) || cantidad < 1 || cantidad > 10000 || !Number.isFinite(articulo.precio_mayoreo) || articulo.precio_mayoreo <= 0) return;
     setArticulos((previos) => {
       const existente = previos.find((a) => a.id === articulo.id);
       if (existente) {
         return previos.map((a) =>
-          a.id === articulo.id ? { ...a, ...articulo, cantidad: a.cantidad + cantidad } : a
+          a.id === articulo.id ? { ...a, ...articulo, cantidad: Math.min(10000, a.cantidad + cantidad) } : a
         );
       }
       return [...previos, { ...articulo, cantidad }];
@@ -94,6 +107,7 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
   };
 
   const cambiarCantidad: EstadoCarrito['cambiarCantidad'] = (id, cantidad) => {
+    if (!Number.isSafeInteger(cantidad) || cantidad > 10000) return;
     setArticulos((previos) =>
       cantidad <= 0
         ? previos.filter((a) => a.id !== id)
@@ -142,10 +156,12 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
 }
 
 /** Hook para usar el carrito desde cualquier componente de cliente. */
-export function usarCarrito() {
+export function useCarrito() {
   const contexto = useContext(ContextoCarrito);
   if (!contexto) {
     throw new Error('usarCarrito debe usarse dentro de <ProveedorCarrito>');
   }
   return contexto;
 }
+
+export { useCarrito as usarCarrito };

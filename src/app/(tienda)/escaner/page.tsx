@@ -68,22 +68,6 @@ const aparecer = {
   show: { opacity: 1, y: 0 },
 };
 
-function BotonPrincipal({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link href={href} className="group inline-flex items-center justify-center rounded-full border-2 border-[#2B1B12] p-1 transition-colors hover:border-[#FF5A5F]">
-      <span className="flex items-center gap-3 rounded-full bg-[#2B1B12] px-5 py-2.5 text-[#FFF6EC] transition-colors group-hover:bg-[#FF5A5F] sm:px-7">
-        <span className="grid h-6 w-6 place-items-center rounded-full bg-white/10">
-          <ArrowRight className="-rotate-45 transition-transform group-hover:rotate-0" size={13} />
-        </span>
-        <span className="text-[11px] font-black uppercase tracking-[0.18em]">{children}</span>
-        <span className="grid h-6 w-6 place-items-center rounded-full bg-white/15">
-          <ArrowRight className="-rotate-45 transition-transform group-hover:rotate-0" size={13} />
-        </span>
-      </span>
-    </Link>
-  );
-}
-
 function ProductoFlotante({
   src,
   className,
