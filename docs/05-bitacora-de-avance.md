@@ -7,6 +7,7 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - Se integraron las seis fotografías oficiales entregadas por Mauricio en el catálogo, las fichas y el carrusel del Home.
 - Se optimizaron a un tamaño apropiado para web y se asociaron por slug mediante la migración `0011_imagenes_catalogo.sql`.
 - La revisión visual detectó y corrigió que el contenedor del carrusel colapsaba a altura cero en escritorio.
+- Se sustituyeron por PNG transparentes las fotos previas con fondo blanco. Se eliminó la precarga de todas las imágenes del Home para no descargar recursos fuera de pantalla; Next carga y optimiza cada imagen cuando corresponde.
 
 ## 2026-07-07 (continuación — estándar visual para cuenta, dashboard, carrito y catálogo)
 

@@ -2,25 +2,21 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Boxes, Camera, CheckCircle2, Crown, PackageCheck, ScanLine, Sparkles, Store, TrendingUp, Truck } from 'lucide-react';
 
 const ESCENAS = [
-  { nombre: 'Gomilocas Pingüinos', descripcion: 'Bolsa de gomitas Ricolino para mostrador, dulcería, eventos y reventa.', src: '/productos/gomita-pinguino.jpg', color: '#eb168a' },
-  { nombre: 'Gomilocas Dientes', descripcion: 'Una presentación llamativa para darle variedad y color a tu anaquel.', src: '/productos/gomita-diente.jpg', color: '#08aeda' },
-  { nombre: 'Panditas Clásicos', descripcion: 'El formato de un kilogramo de una gomita reconocida por el consumidor.', src: '/productos/gomita-oso.jpg', color: '#20a83a' },
-  { nombre: 'Gomilocas Lombrices', descripcion: 'Surtido de figuras y sabores en una presentación pensada para reventa.', src: '/productos/gomita-lombriz.jpg', color: '#a40ab7' },
-  { nombre: 'Gomilocas Huevitos', descripcion: 'Gomitas en forma de huevito para complementar un surtido más divertido.', src: '/productos/huevito-pinto.jpg', color: '#ed1688' },
-  { nombre: 'Bubulubu Ice', descripcion: 'Caja de 300 piezas para negocios que quieren comprar por volumen.', src: '/productos/bubulubu-ice.jpg', color: '#078ee8' },
+  { nombre: 'Gomilocas Pingüinos', descripcion: 'Bolsa de gomitas Ricolino para mostrador, dulcería, eventos y reventa.', src: '/productos/gomita-pinguino.png', color: '#eb168a' },
+  { nombre: 'Gomilocas Dientes', descripcion: 'Una presentación llamativa para darle variedad y color a tu anaquel.', src: '/productos/gomita-diente.png', color: '#08aeda' },
+  { nombre: 'Panditas Clásicos', descripcion: 'El formato de un kilogramo de una gomita reconocida por el consumidor.', src: '/productos/gomita-oso.png', color: '#20a83a' },
+  { nombre: 'Gomilocas Lombrices', descripcion: 'Surtido de figuras y sabores en una presentación pensada para reventa.', src: '/productos/gomita-lombriz.png', color: '#a40ab7' },
+  { nombre: 'Gomilocas Huevitos', descripcion: 'Gomitas en forma de huevito para complementar un surtido más divertido.', src: '/productos/huevito-pinto.png', color: '#ed1688' },
+  { nombre: 'Bubulubu Ice', descripcion: 'Caja de 300 piezas para negocios que quieren comprar por volumen.', src: '/productos/bubulubu-ice.png', color: '#078ee8' },
 ];
 
 export default function HomeExperiencia() {
   const [activo, setActivo] = useState(0);
   const [moviendo, setMoviendo] = useState(false);
-
-  useEffect(() => {
-    ESCENAS.forEach(({ src }) => { const imagen = new window.Image(); imagen.src = src; });
-  }, []);
 
   const navegar = (paso: number) => {
     if (moviendo) return;
