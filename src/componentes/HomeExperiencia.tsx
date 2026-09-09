@@ -1,0 +1,105 @@
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState, type CSSProperties } from 'react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Boxes, Camera, CheckCircle2, Crown, PackageCheck, ScanLine, Sparkles, Store, TrendingUp, Truck } from 'lucide-react';
+
+const ESCENAS = [
+  { nombre: 'Gomitas que sí se mueven', descripcion: 'Un surtido inicial pensado para mostrador, dulcería, eventos y reventa.', src: '/gomitas.png', color: '#00A699' },
+  { nombre: 'Dulces para tu anaquel', descripcion: 'Compra por caja y consulta la presentación real antes de cerrar tu pedido.', src: '/mazapan.png', color: '#FFB400' },
+  { nombre: 'Botanas para completar', descripcion: 'Anaquelito crecerá con productos elegidos por rotación, no por llenar el catálogo.', src: '/papas.png', color: '#FF5A5F' },
+  { nombre: 'Reordena en segundos', descripcion: 'Cuando un producto se termine, podrás volver a pedirlo desde tu celular.', src: '/paleta.png', color: '#E882B4' },
+];
+
+export default function HomeExperiencia() {
+  const [activo, setActivo] = useState(0);
+  const [moviendo, setMoviendo] = useState(false);
+
+  useEffect(() => {
+    ESCENAS.forEach(({ src }) => { const imagen = new window.Image(); imagen.src = src; });
+  }, []);
+
+  const navegar = (paso: number) => {
+    if (moviendo) return;
+    setMoviendo(true);
+    setActivo((actual) => (actual + paso + ESCENAS.length) % ESCENAS.length);
+    window.setTimeout(() => setMoviendo(false), 650);
+  };
+
+  const rol = (indice: number) => {
+    const distancia = (indice - activo + ESCENAS.length) % ESCENAS.length;
+    if (distancia === 0) return 'centro';
+    if (distancia === 1) return 'derecha';
+    if (distancia === ESCENAS.length - 1) return 'izquierda';
+    return 'fondo';
+  };
+
+  return (
+    <main id="contenido" className="home-vivo">
+      <section className="home-hero" style={{ '--color-escena': ESCENAS[activo].color } as CSSProperties}>
+        <video className="video-background" autoPlay muted loop playsInline aria-hidden="true">
+          <source src="/dulces-loop.mp4" type="video/mp4" />
+        </video>
+        <div className="home-hero-sombra" />
+        <div className="grain-overlay" />
+        <div className="portada-grid">
+          <div className="portada-col-info">
+            <p className="tagline-hero animate-fade-up"><Crown size={15} /> El aliado de tu negocio</p>
+            <h1 className="titulo-hero animate-fade-up-delay-1"><span className="titulo-linea">SURTE.</span><span className="titulo-linea home-titulo-color">VENDE.</span><span className="titulo-linea">CRECE.</span></h1>
+            <p className="subtexto-hero animate-fade-up-delay-2">Dulces y botanas al mayoreo para tienditas, dulcerías, eventos y personas que quieren revender sin complicarse.</p>
+            <div className="fila-cta-hero animate-fade-up-delay-3">
+              <Link href="/catalogo" className="home-cta-principal">Ver productos <ArrowUpRight size={17} /></Link>
+              <Link href="/mayoreo" className="boton-cta-cristal">Cómo comprar <ArrowRight size={17} /></Link>
+            </div>
+            <div className="home-promesas animate-fade-up-delay-4">
+              <span><Boxes size={18} /> Compra por caja</span><span><Store size={18} /> Pensado para negocio</span><span><Truck size={18} /> Entrega por confirmar</span>
+            </div>
+          </div>
+
+          <div className="portada-col-carrusel animate-fade-in-delay" aria-roledescription="carrusel" aria-label="Ventajas de Anaquelito">
+            <div className="home-halo" />
+            {ESCENAS.map((escena, indice) => (
+              <div className={`home-producto home-producto--${rol(indice)}`} key={escena.nombre} aria-hidden={indice !== activo}>
+                <Image src={escena.src} alt="" fill sizes="(max-width: 768px) 60vw, 32vw" priority={indice === 0} />
+              </div>
+            ))}
+            <div className="controles-carrusel-premium" aria-live="polite">
+              <div className="info-producto-carrusel"><strong className="nombre-producto-carrusel">{ESCENAS[activo].nombre}</strong><span className="desc-producto-carrusel">{ESCENAS[activo].descripcion}</span></div>
+              <div className="botones-carrusel-premium"><button type="button" onClick={() => navegar(-1)} className="boton-carrusel-premium" aria-label="Anterior"><ArrowLeft size={18} /></button><button type="button" onClick={() => navegar(1)} className="boton-carrusel-premium" aria-label="Siguiente"><ArrowRight size={18} /></button></div>
+            </div>
+          </div>
+        </div>
+        <a href="#por-que" className="home-bajar">Descubre Anaquelito <span>↓</span></a>
+      </section>
+
+      <section id="por-que" className="home-seccion home-intro">
+        <div className="home-contenedor home-intro-grid">
+          <div><p className="home-ceja"><Sparkles size={16} /> Del proveedor a tu anaquel</p><h2>No necesitas un catálogo infinito. Necesitas producto que se venda.</h2></div>
+          <div className="home-intro-copy"><p>Anaquelito nace para hacer más fácil el resurtido de negocios pequeños: una selección concreta, información clara y una compra que puedas resolver desde el celular.</p><Link href="/mayoreo">Conoce nuestra forma de vender <ArrowUpRight size={18} /></Link></div>
+        </div>
+        <div className="home-marquesina"><div>GOMITAS · DULCES · BOTANAS · MAYOREO · REVENTA · TIENDITAS · GOMITAS · DULCES · BOTANAS · MAYOREO · REVENTA · TIENDITAS ·</div></div>
+      </section>
+
+      <section className="home-seccion home-ruta">
+        <div className="home-contenedor"><p className="home-ceja"><TrendingUp size={16} /> Compra con intención</p><h2>Todo lo importante, en su lugar.</h2>
+          <div className="home-ruta-grid">
+            <Link href="/catalogo" className="home-ruta-card home-ruta-card--coral"><span>01</span><Store size={35} /><h3>Productos</h3><p>Explora el catálogo real conectado a nuestra base de datos, con presentación, disponibilidad y precio cuando estén confirmados.</p><b>Ir al catálogo →</b></Link>
+            <Link href="/mayoreo" className="home-ruta-card home-ruta-card--amarillo"><span>02</span><PackageCheck size={35} /><h3>Cómo comprar</h3><p>Conoce el proceso, mínimos, entrega, pagos y respuestas a las preguntas que surgen antes del primer pedido.</p><b>Ver cómo funciona →</b></Link>
+            <Link href="/escaner" className="home-ruta-card home-ruta-card--teal"><span>03</span><ScanLine size={35} /><h3>Reordena</h3><p>La herramienta que hará diferente a Anaquelito: escanea una bolsa vacía y encuentra el producto para volver a surtirlo.</p><b>Abrir escáner →</b></Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="home-seccion home-historia">
+        <div className="home-contenedor home-historia-grid">
+          <div className="home-historia-numero">3</div>
+          <div><p className="home-ceja"><Camera size={16} /> Una compra sencilla</p><h2>Elige. Confirma. Recibe.</h2><p>El catálogo te ayuda a decidir; la sección de mayoreo explica las condiciones; y tu cuenta conservará tus pedidos para que resurtir sea cada vez más rápido.</p></div>
+          <ul><li><CheckCircle2 /> Datos reales, sin inventar precios</li><li><CheckCircle2 /> Atención antes de cerrar el pedido</li><li><CheckCircle2 /> Experiencia diseñada para celular</li></ul>
+        </div>
+      </section>
+
+      <section className="home-cierre"><div className="grain-overlay" /><div className="home-contenedor"><p>Tu negocio no puede esperar.</p><h2>Que no se quede vacío<br />tu anaquel.</h2><Link href="/catalogo">Explorar productos <ArrowUpRight /></Link></div></section>
+    </main>
+  );
+}

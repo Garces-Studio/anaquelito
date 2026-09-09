@@ -153,3 +153,11 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - Se reforzó la creación de pedidos para impedir que el navegador fije precios o estados, se añadieron validaciones de entrada y encabezados de seguridad, y se actualizó Next.js a 16.3.4.
 - Se añadieron SEO de producto/organización/preguntas frecuentes, navegación B2B y borradores claramente marcados para términos, privacidad, envíos, devoluciones y facturación.
 - Validación final: lint, TypeScript, 5 pruebas, build de producción y auditoría de dependencias sin vulnerabilidades de producción.
+# 2026-09-09 — Recuperación de identidad visual del Home
+
+- Se recuperaron video, grano, animaciones escalonadas, carrusel 3D, color dinámico y microinteracciones de la portada original.
+- Se reorganizó el recorrido: el Home explica la propuesta; Productos, Cómo comprar y Reordenar llevan a páginas independientes.
+- Se eliminó el comportamiento que ocultaba el encabezado al bajar.
+- Se integró el logo oficial proporcionado por Mauricio, optimizado para web y enlazado al Home.
+- El pie de página volvió a tener fondo oscuro y contraste de marca.
+- Se mantuvieron intactos el catálogo de Supabase, cuentas, carrito, checkout preparado y controles de seguridad.

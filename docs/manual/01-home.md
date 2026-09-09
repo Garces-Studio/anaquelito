@@ -1,5 +1,7 @@
 # 01 — Home / Portada
 
+> Actualización vigente (2026-09-09): el Home volvió a ser una experiencia de marca con video, grano, color dinámico, entrada escalonada y carrusel 3D. Su función es explicar Anaquelito y dirigir a tres recorridos independientes: Productos (`/catalogo`), Cómo comprar (`/mayoreo`) y Reordenar (`/escaner`). Ya no duplica el catálogo dentro de la portada. El encabezado permanece visible, usa el logo oficial enlazado a `/`, y el pie tiene fondo oscuro de alto contraste. No se publican márgenes, tiempos de entrega, mínimos o cobertura hasta confirmarlos. La descripción histórica inferior sirve como referencia del diseño recuperado; las imágenes del carrusel siguen siendo temporales hasta recibir las fotografías definitivas.
+
 ## 1. Qué es
 
 La página de entrada del sitio (`/`). Es una landing de venta: un carrusel a pantalla completa con los productos estrella, seguido de tres secciones de contenido (qué es Anaquelito, simulador de margen de ganancia, cómo funciona el proceso de compra) y el pie de página. No tiene barra lateral ni menú dentro del propio componente — la navegación superior la pone el layout raíz (`Encabezado`), que es global a todo el sitio.

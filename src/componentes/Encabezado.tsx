@@ -2,9 +2,10 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { usePanelAccesible } from './usarPanelAccesible';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, ScanLine, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import EnlaceCarrito from './carrito/EnlaceCarrito';
 import { usarCarrito } from './carrito/ContextoCarrito';
@@ -25,23 +26,12 @@ export default function Encabezado() {
   const [adminUserId, setAdminUserId] = useState<string | null>(null);
   const esAdmin = Boolean(usuario && adminUserId === usuario.id);
   const [scrolled, setScrolled] = useState(false);
-  const [oculto, setOculto] = useState(false);
-  const lastScrollY = useRef(0);
   const pathname = usePathname();
   const { subtotal, totalArticulos } = usarCarrito();
 
   useEffect(() => {
     const manejarScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrolled(currentScrollY > 18);
-      
-      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-        setOculto(true);
-      } else if (currentScrollY < lastScrollY.current) {
-        setOculto(false);
-      }
-      
-      lastScrollY.current = currentScrollY;
+      setScrolled(window.scrollY > 18);
     };
     
     window.addEventListener('scroll', manejarScroll, { passive: true });
@@ -80,8 +70,8 @@ export default function Encabezado() {
       <header
         className="fixed left-0 right-0 top-4 z-50 flex w-full justify-center px-4 pointer-events-none"
         style={{
-          opacity: !oculto ? 1 : 0,
-          transform: !oculto ? 'translateY(0)' : 'translateY(-120px)',
+          opacity: 1,
+          transform: 'translateY(0)',
           transition: 'opacity 520ms ease, transform 520ms cubic-bezier(0.22,1,0.36,1)',
         }}
       >
@@ -92,11 +82,8 @@ export default function Encabezado() {
               : 'border-white/65 bg-white/55 shadow-[0_12px_40px_rgba(43,27,18,0.08)]'
           }`}
         >
-          <Link href="/" className="flex items-center gap-2 rounded-full pr-2" style={{ color: '#2B1B12' }}>
-            <span className="grid h-9 w-9 place-items-center rounded-full shadow-[0_10px_24px_rgba(255,90,95,0.28)]" style={{ backgroundColor: '#FF5A5F', color: '#FFFFFF' }}>
-              <ScanLine size={17} />
-            </span>
-            <span className="font-titulo text-sm font-black uppercase tracking-[0.2em] sm:text-base">Anaquelito</span>
+          <Link href="/" className="logo-encabezado" aria-label="Anaquelito, ir al inicio">
+            <Image src="/anaquelito-logo.png" width={600} height={454} sizes="92px" priority alt="Anaquelito" />
           </Link>
 
           <nav className="hidden items-center gap-2 md:flex" aria-label="Navegación principal">
@@ -170,7 +157,9 @@ export default function Encabezado() {
 
       <div ref={panelMenu} id="menu-principal-movil" role="dialog" aria-modal={menuOpen || undefined} aria-label="Navegación" aria-hidden={!menuOpen} inert={!menuOpen} className={`fixed inset-0 z-[999] overflow-y-auto bg-[#2B1B12] text-[#FFF6EC] transition duration-300 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
-          <span className="font-titulo text-lg font-black uppercase tracking-[0.22em] text-[#FFB400]">Anaquelito</span>
+          <Link href="/" onClick={() => setMenuOpen(false)} aria-label="Anaquelito, ir al inicio">
+            <Image src="/anaquelito-logo.png" width={600} height={454} sizes="96px" className="h-auto w-24" alt="Anaquelito" />
+          </Link>
           <button type="button" onClick={() => setMenuOpen(false)} className="grid h-11 w-11 place-items-center rounded-full border border-white/20" aria-label="Cerrar menú">
             <X size={24} />
           </button>
