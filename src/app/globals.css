@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+.tema-tienda .cuenta-comercial h1 { font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.12; letter-spacing: -.04em; text-transform: none; }
+.tema-tienda .cuenta-comercial h2 { font-size: 1.65rem; font-weight: 800; line-height: 1.2; text-transform: none; }
+.cuenta-comercial input, .cuenta-comercial select { font-size: 1rem; min-width: 0; }
+.cuenta-comercial label { font-size: .875rem; letter-spacing: .02em; text-transform: none; }
+.cuenta-comercial form { border-radius: 20px; }
+.cuenta-comercial form > button[type=submit] { font-size: .95rem; letter-spacing: .02em; text-transform: none; }
+.cuenta-comercial label:focus-within > span { outline: 2px solid #087a70; outline-offset: 2px; }
+.b2b-tarjeta { transition: transform 180ms ease, box-shadow 180ms ease; }
+@media (hover: hover) { .b2b-tarjeta:hover { transform: translateY(-3px); box-shadow: 0 10px 26px #2b1b1210; } }
+@media (max-width: 640px) {
+  .cuenta-comercial > div > section:first-child > div { display: none; }
+  .cuenta-comercial { padding-top: 105px; }
+}
+
 /* Mayoreo: contenido servido desde el servidor, sin vídeo ni carrusel pesado. */
 .b2b { background: #fff6ec; color: #2b1b12; font-family: var(--font-principal), sans-serif; }
 .b2b-contenedor { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
@@ -84,6 +98,9 @@
   .b2b-manifiesto { padding: 28px; }
   .b2b-beneficios { justify-content: start; }
   .b2b-pasos { grid-template-columns: repeat(2, 1fr); }
+  .b2b-acciones { align-items: stretch; flex-direction: column; }
+  .b2b-acciones > * { width: 100%; max-width: 100%; }
+  .b2b-consultar, .b2b .b2b-nota { overflow-wrap: anywhere; }
   .pie-legal-enlaces { justify-content: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -171,8 +188,6 @@ a {
 
 button {
   cursor: pointer;
-  border: none;
-  background: none;
   font-family: inherit;
   color: inherit;
 }
@@ -1568,7 +1583,10 @@ html {
 body {
   /* Sin rebote lateral raro al hacer swipe en los bordes */
   overscroll-behavior-x: none;
+  overflow-x: clip;
 }
+
+.b2b *, .cuenta-comercial * { min-width: 0; }
 
 a, button, [role="button"], input[type="submit"] {
   /* Quita el recuadro azul/gris de iOS y Android al tocar */

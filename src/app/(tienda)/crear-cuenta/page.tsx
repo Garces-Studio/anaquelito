@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Building2, Check, Mail, MapPin, Phone, Store } from 'lucide-react';
@@ -70,7 +69,7 @@ export default function PaginaCrearCuenta() {
   const labelClass = 'grid gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#6B5546]';
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#FFF6EC] px-4 pb-16 pt-28 text-[#2B1B12] md:px-8 md:pt-32">
+    <main className="cuenta-comercial relative min-h-screen overflow-hidden bg-[#FFF6EC] px-4 pb-16 pt-28 text-[#2B1B12] md:px-8 md:pt-32">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(255,180,0,0.18),transparent_28%),radial-gradient(circle_at_84%_22%,rgba(255,90,95,0.14),transparent_28%)]" />
       <div className="relative mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
         <aside className="aparecer lg:sticky lg:top-28">
@@ -81,11 +80,9 @@ export default function PaginaCrearCuenta() {
             Crea tu cuenta mayorista.
           </h1>
           <p className="mt-5 max-w-xl text-base font-semibold leading-7 text-[#6B5546]">
-            Guarda tus datos, compra más rápido y prepara tu tienda para reordenar por escáner cuando se active la lectura real.
+            Organiza tus pedidos y guarda la información de entrega de tu negocio. Puedes explorar los productos antes de registrarte.
           </p>
-          <div className="relative mt-8 aspect-[4/3] overflow-hidden rounded-lg border border-[#EBD9C3] bg-white shadow-[0_18px_50px_rgba(43,27,18,0.08)]">
-            <Image src="/palomitas.png" alt="Palomitas de caramelo" fill sizes="(min-width: 1024px) 420px, 100vw" className="blend-multiply object-cover" />
-          </div>
+          <Link href="/catalogo" className="mt-6 inline-flex min-h-11 items-center gap-2 font-bold underline underline-offset-4">Explorar los seis productos <ArrowRight size={18} /></Link>
         </aside>
 
         <form onSubmit={manejarEnvio} className="aparecer retraso-1 grid gap-5 rounded-lg border border-[#EBD9C3] bg-white/88 p-4 shadow-[0_24px_70px_rgba(43,27,18,0.12)] backdrop-blur md:p-6">
@@ -103,6 +100,7 @@ export default function PaginaCrearCuenta() {
                 <button
                   key={tipo.id}
                   type="button"
+                  aria-pressed={tipoNegocio === tipo.id}
                   onClick={() => setTipoNegocio(tipo.id)}
                   className={`rounded-lg border p-4 text-left transition ${
                     tipoNegocio === tipo.id ? 'border-[#2B1B12] bg-[#2B1B12] text-white' : 'border-[#EBD9C3] bg-[#FFF6EC] text-[#2B1B12] hover:border-[#FF5A5F]'
@@ -156,7 +154,7 @@ export default function PaginaCrearCuenta() {
             </div>
           </section>
 
-          {error && <p className="rounded-lg border border-[#D64545]/30 bg-[#D64545]/10 px-4 py-3 text-sm font-bold text-[#D64545]">{error}</p>}
+          {error && <p role="alert" className="rounded-lg border border-[#D64545]/30 bg-[#D64545]/10 px-4 py-3 text-sm font-bold text-[#D64545]">{error}</p>}
 
           <button type="submit" disabled={enviando} className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-[#2B1B12] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white transition hover:bg-[#FF5A5F] disabled:opacity-60">
             {enviando ? 'Creando cuenta...' : 'Crear cuenta'} <ArrowRight size={16} />

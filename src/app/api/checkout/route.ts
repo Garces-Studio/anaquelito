@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Preference } from 'mercadopago';
 import { crearClienteAdmin } from '@/lib/supabase/admin';
+import { crearCliente as crearClienteServidor } from '@/lib/supabase/server';
 import { crearClienteMercadoPago } from '@/lib/mercadopago/cliente';
 import { validarCheckout } from '@/lib/validacion';
 
@@ -78,14 +79,14 @@ export async function POST(solicitud: NextRequest) {
 
   const { data: productosDb, error: errorProductos } = await supabaseAdmin
     .from('productos')
-    .select('id, nombre, unidad, precio_mayoreo, activo')
+    .select('id, nombre, unidad, precio_mayoreo, activo, disponibilidad, stock, cantidad_minima')
     .in('id', [...cantidadPorId.keys()]);
 
   if (errorProductos) {
     return NextResponse.json({ error: 'No se pudieron verificar los productos' }, { status: 503 });
   }
 
-  const disponibles = (productosDb ?? []).filter((p) => p.activo);
+  const disponibles = (productosDb ?? []).filter((p) => p.activo && p.disponibilidad !== 'agotado' && Number(p.precio_mayoreo) > 0 && p.unidad);
   if (disponibles.length !== cantidadPorId.size) {
     return NextResponse.json(
       { error: 'Uno o más productos del carrito ya no están disponibles. Actualiza tu carrito.' },
@@ -100,19 +101,40 @@ export async function POST(solicitud: NextRequest) {
     precio_unitario: Number(producto.precio_mayoreo),
   }));
 
-  // 1. Cliente de invitado (sin cuenta todavía; auth_user_id queda vacío)
-  const { data: cliente, error: errorCliente } = await supabaseAdmin
-    .from('clientes')
-    .insert({
+  for (const producto of disponibles) {
+    const cantidad = cantidadPorId.get(producto.id)!;
+    if (producto.cantidad_minima && cantidad < producto.cantidad_minima) {
+      return NextResponse.json({ error: `${producto.nombre} requiere un mínimo de ${producto.cantidad_minima} cajas.` }, { status: 409 });
+    }
+    if (producto.stock !== null && cantidad > producto.stock) {
+      return NextResponse.json({ error: `Solo hay ${producto.stock} cajas disponibles de ${producto.nombre}.` }, { status: 409 });
+    }
+  }
+
+  // 1. Asociar el pedido con la cuenta actual para que aparezca en su historial.
+  // El checkout de invitado sigue disponible y crea un perfil sin auth_user_id.
+  const supabaseSesion = await crearClienteServidor();
+  const { data: { user } } = await supabaseSesion.auth.getUser();
+  let consultaCliente = supabaseAdmin.from('clientes').select('id');
+  if (user) consultaCliente = consultaCliente.eq('auth_user_id', user.id);
+  const existente = user ? await consultaCliente.maybeSingle() : { data: null, error: null };
+  let cliente = existente.data;
+  let errorCliente = existente.error;
+  if (!cliente && !errorCliente) {
+    const creado = await supabaseAdmin.from('clientes').insert({
+      auth_user_id: user?.id ?? null,
       nombre_negocio: negocio.nombre_negocio,
       telefono: negocio.telefono,
       direccion: negocio.direccion,
       tipo_negocio: negocio.tipo_negocio ?? 'tiendita',
-    })
-    .select('id')
-    .single();
+    }).select('id').single();
+    cliente = creado.data;
+    errorCliente = creado.error;
+  } else if (cliente && user) {
+    await supabaseAdmin.from('clientes').update({ nombre_negocio: negocio.nombre_negocio, telefono: negocio.telefono, direccion: negocio.direccion, tipo_negocio: negocio.tipo_negocio }).eq('id', cliente.id);
+  }
 
-  if (errorCliente) {
+  if (errorCliente || !cliente) {
     return NextResponse.json({ error: 'No se pudo registrar el negocio' }, { status: 500 });
   }
 
@@ -145,6 +167,7 @@ export async function POST(solicitud: NextRequest) {
   );
 
   if (errorItems) {
+    await supabaseAdmin.from('pedidos').update({ estado: 'cancelado' }).eq('id', pedido.id);
     return NextResponse.json({ error: 'No se pudieron guardar los artículos' }, { status: 500 });
   }
 
@@ -178,6 +201,7 @@ export async function POST(solicitud: NextRequest) {
 
     return NextResponse.json({ urlPago, pedidoId: pedido.id });
   } catch {
+    await supabaseAdmin.from('pedidos').update({ estado: 'cancelado' }).eq('id', pedido.id);
     return NextResponse.json(
       { error: 'No se pudo generar el cobro. Contacta al negocio antes de volver a intentarlo.' },
       { status: 500 }

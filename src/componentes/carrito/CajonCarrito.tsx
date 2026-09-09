@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ArrowRight, Check, Minus, Plus, ShoppingBag, Trash2, Truck, X } from 'lucide-react';
 import { usarCarrito } from './ContextoCarrito';
 
+const PAGO_ACTIVO = process.env.NEXT_PUBLIC_CHECKOUT_HABILITADO === 'true';
+
 /** Cajón lateral del carrito (sin modales que bloqueen): se desliza desde la
  *  derecha, deja ver el pedido completo con cantidades editables y muestra
  *  cuánto falta para el envío gratis. Incluye el aviso flotante que aparece
@@ -218,13 +220,13 @@ export default function CajonCarrito() {
               <span className="text-[11px] font-black uppercase tracking-[0.16em] text-[#6B5546]">Subtotal</span>
               <strong className="text-3xl font-black">${subtotal.toFixed(2)}</strong>
             </div>
-            <Link
+            {PAGO_ACTIVO ? <Link
               href="/checkout"
               onClick={cerrarCajon}
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#2B1B12] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white transition hover:bg-[#FF5A5F]"
             >
               Ir a pagar <ArrowRight size={16} />
-            </Link>
+            </Link> : <p className="rounded-xl bg-[#FFF0D5] px-4 py-3 text-center text-sm font-bold text-[#7A5630]">Pago web en preparación</p>}
             <Link
               href="/carrito"
               onClick={cerrarCajon}

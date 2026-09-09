@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { usePanelAccesible } from './usarPanelAccesible';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, ScanLine, X } from 'lucide-react';
@@ -17,6 +18,9 @@ const enlaces = [
 
 export default function Encabezado() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const panelMenu = useRef<HTMLDivElement>(null);
+  const cerrarMenu = useCallback(() => setMenuOpen(false), []);
+  usePanelAccesible(menuOpen, panelMenu, cerrarMenu);
   const [usuario, setUsuario] = useState<User | null>(null);
   const [adminUserId, setAdminUserId] = useState<string | null>(null);
   const esAdmin = Boolean(usuario && adminUserId === usuario.id);
@@ -155,6 +159,8 @@ export default function Encabezado() {
               className="grid h-10 w-10 place-items-center rounded-full bg-[#2B1B12] text-white"
               style={{ backgroundColor: '#2B1B12', color: '#FFFFFF' }}
               aria-label="Abrir menú"
+              aria-expanded={menuOpen}
+              aria-controls="menu-principal-movil"
             >
               <Menu size={19} />
             </button>
@@ -162,7 +168,7 @@ export default function Encabezado() {
         </div>
       </header>
 
-      <div className={`fixed inset-0 z-[999] bg-[#2B1B12] text-[#FFF6EC] transition duration-300 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+      <div ref={panelMenu} id="menu-principal-movil" role="dialog" aria-modal={menuOpen || undefined} aria-label="Navegación" aria-hidden={!menuOpen} inert={!menuOpen} className={`fixed inset-0 z-[999] overflow-y-auto bg-[#2B1B12] text-[#FFF6EC] transition duration-300 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
           <span className="font-titulo text-lg font-black uppercase tracking-[0.22em] text-[#FFB400]">Anaquelito</span>
           <button type="button" onClick={() => setMenuOpen(false)} className="grid h-11 w-11 place-items-center rounded-full border border-white/20" aria-label="Cerrar menú">

@@ -142,6 +142,10 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - **Verificado**: `tsc --noEmit` limpio y `next build` completo (compila, TypeScript en 21.4s, 20 páginas generadas) sin errores.
 ## 2026-09-09 — Primera etapa de la tienda mayorista
 
+- Segunda revisión de conversión: acceso y registro más compactos, imágenes de productos ajenos al catálogo retiradas de esas pantallas, contraseña visible opcional, autocompletado de acceso y errores de conexión recuperables.
+- Menú móvil: contenido cerrado no enfocable, cierre con Escape, foco contenido y restaurado, y bloqueo de scroll de fondo. Transiciones discretas en tarjetas respetando movimiento reducido.
+- Mauricio confirmó mantener precios y WhatsApp pendientes. Proveedor de pago todavía en evaluación; cobros continúan deshabilitados. Falta conectar correctamente pedidos con cuentas, confirmación de pago del servidor y pruebas de compra antes del lanzamiento.
+
 - Se cambió el enfoque principal a venta B2B con el mensaje “Surtimos tu negocio, no tu antojo”, home comercial, catálogo ligero, fichas de producto y página `/mayoreo`.
 - Supabase quedó con los seis productos acordados activos; los seis registros de demostración anteriores se conservaron inactivos. Los datos comerciales desconocidos siguen en `null` para no inventarlos.
 - Bubulubu Ice conserva únicamente la presentación confirmada (caja con 300 piezas). Su costo provisional de proveedor se guardó en `privado.producto_costos`, sin acceso público.
