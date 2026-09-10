@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail, ScanLine } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/client';
+import { registrarEvento } from '@/lib/analitica';
 
 export default function PaginaIniciarSesion() {
   const router = useRouter();
@@ -28,6 +29,8 @@ export default function PaginaIniciarSesion() {
       setEnviando(false);
       return;
     }
+
+    registrarEvento('login', { method: 'email' });
 
     router.push('/dashboard');
     router.refresh();

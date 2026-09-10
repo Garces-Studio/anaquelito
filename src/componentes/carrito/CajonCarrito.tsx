@@ -4,8 +4,11 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, Minus, Plus, ShoppingBag, Trash2, Truck, X } from 'lucide-react';
 import { usarCarrito } from './ContextoCarrito';
+import EnlaceWhatsApp from '@/componentes/EnlaceWhatsApp';
+import { registrarEvento } from '@/lib/analitica';
 
 const PAGO_ACTIVO = process.env.NEXT_PUBLIC_CHECKOUT_HABILITADO === 'true';
+const NUMERO_WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMERO;
 
 /** Cajón lateral del carrito (sin modales que bloqueen): se desliza desde la
  *  derecha, deja ver el pedido completo con cantidades editables y muestra
@@ -24,6 +27,7 @@ export default function CajonCarrito() {
     aviso,
     descartarAviso,
   } = usarCarrito();
+  const mensajePedido = encodeURIComponent(`Hola, quiero realizar un pedido en Anaquelito:\n\n${articulos.map((a) => `${a.cantidad} ${a.cantidad === 1 ? 'caja' : 'cajas'} de ${a.nombre}`).join('\n')}\n\nTotal estimado: $${subtotal.toFixed(2)}\n\n¿Me confirman disponibilidad y opciones de entrega?`);
 
   // Bloquear el scroll del fondo mientras el cajón está abierto
   useEffect(() => {
@@ -174,6 +178,7 @@ export default function CajonCarrito() {
                     <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#6B5546]">
                       ${articulo.precio_mayoreo} / {articulo.unidad}
                     </p>
+                    {(articulo.piezas_por_caja || articulo.bolsas_por_caja) && <p className="text-[10px] font-bold text-[#6B5546]">{articulo.cantidad * (articulo.piezas_por_caja ?? articulo.bolsas_por_caja ?? 0)} {articulo.piezas_por_caja ? 'piezas' : 'bolsas'} totales</p>}
                     <div className="mt-2 flex items-center gap-2">
                       <div className="inline-flex items-center rounded-full border border-[#EBD9C3] bg-[#FFF6EC] p-0.5">
                         <button
@@ -222,11 +227,13 @@ export default function CajonCarrito() {
             </div>
             {PAGO_ACTIVO ? <Link
               href="/checkout"
-              onClick={cerrarCajon}
+              onClick={() => { registrarEvento('begin_checkout', { currency: 'MXN', value: subtotal }); cerrarCajon(); }}
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#2B1B12] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white transition hover:bg-[#FF5A5F]"
             >
               Ir a pagar <ArrowRight size={16} />
             </Link> : <p className="rounded-xl bg-[#FFF0D5] px-4 py-3 text-center text-sm font-bold text-[#7A5630]">Pago web en preparación</p>}
+            {NUMERO_WHATSAPP && <EnlaceWhatsApp href={`https://wa.me/${NUMERO_WHATSAPP}?text=${mensajePedido}`} className="mt-2 inline-flex w-full items-center justify-center rounded-full border border-[#EBD9C3] bg-white px-6 py-3.5 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12]">Pedir por WhatsApp</EnlaceWhatsApp>}
+            <Link href="/catalogo" onClick={cerrarCajon} className="mt-2 inline-flex w-full items-center justify-center px-6 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#6B5546]">Continuar compra</Link>
             <Link
               href="/carrito"
               onClick={cerrarCajon}

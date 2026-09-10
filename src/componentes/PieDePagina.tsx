@@ -28,10 +28,10 @@ export default function PieDePagina() {
             </ul>
           </div>
           <div>
-            <h4>Categorías</h4>
+            <h4>Anaquelito</h4>
             <ul>
-              <li><Link href="/catalogo?categoria=gomitas">Gomitas</Link></li>
-              <li><Link href="/catalogo?categoria=chocolates">Chocolates</Link></li>
+              <li><Link href="/#por-que">Nosotros</Link></li>
+              <li><Link href="/catalogo">Productos</Link></li>
               <li><Link href="/mayoreo#preguntas">Preguntas frecuentes</Link></li>
             </ul>
           </div>

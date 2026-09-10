@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { registrarEvento } from '@/lib/analitica';
 
 /** Un producto dentro del carrito. */
 export type ArticuloCarrito = {
@@ -10,6 +11,8 @@ export type ArticuloCarrito = {
   precio_mayoreo: number;
   cantidad: number;
   imagen?: string;
+  piezas_por_caja?: number | null;
+  bolsas_por_caja?: number | null;
 };
 
 /** Aviso flotante que se muestra al agregar un dulce. */
@@ -29,6 +32,7 @@ type EstadoCarrito = {
   cambiarCantidad: (id: string, cantidad: number) => void;
   quitar: (id: string) => void;
   vaciar: () => void;
+  cargarPedido: (articulos: ArticuloCarrito[]) => void;
   totalArticulos: number;
   subtotal: number;
   cajonAbierto: boolean;
@@ -104,10 +108,13 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
       return [...previos, { ...articulo, cantidad }];
     });
     mostrarAviso(articulo, cantidad);
+    registrarEvento('add_to_cart', { currency: 'MXN', value: articulo.precio_mayoreo * cantidad, items: [{ item_id: articulo.id, item_name: articulo.nombre, price: articulo.precio_mayoreo, quantity: cantidad }] });
   };
 
   const cambiarCantidad: EstadoCarrito['cambiarCantidad'] = (id, cantidad) => {
     if (!Number.isSafeInteger(cantidad) || cantidad > 10000) return;
+    const actual = articulos.find((a) => a.id === id);
+    if (actual && cantidad < actual.cantidad) registrarEvento('remove_from_cart', { currency: 'MXN', value: actual.precio_mayoreo * (actual.cantidad - Math.max(0, cantidad)), items: [{ item_id: actual.id, item_name: actual.nombre, price: actual.precio_mayoreo, quantity: actual.cantidad - Math.max(0, cantidad) }] });
     setArticulos((previos) =>
       cantidad <= 0
         ? previos.filter((a) => a.id !== id)
@@ -115,14 +122,19 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const quitar = (id: string) =>
+  const quitar = (id: string) => {
+    const articulo = articulos.find((a) => a.id === id);
+    if (articulo) registrarEvento('remove_from_cart', { currency: 'MXN', value: articulo.precio_mayoreo * articulo.cantidad, items: [{ item_id: articulo.id, item_name: articulo.nombre, price: articulo.precio_mayoreo, quantity: articulo.cantidad }] });
     setArticulos((previos) => previos.filter((a) => a.id !== id));
+  };
 
   const vaciar = () => setArticulos([]);
+  const cargarPedido = (nuevos: ArticuloCarrito[]) => setArticulos(nuevos.slice(0, 100));
 
   const abrirCajon = () => {
     setAviso(null);
     setCajonAbierto(true);
+    registrarEvento('view_cart', { currency: 'MXN', value: subtotal, items: articulos.map((a) => ({ item_id: a.id, item_name: a.nombre, price: a.precio_mayoreo, quantity: a.cantidad })) });
   };
   const cerrarCajon = () => setCajonAbierto(false);
   const descartarAviso = () => setAviso(null);
@@ -141,6 +153,7 @@ export function ProveedorCarrito({ children }: { children: React.ReactNode }) {
         cambiarCantidad,
         quitar,
         vaciar,
+        cargarPedido,
         totalArticulos,
         subtotal,
         cajonAbierto,

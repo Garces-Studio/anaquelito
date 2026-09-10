@@ -10,6 +10,8 @@ type Producto = {
   nombre: string;
   descripcion: string | null;
   categoria: string | null;
+  marca: string | null;
+  tipo_empaque: string | null;
   unidad: string | null;
   precio_mayoreo: number | null;
   precio_menudeo: number | null;
@@ -18,9 +20,11 @@ type Producto = {
   piezas_por_caja: number | null;
   bolsas_por_caja: number | null;
   peso_por_bolsa_g: number | null;
+  peso_total_g: number | null;
+  destacado: boolean;
   stock: number | null;
   cantidad_minima: number | null;
-  disponibilidad: 'por_confirmar' | 'disponible' | 'agotado';
+  disponibilidad: 'unconfirmed' | 'in_stock' | 'available_from_supplier' | 'low_stock' | 'out_of_stock';
   activo: boolean;
   creado_en: string;
   codigos_barra?: { codigo: string }[];
@@ -41,12 +45,16 @@ type Formulario = {
   sku: string;
   descripcion: string;
   categoria: string;
+  marca: string;
+  tipo_empaque: string;
   unidad: string;
   precio_mayoreo: string;
   precio_sugerido_reventa: string;
   piezas_por_caja: string;
   bolsas_por_caja: string;
   peso_por_bolsa_g: string;
+  peso_total_g: string;
+  destacado: boolean;
   stock: string;
   cantidad_minima: string;
   disponibilidad: Producto['disponibilidad'];
@@ -60,15 +68,19 @@ const FORMULARIO_VACIO: Formulario = {
   sku: '',
   descripcion: '',
   categoria: 'dulces',
+  marca: '',
+  tipo_empaque: '',
   unidad: '',
   precio_mayoreo: '',
   precio_sugerido_reventa: '',
   piezas_por_caja: '',
   bolsas_por_caja: '',
   peso_por_bolsa_g: '',
+  peso_total_g: '',
+  destacado: false,
   stock: '',
   cantidad_minima: '',
-  disponibilidad: 'por_confirmar',
+  disponibilidad: 'unconfirmed',
   imagen_url: '',
   codigo_barras: '',
 };
@@ -126,12 +138,16 @@ export default function PaginaAdminProductos() {
       sku: producto.sku ?? '',
       descripcion: producto.descripcion ?? '',
       categoria: producto.categoria ?? 'dulces',
+      marca: producto.marca ?? '',
+      tipo_empaque: producto.tipo_empaque ?? '',
       unidad: producto.unidad ?? '',
       precio_mayoreo: producto.precio_mayoreo ? String(producto.precio_mayoreo) : '',
       precio_sugerido_reventa: producto.precio_sugerido_reventa ? String(producto.precio_sugerido_reventa) : '',
       piezas_por_caja: producto.piezas_por_caja ? String(producto.piezas_por_caja) : '',
       bolsas_por_caja: producto.bolsas_por_caja ? String(producto.bolsas_por_caja) : '',
       peso_por_bolsa_g: producto.peso_por_bolsa_g ? String(producto.peso_por_bolsa_g) : '',
+      peso_total_g: producto.peso_total_g ? String(producto.peso_total_g) : '',
+      destacado: producto.destacado,
       stock: producto.stock === null ? '' : String(producto.stock),
       cantidad_minima: producto.cantidad_minima ? String(producto.cantidad_minima) : '',
       disponibilidad: producto.disponibilidad,
@@ -172,12 +188,16 @@ export default function PaginaAdminProductos() {
         sku: formulario.sku || null,
         descripcion: formulario.descripcion || null,
         categoria: formulario.categoria || null,
+        marca: formulario.marca || null,
+        tipo_empaque: formulario.tipo_empaque || null,
         unidad: formulario.unidad || null,
         precio_mayoreo: formulario.precio_mayoreo ? Number(formulario.precio_mayoreo) : null,
         precio_sugerido_reventa: formulario.precio_sugerido_reventa ? Number(formulario.precio_sugerido_reventa) : null,
         piezas_por_caja: formulario.piezas_por_caja ? Number(formulario.piezas_por_caja) : null,
         bolsas_por_caja: formulario.bolsas_por_caja ? Number(formulario.bolsas_por_caja) : null,
         peso_por_bolsa_g: formulario.peso_por_bolsa_g ? Number(formulario.peso_por_bolsa_g) : null,
+        peso_total_g: formulario.peso_total_g ? Number(formulario.peso_total_g) : null,
+        destacado: formulario.destacado,
         stock: formulario.stock === '' ? null : Number(formulario.stock),
         cantidad_minima: formulario.cantidad_minima ? Number(formulario.cantidad_minima) : null,
         disponibilidad: formulario.disponibilidad,
@@ -358,6 +378,9 @@ export default function PaginaAdminProductos() {
                 />
               </label>
 
+              <label className={ETIQUETA}>Marca<input className={CAMPO} value={formulario.marca} onChange={(e) => setFormulario({ ...formulario, marca: e.target.value })} placeholder="Ej. Ricolino" /></label>
+              <label className={ETIQUETA}>Tipo de empaque<input className={CAMPO} value={formulario.tipo_empaque} onChange={(e) => setFormulario({ ...formulario, tipo_empaque: e.target.value })} placeholder="Caja, bolsa…" /></label>
+
               <label className={ETIQUETA}>
                 Categoría
                 <select
@@ -397,9 +420,11 @@ export default function PaginaAdminProductos() {
               <label className={ETIQUETA}>
                 Disponibilidad
                 <select className={CAMPO} value={formulario.disponibilidad} onChange={(e) => setFormulario({ ...formulario, disponibilidad: e.target.value as Producto['disponibilidad'] })}>
-                  <option value="por_confirmar">Por confirmar</option>
-                  <option value="disponible">Disponible</option>
-                  <option value="agotado">Agotado</option>
+                  <option value="unconfirmed">Por confirmar</option>
+                  <option value="in_stock">En stock propio</option>
+                  <option value="available_from_supplier">Disponible con proveedor</option>
+                  <option value="low_stock">Pocas cajas propias</option>
+                  <option value="out_of_stock">Agotado</option>
                 </select>
               </label>
 
@@ -417,6 +442,10 @@ export default function PaginaAdminProductos() {
                 Peso por bolsa (g)
                 <input className={CAMPO} type="number" min="0.01" step="0.01" value={formulario.peso_por_bolsa_g} onChange={(e) => setFormulario({ ...formulario, peso_por_bolsa_g: e.target.value })} placeholder="Pendiente" />
               </label>
+
+              <label className={ETIQUETA}>Peso total de caja (g)<input className={CAMPO} type="number" min="0.01" step="0.01" value={formulario.peso_total_g} onChange={(e) => setFormulario({ ...formulario, peso_total_g: e.target.value })} placeholder="Pendiente" /></label>
+
+              <label className={`${ETIQUETA} flex-row items-center`}><input type="checkbox" checked={formulario.destacado} onChange={(e) => setFormulario({ ...formulario, destacado: e.target.checked })} /> Producto destacado</label>
 
               <label className={ETIQUETA}>
                 Stock en cajas

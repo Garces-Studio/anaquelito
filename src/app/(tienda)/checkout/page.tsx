@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usarCarrito } from '@/componentes/carrito/ContextoCarrito';
+import { registrarEvento } from '@/lib/analitica';
 
 type TipoNegocio = 'tiendita' | 'cafe' | 'emprendedor';
 
@@ -33,6 +34,7 @@ export default function PaginaCheckout() {
     evento.preventDefault();
     setEnviando(true);
     setError(null);
+    registrarEvento('begin_checkout', { currency: 'MXN', value: subtotal, items: articulos.map((a) => ({ item_id: a.id, item_name: a.nombre, price: a.precio_mayoreo, quantity: a.cantidad })) });
 
     try {
       const respuesta = await fetch('/api/checkout', {
@@ -65,7 +67,7 @@ export default function PaginaCheckout() {
     <main className="contenedor pagina-colorida" style={{ padding: '3rem 1.25rem 4rem' }}>
       <h1 className="seccion-titulo titulo-degradado aparecer">Confirmar pedido</h1>
       <p className="seccion-bajada aparecer retraso-1">
-        Estos datos son para saber a dónde y a nombre de quién entregar.
+        Compra como invitado; estos datos son para saber a dónde y a nombre de quién entregar. ¿Ya tienes cuenta? <Link href="/iniciar-sesion" className="font-black underline">Ingresar</Link>
       </p>
 
       <div className="grid-checkout aparecer retraso-2">
@@ -117,6 +119,7 @@ export default function PaginaCheckout() {
           <button type="submit" className="boton boton-primario" disabled={enviando} style={{ width: '100%' }}>
             {enviando ? 'Redirigiendo a Mercado Pago…' : `Pagar $${subtotal.toFixed(2)} con Mercado Pago`}
           </button>
+          <p className="resumen-nota">No necesitas crear una cuenta para completar el pago.</p>
         </form>
 
         <aside className="resumen-checkout">

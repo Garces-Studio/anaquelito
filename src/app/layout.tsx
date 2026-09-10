@@ -12,6 +12,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://anaquelito.vercel.app"),
   title: "Dulces y botanas al mayoreo para tu negocio | Anaquelito",
   description:
     "Compra dulces por caja para surtir tu tiendita, dulcería o negocio de reventa. Consulta presentaciones, precios y entrega según cobertura en Anaquelito.",
@@ -30,6 +31,7 @@ export const viewport: Viewport = {
 import { ProveedorCarrito } from "@/componentes/carrito/ContextoCarrito";
 import CajonCarrito from "@/componentes/carrito/CajonCarrito";
 import Encabezado from "@/componentes/Encabezado";
+import Analitica from "@/componentes/Analitica";
 
 export default function DisenoPrincipal({
   children,
@@ -39,6 +41,7 @@ export default function DisenoPrincipal({
   return (
     <html lang="es" className={`${jakarta.variable}`}>
       <body>
+        <Analitica />
         <ProveedorCarrito>
           <Encabezado />
           {children}

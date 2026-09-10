@@ -13,6 +13,8 @@ type CuerpoCrearCuenta = {
   municipio?: string;
   estado?: string;
   codigo_postal?: string;
+  pedido?: string | null;
+  token_pedido?: string | null;
 };
 
 /**
@@ -74,17 +76,24 @@ export async function POST(solicitud: NextRequest) {
     .join(', ');
 
   // 2. Registro del negocio en la tabla clientes
-  const { data: cliente, error: errorCliente } = await supabaseAdmin
-    .from('clientes')
-    .insert({
+  const formatoUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  let clientePedido: { cliente_id: string } | null = null;
+  if (cuerpo.pedido && cuerpo.token_pedido && formatoUuid.test(cuerpo.pedido) && formatoUuid.test(cuerpo.token_pedido)) {
+    const { data } = await supabaseAdmin.from('pedidos').select('cliente_id, clientes!inner(auth_user_id)').eq('id', cuerpo.pedido).eq('token_confirmacion', cuerpo.token_pedido).eq('pago_estado', 'aprobado').is('clientes.auth_user_id', null).maybeSingle();
+    clientePedido = data ? { cliente_id: data.cliente_id } : null;
+  }
+
+  const datosCliente = {
       auth_user_id: usuarioCreado.user.id,
       nombre_negocio,
       tipo_negocio,
       telefono,
       direccion: direccionResumen,
-    })
-    .select('id')
-    .single();
+  };
+  const resultadoCliente = clientePedido
+    ? await supabaseAdmin.from('clientes').update(datosCliente).eq('id', clientePedido.cliente_id).is('auth_user_id', null).select('id').single()
+    : await supabaseAdmin.from('clientes').insert(datosCliente).select('id').single();
+  const { data: cliente, error: errorCliente } = resultadoCliente;
 
   if (errorCliente) {
     // Si esto falla, no dejamos un usuario de auth huérfano sin registro de negocio

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Building2, Check, Mail, MapPin, Phone, Store } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/client';
+import { registrarEvento } from '@/lib/analitica';
 
 type TipoNegocio = 'tiendita' | 'cafe' | 'emprendedor';
 
@@ -47,6 +48,7 @@ export default function PaginaCrearCuenta() {
         body: JSON.stringify({
           email, password, nombre_negocio: nombreNegocio, tipo_negocio: tipoNegocio,
           telefono, calle_numero: calleNumero, colonia, municipio, estado, codigo_postal: codigoPostal,
+          pedido: new URLSearchParams(window.location.search).get('pedido'), token_pedido: new URLSearchParams(window.location.search).get('token'),
         }),
       });
 
@@ -56,6 +58,8 @@ export default function PaginaCrearCuenta() {
       const supabase = crearCliente();
       const { error: errorLogin } = await supabase.auth.signInWithPassword({ email, password });
       if (errorLogin) throw errorLogin;
+
+      registrarEvento('sign_up', { method: 'email', tipo_negocio: tipoNegocio });
 
       router.push('/dashboard');
       router.refresh();

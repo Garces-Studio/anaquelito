@@ -10,6 +10,8 @@ type ProductoAgregable = {
   precio_mayoreo: number;
   imagen?: string | null;
   imagen_url?: string | null;
+  piezas_por_caja?: number | null;
+  bolsas_por_caja?: number | null;
 };
 
 /** Botón de compra de las tarjetas de producto, sin modales:
@@ -27,6 +29,8 @@ export default function BotonAgregar({ producto }: { producto: ProductoAgregable
     unidad: producto.unidad,
     precio_mayoreo: Number(producto.precio_mayoreo),
     imagen,
+    piezas_por_caja: producto.piezas_por_caja,
+    bolsas_por_caja: producto.bolsas_por_caja,
   };
 
   if (enCarrito) {

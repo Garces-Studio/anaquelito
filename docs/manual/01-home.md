@@ -1,6 +1,6 @@
 # 01 — Home / Portada
 
-> Actualización vigente (2026-09-09): el Home volvió a ser una experiencia de marca con video, grano, color dinámico, entrada escalonada y carrusel 3D. Su función es explicar Anaquelito y dirigir a tres recorridos independientes: Productos (`/catalogo`), Cómo comprar (`/mayoreo`) y Reordenar (`/escaner`). Ya no duplica el catálogo dentro de la portada. El encabezado permanece visible, usa el logo oficial enlazado a `/`, y el pie tiene fondo oscuro de alto contraste. No se publican márgenes, tiempos de entrega, mínimos o cobertura hasta confirmarlos. La descripción histórica inferior sirve como referencia del diseño recuperado; las imágenes del carrusel siguen siendo temporales hasta recibir las fotografías definitivas.
+> Actualización vigente (2026-09-09): el Home conserva íntegros su video, grano, color dinámico, entradas y carrusel 3D con las seis imágenes definitivas. El recorrido público se limita a Inicio, Productos, Cómo comprar, cuenta y carrito. La tarjeta que promovía el escáner ahora atiende Eventos y dirige al catálogo; el escáner continúa construido pero queda fuera del lanzamiento. No se publican precios, mínimos, tiempos ni cobertura hasta confirmarlos.
 
 ## 1. Qué es
 
@@ -10,22 +10,23 @@ Es la única página que **no** vive dentro del grupo de ruta `(tienda)`, así q
 
 ## 2. Archivo(s) involucrados
 
-- `src/app/page.tsx` — toda la página (componente `Inicio`), es un Client Component (`'use client'`).
+- `src/app/page.tsx` — ensambla la portada, el pie y el schema Organization.
+- `src/componentes/HomeExperiencia.tsx` — experiencia interactiva del Home y carrusel.
 - `src/app/layout.tsx` — layout raíz: fuente Plus Jakarta Sans, `ProveedorCarrito`, `Encabezado`.
 - `src/app/globals.css` — clases usadas por el hero: `.portada-grid`, `.portada-col-info`, `.portada-col-carrusel`, `.tagline-hero`, `.titulo-hero`, `.subtexto-hero`, `.fila-cta-hero`, `.fila-stats-hero`, `.controles-carrusel-premium`, `.grain-overlay`, `.video-overlay`, `.animate-fade-*`.
 - `src/componentes/PieDePagina.tsx` — se importa y se renderiza al final, envuelto en un `div.tema-tienda` solo para que el pie tome el tema cálido de las páginas interiores aunque el resto del Home no lo use.
-- Assets públicos: `/dulces-loop.mp4` (video de fondo del hero) y `/papas.png`, `/mazapan.png`, `/gomitas.png`, `/paleta.png` (imágenes del carrusel, en `public/`).
+- Assets públicos: `/dulces-loop.mp4`, `/anaquelito-logo.png` y las seis imágenes transparentes de `public/productos/`.
 
 ## 3. Estructura del contenido (de arriba a abajo)
 
 1. **Hero / carrusel (`<main>`, pantalla completa, `100vh`)**
    - Video de fondo en loop (`mixBlendMode: overlay`, opacidad 0.15) + degradado oscuro + capa de grano analógico (`.grain-overlay`) para look premium.
-   - Columna izquierda: tagline, título en 3 líneas ("SURTE. AHORRA. CRECE."), subtexto, dos botones (`Ver catálogo` → `/catalogo`, `Escanear producto` → `/escaner`) y una fila de 3 estadísticas fijas (1.1M+ tienditas, 24 hrs de entrega, ~40% margen).
+   - Columna izquierda: propuesta de valor, botones a Productos y Cómo comprar y promesas verificables sin estadísticas inventadas.
    - Columna derecha: carrusel 3D de 4 productos (`DULCES`), con controles de flecha izquierda/derecha y el nombre + descripción del producto activo.
    - El color de fondo del `<main>` cambia según el producto activo (`DULCES[activeIndex].bg`), con transición suave.
 2. **Sección "¿Qué es Anaquelito?"** — 4 tarjetas de categoría (frutos secos, gomitas, chocolates, fritos) en grid responsive, con Tailwind.
-3. **Sección "Simulador de ganancias"** — texto de argumento de venta (margen 40%-65%) a la izquierda y una tarjeta de "factura de ejemplo" a la derecha mostrando precio mayoreo vs. reventa sugerida.
-4. **Sección "Cómo funciona"** — 3 pasos numerados (Elige tu pedido → Recibe en tu local → Reordena escaneando) con iconos de `lucide-react`.
+3. **Sección de recorridos** — Productos, Cómo comprar y Eventos; todos llevan a funciones disponibles de V1.
+4. **Sección de proceso** — resume una compra clara sin asegurar datos comerciales pendientes.
 5. **Pie de página** — `<PieDePagina />`.
 
 ## 4. Estado y lógica
@@ -53,8 +54,8 @@ Mezcla deliberada de dos sistemas:
 ## 6. Enlaces salientes
 
 - `Ver catálogo` → `/catalogo`
-- `Escanear producto` → `/escaner`
-- `Explorar margen en catálogo` (sección simulador) → `/catalogo`
+- `Cómo comprar` → `/#como-comprar` y `/mayoreo`
+- `Eventos` → `/catalogo`
 
 ## 7. Pendientes / ideas de mejora
 

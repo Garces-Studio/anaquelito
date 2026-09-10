@@ -2,14 +2,25 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 import { ArrowRight, Minus, Plus, ShoppingBag, Trash2, Truck } from 'lucide-react';
 import { usarCarrito } from '@/componentes/carrito/ContextoCarrito';
+import { registrarEvento } from '@/lib/analitica';
+import EnlaceWhatsApp from '@/componentes/EnlaceWhatsApp';
 
 const NUMERO_WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMERO;
 const PAGO_ACTIVO = process.env.NEXT_PUBLIC_CHECKOUT_HABILITADO === 'true';
 
 export default function PaginaCarrito() {
   const { articulos, cambiarCantidad, quitar, vaciar, subtotal, totalArticulos } = usarCarrito();
+  const vistaRegistrada = useRef(false);
+
+  useEffect(() => {
+    if (articulos.length && !vistaRegistrada.current) {
+      vistaRegistrada.current = true;
+      registrarEvento('view_cart', { currency: 'MXN', value: subtotal, items: articulos.map((a) => ({ item_id: a.id, item_name: a.nombre, price: a.precio_mayoreo, quantity: a.cantidad })) });
+    }
+  }, [articulos, subtotal]);
 
   const mensajePedido = encodeURIComponent(
     `¡Hola! Quiero hacer este pedido en Anaquelito:\n\n` +
@@ -130,13 +141,13 @@ export default function PaginaCarrito() {
               <span className="text-sm font-black uppercase tracking-[0.14em] text-[#6B5546]">Total base</span>
               <strong className="text-4xl font-black">${subtotal.toFixed(0)}</strong>
             </div>
-            {PAGO_ACTIVO ? <Link href="/checkout" className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#2B1B12] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white transition hover:bg-[#FF5A5F]">
+            {PAGO_ACTIVO ? <Link href="/checkout" onClick={() => registrarEvento('begin_checkout', { currency: 'MXN', value: subtotal })} className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#2B1B12] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white transition hover:bg-[#FF5A5F]">
               Ir a pagar <ArrowRight size={16} />
             </Link> : <p className="mt-5 rounded-lg bg-[#FFF0D5] px-4 py-3 text-center text-sm font-bold text-[#7A5630]">Pago web en preparación</p>}
             {NUMERO_WHATSAPP && (
-              <a href={`https://wa.me/${NUMERO_WHATSAPP}?text=${mensajePedido}`} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-[#EBD9C3] bg-[#FFF6EC] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-[#2B1B12]">
+              <EnlaceWhatsApp href={`https://wa.me/${NUMERO_WHATSAPP}?text=${mensajePedido}`} className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-[#EBD9C3] bg-[#FFF6EC] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-[#2B1B12]">
                 Finalizar pedido por WhatsApp
-              </a>
+              </EnlaceWhatsApp>
             )}
             <button type="button" onClick={vaciar} className="mt-4 w-full text-center text-sm font-black text-[#6B5546] transition hover:text-[#D64545]">
               Vaciar carrito

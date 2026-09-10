@@ -1,35 +1,38 @@
 /** Datos comerciales públicos. Nunca incluir costos de proveedor aquí. */
 export type ProductoMayoreo = {
   id: string; slug: string; nombre: string; categoria: string;
-  descripcion: string | null; unidad: string | null;
+  descripcion: string | null; unidad: string | null; sku: string | null;
+  marca: string | null; tipo_empaque: string | null; destacado: boolean;
+  imagenes: string[];
   piezas_por_caja: number | null; bolsas_por_caja: number | null;
-  peso_por_bolsa_g: number | null; precio_mayoreo: number | null;
+  peso_por_bolsa_g: number | null; peso_total_g: number | null; precio_mayoreo: number | null;
   imagen_url: string | null; stock: number | null;
   cantidad_minima: number | null;
-  disponibilidad: 'por_confirmar' | 'disponible' | 'agotado';
+  disponibilidad: 'unconfirmed' | 'in_stock' | 'available_from_supplier' | 'low_stock' | 'out_of_stock';
 };
 export const SELECCION_INICIAL: ProductoMayoreo[] = [
-  ['gomita-pinguino', 'Gomita Pingüino', 'gomitas'],
-  ['gomita-diente', 'Gomita Diente', 'gomitas'],
-  ['gomita-oso', 'Gomita Oso', 'gomitas'],
-  ['gomita-lombriz', 'Gomita Lombriz', 'gomitas'],
-  ['huevito-pinto', 'Huevito Pinto', 'chocolates'],
+  ['gomita-pinguino', 'Gomilocas Pingüinos', 'gomitas'],
+  ['gomita-diente', 'Gomilocas Dientes', 'gomitas'],
+  ['gomita-oso', 'Panditas Clásicos', 'gomitas'],
+  ['gomita-lombriz', 'Gomilocas Lombrices', 'gomitas'],
+  ['huevito-pinto', 'Gomilocas Huevitos', 'gomitas'],
   ['bubulubu-ice', 'Bubulubu Ice', 'chocolates'],
 ].map(([slug, nombre, categoria]) => ({
   id: slug, slug, nombre, categoria, descripcion: null,
+  sku: null, marca: 'Ricolino', tipo_empaque: slug === 'bubulubu-ice' ? 'caja' : null, destacado: false, imagenes: [`/productos/${slug}.png`],
   unidad: slug === 'bubulubu-ice' ? 'caja' : null,
   piezas_por_caja: slug === 'bubulubu-ice' ? 300 : null,
-  bolsas_por_caja: null, peso_por_bolsa_g: null,
+  bolsas_por_caja: null, peso_por_bolsa_g: null, peso_total_g: null,
   precio_mayoreo: null, imagen_url: `/productos/${slug}.png`, stock: null,
-  cantidad_minima: null, disponibilidad: 'por_confirmar',
+  cantidad_minima: null, disponibilidad: 'unconfirmed',
 }));
 
 export function textoDisponibilidad(p: ProductoMayoreo): string {
-  if (p.disponibilidad === 'agotado') return 'Agotado';
-  if (p.disponibilidad === 'disponible') {
-    return p.stock === null ? 'Disponible' : `${p.stock} ${p.stock === 1 ? 'caja disponible' : 'cajas disponibles'}`;
-  }
-  return 'Disponibilidad por confirmar';
+  if (p.disponibilidad === 'out_of_stock') return 'Agotado';
+  if (p.disponibilidad === 'low_stock') return 'Pocas cajas';
+  if (p.disponibilidad === 'in_stock') return 'En stock';
+  if (p.disponibilidad === 'unconfirmed') return 'Disponibilidad por confirmar';
+  return 'Disponible para pedido';
 }
 export function presentacion(p: ProductoMayoreo): string {
   if (p.piezas_por_caja) return `Caja con ${p.piezas_por_caja} piezas`;

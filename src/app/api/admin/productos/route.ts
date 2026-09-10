@@ -8,6 +8,8 @@ type CamposProducto = {
   nombre?: string;
   slug?: string | null;
   sku?: string | null;
+  marca?: string | null;
+  tipo_empaque?: string | null;
   descripcion?: string | null;
   categoria?: string | null;
   unidad?: string | null;
@@ -17,11 +19,14 @@ type CamposProducto = {
   piezas_por_caja?: number | null;
   bolsas_por_caja?: number | null;
   peso_por_bolsa_g?: number | null;
+  peso_total_g?: number | null;
   stock?: number | null;
   cantidad_minima?: number | null;
-  disponibilidad?: 'por_confirmar' | 'disponible' | 'agotado';
+  disponibilidad?: 'unconfirmed' | 'in_stock' | 'available_from_supplier' | 'low_stock' | 'out_of_stock';
   imagen_url?: string | null;
+  imagenes?: string[];
   activo?: boolean;
+  destacado?: boolean;
 };
 
 function validarCampos(campos: CamposProducto, esCreacion: boolean): string | null {
@@ -29,6 +34,8 @@ function validarCampos(campos: CamposProducto, esCreacion: boolean): string | nu
     if (!campos.nombre?.trim()) return 'El nombre es obligatorio';
   }
   if (campos.nombre !== undefined && (!campos.nombre || campos.nombre.length > 160)) return 'El nombre no es válido';
+  if (campos.marca !== undefined && campos.marca !== null && campos.marca.length > 100) return 'La marca no es válida';
+  if (campos.tipo_empaque !== undefined && campos.tipo_empaque !== null && campos.tipo_empaque.length > 100) return 'El tipo de empaque no es válido';
   if (campos.slug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(campos.slug)) return 'El slug solo admite minúsculas, números y guiones';
   if (campos.precio_mayoreo !== undefined && campos.precio_mayoreo !== null && (!Number.isFinite(campos.precio_mayoreo) || campos.precio_mayoreo <= 0)) {
     return 'El precio de mayoreo debe ser mayor a 0 o quedar vacío';
@@ -48,7 +55,8 @@ function validarCampos(campos: CamposProducto, esCreacion: boolean): string | nu
   }
   if (campos.stock !== undefined && campos.stock !== null && (!Number.isSafeInteger(campos.stock) || campos.stock < 0)) return 'El stock debe ser un entero igual o mayor a 0';
   if (campos.peso_por_bolsa_g !== undefined && campos.peso_por_bolsa_g !== null && (!Number.isFinite(campos.peso_por_bolsa_g) || campos.peso_por_bolsa_g <= 0)) return 'El peso por bolsa debe ser mayor a 0';
-  if (campos.disponibilidad && !['por_confirmar', 'disponible', 'agotado'].includes(campos.disponibilidad)) return 'Disponibilidad inválida';
+  if (campos.peso_total_g !== undefined && campos.peso_total_g !== null && (!Number.isFinite(campos.peso_total_g) || campos.peso_total_g <= 0)) return 'El peso total debe ser mayor a 0';
+  if (campos.disponibilidad && !['unconfirmed', 'in_stock', 'available_from_supplier', 'low_stock', 'out_of_stock'].includes(campos.disponibilidad)) return 'Disponibilidad inválida';
   return null;
 }
 
@@ -64,6 +72,8 @@ function extraerCampos(cuerpo: Record<string, unknown>): CamposProducto {
   if ('slug' in cuerpo) campos.slug = cuerpo.slug ? String(cuerpo.slug).trim().toLowerCase() : null;
   if ('sku' in cuerpo) campos.sku = cuerpo.sku ? String(cuerpo.sku).trim() : null;
   if ('descripcion' in cuerpo) campos.descripcion = cuerpo.descripcion ? String(cuerpo.descripcion) : null;
+  if ('marca' in cuerpo) campos.marca = cuerpo.marca ? String(cuerpo.marca).trim() : null;
+  if ('tipo_empaque' in cuerpo) campos.tipo_empaque = cuerpo.tipo_empaque ? String(cuerpo.tipo_empaque).trim() : null;
   if ('categoria' in cuerpo) campos.categoria = cuerpo.categoria ? String(cuerpo.categoria) : null;
   if ('unidad' in cuerpo) campos.unidad = cuerpo.unidad ? String(cuerpo.unidad).trim() : null;
   if ('precio_mayoreo' in cuerpo) campos.precio_mayoreo = numeroOpcional(cuerpo.precio_mayoreo);
@@ -72,11 +82,14 @@ function extraerCampos(cuerpo: Record<string, unknown>): CamposProducto {
   if ('piezas_por_caja' in cuerpo) campos.piezas_por_caja = numeroOpcional(cuerpo.piezas_por_caja);
   if ('bolsas_por_caja' in cuerpo) campos.bolsas_por_caja = numeroOpcional(cuerpo.bolsas_por_caja);
   if ('peso_por_bolsa_g' in cuerpo) campos.peso_por_bolsa_g = numeroOpcional(cuerpo.peso_por_bolsa_g);
+  if ('peso_total_g' in cuerpo) campos.peso_total_g = numeroOpcional(cuerpo.peso_total_g);
   if ('stock' in cuerpo) campos.stock = numeroOpcional(cuerpo.stock);
   if ('cantidad_minima' in cuerpo) campos.cantidad_minima = numeroOpcional(cuerpo.cantidad_minima);
   if ('disponibilidad' in cuerpo) campos.disponibilidad = String(cuerpo.disponibilidad) as CamposProducto['disponibilidad'];
   if ('imagen_url' in cuerpo) campos.imagen_url = cuerpo.imagen_url ? String(cuerpo.imagen_url) : null;
+  if (campos.imagen_url) campos.imagenes = [campos.imagen_url];
   if ('activo' in cuerpo) campos.activo = Boolean(cuerpo.activo);
+  if ('destacado' in cuerpo) campos.destacado = Boolean(cuerpo.destacado);
   return campos;
 }
 
@@ -140,7 +153,7 @@ export async function GET() {
   const supabase = await crearCliente();
   const { data: productos, error } = await supabase
     .from('productos')
-    .select('id, slug, sku, nombre, descripcion, categoria, unidad, precio_mayoreo, precio_menudeo, precio_sugerido_reventa, piezas_por_caja, bolsas_por_caja, peso_por_bolsa_g, stock, cantidad_minima, disponibilidad, imagen_url, activo, creado_en, codigos_barra(codigo)')
+    .select('id, slug, sku, marca, tipo_empaque, destacado, nombre, descripcion, categoria, unidad, precio_mayoreo, precio_menudeo, precio_sugerido_reventa, piezas_por_caja, bolsas_por_caja,peso_por_bolsa_g,peso_total_g,stock,cantidad_minima,disponibilidad,imagen_url,imagenes,activo,creado_en,codigos_barra(codigo)')
     .order('creado_en', { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -166,7 +179,7 @@ export async function POST(solicitud: NextRequest) {
   const supabase = await crearCliente();
   const { data: producto, error } = await supabase
     .from('productos')
-    .insert({ activo: true, disponibilidad: 'por_confirmar', ...campos })
+    .insert({ activo: true, disponibilidad: 'unconfirmed', ...campos })
     .select('id')
     .single();
 

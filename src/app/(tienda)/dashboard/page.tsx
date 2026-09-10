@@ -2,19 +2,17 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import {
   ArrowRight,
-  BadgePercent,
   MapPin,
-  PackageCheck,
   ReceiptText,
   ShoppingBag,
-  Sparkles,
   Store,
-  Ticket,
   Truck,
 } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/server';
 import BotonCerrarSesion from '@/componentes/BotonCerrarSesion';
 import PestanasPanel from '@/componentes/PestanasPanel';
+import BotonRepetirPedido from '@/componentes/BotonRepetirPedido';
+import { FormularioDireccion, FormularioPerfil } from '@/componentes/GestionCuenta';
 
 const ESTADO_ETIQUETA: Record<string, string> = {
   pendiente: 'Pendiente',
@@ -55,10 +53,10 @@ export default async function PaginaDashboard() {
     );
   }
 
-  const [{ data: pedidos }, { data: direcciones }, { data: cupones }] = await Promise.all([
+  const [{ data: pedidos }, { data: direcciones }] = await Promise.all([
     supabase
       .from('pedidos')
-      .select('id, estado, total, creado_en, pedido_items(cantidad, precio_unitario, productos(nombre))')
+      .select('id, estado, total, creado_en, pedido_items(cantidad, precio_unitario, productos(id,nombre,unidad,imagen_url,piezas_por_caja,bolsas_por_caja,activo,disponibilidad))')
       .eq('cliente_id', cliente.id)
       .order('creado_en', { ascending: false }),
     supabase
@@ -66,9 +64,6 @@ export default async function PaginaDashboard() {
       .select('id, etiqueta, calle_numero, colonia, municipio, estado, codigo_postal, predeterminada')
       .eq('cliente_id', cliente.id)
       .order('predeterminada', { ascending: false }),
-    supabase
-      .from('cupones')
-      .select('id, codigo, descripcion, descuento_porcentaje, valido_hasta'),
   ]);
 
   const totalGastado = (pedidos ?? []).reduce((suma, pedido) => suma + Number(pedido.total), 0);
@@ -108,10 +103,10 @@ export default async function PaginaDashboard() {
                 Surtir ahora <ArrowRight size={15} className="transition group-hover:translate-x-0.5" />
               </Link>
               <Link
-                href="/escaner"
+                href={ultimoPedido ? '#pedidos' : '/catalogo'}
                 className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] px-5 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition hover:border-[#00A699] hover:text-[#00A699]"
               >
-                <PackageCheck size={15} /> Reordenar
+                <ShoppingBag size={15} /> {ultimoPedido ? 'Ver pedidos' : 'Primer pedido'}
               </Link>
             </div>
           </div>
@@ -121,7 +116,7 @@ export default async function PaginaDashboard() {
           {[
             { icono: ShoppingBag, dato: pedidos?.length ?? 0, texto: 'Pedidos realizados', color: '#FF5A5F' },
             { icono: ReceiptText, dato: `$${totalGastado.toFixed(0)}`, texto: 'Total comprado', color: '#FF8A3D' },
-            { icono: BadgePercent, dato: cupones?.length ?? 0, texto: 'Cupones disponibles', color: '#00A699' },
+            { icono: MapPin, dato: direcciones?.length ?? 0, texto: 'Direcciones guardadas', color: '#00A699' },
           ].map((item, index) => {
             const Icono = item.icono;
             return (
@@ -179,6 +174,7 @@ export default async function PaginaDashboard() {
           </article>
         </div>
 
+        <div id="pedidos" />
         <PestanasPanel
           pestanas={[
             {
@@ -221,6 +217,11 @@ export default async function PaginaDashboard() {
                       <p className="mt-3 text-sm font-semibold leading-6 text-[#6B5546]">
                         {(pedido.pedido_items ?? []).map((item) => `${item.cantidad}x ${(Array.isArray(item.productos) ? item.productos[0]?.nombre : (item.productos as { nombre: string } | null)?.nombre) ?? 'Producto'}`).join(', ')}
                       </p>
+                      <BotonRepetirPedido articulos={(pedido.pedido_items ?? []).flatMap((item) => {
+                        const producto = Array.isArray(item.productos) ? item.productos[0] : item.productos;
+                        if (!producto?.id || !producto.unidad || !producto.activo || !['in_stock', 'available_from_supplier', 'low_stock'].includes(producto.disponibilidad)) return [];
+                        return [{ id: producto.id, nombre: producto.nombre, unidad: producto.unidad, precio_mayoreo: Number(item.precio_unitario), cantidad: item.cantidad, imagen: producto.imagen_url ?? undefined, piezas_por_caja: producto.piezas_por_caja, bolsas_por_caja: producto.bolsas_por_caja }];
+                      })} />
                     </div>
                     <div className="text-right">
                       <span className="inline-flex rounded-full bg-[#FFF6EC] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#6B5546]">
@@ -233,6 +234,17 @@ export default async function PaginaDashboard() {
               ))}
             </div>
           )}
+                </div>
+              ),
+            },
+            {
+              id: 'datos',
+              titulo: 'Datos personales',
+              conteo: 1,
+              contenido: (
+                <div>
+                  <h2 className="mb-5 text-4xl !font-black uppercase leading-none">Datos de tu negocio</h2>
+                  <FormularioPerfil cliente={cliente} />
                 </div>
               ),
             },
@@ -270,43 +282,7 @@ export default async function PaginaDashboard() {
                 ))}
               </div>
             )}
-                </div>
-              ),
-            },
-            {
-              id: 'cupones',
-              titulo: 'Cupones',
-              conteo: cupones?.length ?? 0,
-              contenido: (
-                <div>
-                  <div className="mb-5 flex items-center gap-3">
-                    <span className="grid h-10 w-10 place-items-center rounded-full bg-[#FF5A5F]/12 text-[#FF5A5F]">
-                      <Ticket size={18} />
-                    </span>
-                    <h2 className="text-4xl !font-black uppercase leading-none">Tus cupones</h2>
-                  </div>
-            {!cupones || cupones.length === 0 ? (
-              <p className="rounded-lg border border-dashed border-[#EBD9C3] bg-white/70 p-6 text-sm font-semibold text-[#6B5546]">
-                Todavía no hay cupones disponibles. Cuando activemos promociones, aparecerán aquí.
-              </p>
-            ) : (
-              <div className="grid gap-3">
-                {cupones.map((cupon) => (
-                  <article key={cupon.id} className="relative overflow-hidden rounded-lg border border-[#EBD9C3] bg-white/78 p-5 shadow-[0_14px_36px_rgba(43,27,18,0.05)]">
-                    <Sparkles className="absolute -right-3 -top-3 text-[#FFB400]/20" size={74} />
-                    <h3 className="relative text-2xl !font-black uppercase leading-none">
-                      {cupon.codigo} / {cupon.descuento_porcentaje}%
-                    </h3>
-                    <p className="relative mt-3 text-sm font-semibold leading-6 text-[#6B5546]">{cupon.descripcion}</p>
-                    {cupon.valido_hasta && (
-                      <span className="relative mt-3 inline-flex rounded-full bg-[#FFF6EC] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-[#6B5546]">
-                        Válido hasta {new Date(cupon.valido_hasta).toLocaleDateString('es-MX')}
-                      </span>
-                    )}
-                  </article>
-                ))}
-              </div>
-            )}
+            <FormularioDireccion />
                 </div>
               ),
             },

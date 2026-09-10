@@ -12,14 +12,14 @@ Está pensado para que cualquier programador (tú, tu socio, o alguien nuevo) pu
 |---|---|---|---|---|
 | 01 | Home / Portada | `/` | `src/app/page.tsx` | ✅ Documentada |
 | 02 | Catálogo | `/catalogo` | `src/app/(tienda)/catalogo/page.tsx` | ⏳ Pendiente |
-| 03 | Detalle de producto | `/catalogo/[id]` | `src/app/(tienda)/catalogo/[id]/page.tsx` | ⏳ Pendiente |
+| 03 | Detalle de producto | `/productos/[slug]` | `src/app/(tienda)/productos/[slug]/page.tsx` | ✅ Documentada en arquitectura |
 | 04 | Escáner | `/escaner` | `src/app/(tienda)/escaner/page.tsx` | ⏳ Pendiente |
-| 05 | Carrito | `/carrito` | `src/app/(tienda)/carrito/page.tsx` | ⏳ Pendiente |
-| 06 | Checkout | `/checkout` | `src/app/(tienda)/checkout/page.tsx` | ⏳ Pendiente |
-| 07 | Confirmación de compra | `/checkout/confirmacion` | `src/app/(tienda)/checkout/confirmacion/page.tsx` | ⏳ Pendiente |
+| 05 | Carrito | `/carrito` | `src/app/(tienda)/carrito/page.tsx` | ✅ Funcional, activación comercial pendiente |
+| 06 | Checkout | `/checkout` | `src/app/(tienda)/checkout/page.tsx` | ✅ Construido, pago desactivado |
+| 07 | Confirmación de compra | `/checkout/confirmacion` | `src/app/(tienda)/checkout/confirmacion/page.tsx` | ✅ Verificación segura construida |
 | 08 | Crear cuenta | `/crear-cuenta` | `src/app/(tienda)/crear-cuenta/page.tsx` | ⏳ Pendiente |
 | 09 | Iniciar sesión | `/iniciar-sesion` | `src/app/(tienda)/iniciar-sesion/page.tsx` | ⏳ Pendiente |
-| 10 | Dashboard / Mi cuenta | `/dashboard` | `src/app/(tienda)/dashboard/page.tsx` | ⏳ Pendiente |
+| 10 | Dashboard / Mi cuenta | `/dashboard` | `src/app/(tienda)/dashboard/page.tsx` | ✅ Pedidos, recompra, datos y direcciones |
 | 11 | Panel admin | `/admin` | `src/app/(tienda)/admin/page.tsx` | ⏳ Pendiente |
 | 12 | Admin — productos | `/admin/productos` | `src/app/(tienda)/admin/productos/page.tsx` | ⏳ Pendiente |
 | 13 | Admin — pedidos | `/admin/pedidos` | `src/app/(tienda)/admin/pedidos/page.tsx` | ⏳ Pendiente |

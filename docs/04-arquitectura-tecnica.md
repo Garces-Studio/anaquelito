@@ -80,3 +80,13 @@ supabase/
 ## Nota de vigencia (2026-07-23)
 
 Este documento describe el estado del proyecto en una etapa temprana y **ya no refleja la estructura actual completa** (por ejemplo: ya existen carrito, checkout, cuentas, dashboard, escáner y panel de administrador bajo `src/app/(tienda)/`, y sí se usa Tailwind). Para el estado real y detallado de cada página, ver [`docs/manual/`](manual/README.md). Este archivo se debe actualizar o dividir pronto para no quedar desactualizado otra vez.
+
+## Arquitectura de lanzamiento (2026-09-09)
+
+- Los productos públicos usan `/productos/[slug]`; `/catalogo/[id]` solo conserva compatibilidad mediante redirección permanente.
+- `ProductoMayoreo` incluye marca, SKU, galería, tipo de empaque, piezas/bolsas por caja, pesos, precio, stock, mínimo, destacado y estado de disponibilidad. Los costos continúan exclusivamente en `privado.producto_costos`.
+- Los estados separan inventario propio (`in_stock`, `low_stock`) de surtido contra proveedor (`available_from_supplier`) y agotado (`out_of_stock`). `unconfirmed` evita inventar disponibilidad mientras se captura el dato real. Solo el inventario propio se limita automáticamente con la cifra de `stock`.
+- La analítica vive en `src/lib/analitica.ts`, usa nombres compatibles con GA4 y funciona cuando se configura `NEXT_PUBLIC_GA_ID`.
+- Mercado Pago requiere `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET`. El webhook firmado consulta el pago directamente en Mercado Pago, compara referencia, moneda y total y solo entonces confirma el pedido.
+- La confirmación de invitado usa un token opaco por pedido. Un comprador aprobado puede crear una cuenta y reclamar ese pedido sin exponerlo por un identificador predecible.
+- Futuro documentado, no expuesto en V1: puntos, niveles, descuentos, crédito, facturación automatizada, escáner, portal de distribuidores y PWA/app.

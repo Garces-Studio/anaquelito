@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, type CSSProperties } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Boxes, Camera, CheckCircle2, Crown, PackageCheck, ScanLine, Sparkles, Store, TrendingUp, Truck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Boxes, Camera, CheckCircle2, Crown, PackageCheck, PartyPopper, Sparkles, Store, TrendingUp, Truck } from 'lucide-react';
 
 const ESCENAS = [
   { nombre: 'Gomilocas Pingüinos', descripcion: 'Bolsa de gomitas Ricolino para mostrador, dulcería, eventos y reventa.', src: '/productos/gomita-pinguino.png', color: '#eb168a' },
@@ -48,7 +48,7 @@ export default function HomeExperiencia() {
             <p className="subtexto-hero animate-fade-up-delay-2">Dulces y botanas al mayoreo para tienditas, dulcerías, eventos y personas que quieren revender sin complicarse.</p>
             <div className="fila-cta-hero animate-fade-up-delay-3">
               <Link href="/catalogo" className="home-cta-principal">Ver productos <ArrowUpRight size={17} /></Link>
-              <Link href="/mayoreo" className="boton-cta-cristal">Cómo comprar <ArrowRight size={17} /></Link>
+              <Link href="/#como-comprar" className="boton-cta-cristal">Cómo comprar <ArrowRight size={17} /></Link>
             </div>
             <div className="home-promesas animate-fade-up-delay-4">
               <span><Boxes size={18} /> Compra por caja</span><span><Store size={18} /> Pensado para negocio</span><span><Truck size={18} /> Entrega por confirmar</span>
@@ -74,17 +74,17 @@ export default function HomeExperiencia() {
       <section id="por-que" className="home-seccion home-intro">
         <div className="home-contenedor home-intro-grid">
           <div><p className="home-ceja"><Sparkles size={16} /> Del proveedor a tu anaquel</p><h2>No necesitas un catálogo infinito. Necesitas producto que se venda.</h2></div>
-          <div className="home-intro-copy"><p>Anaquelito nace para hacer más fácil el resurtido de negocios pequeños: una selección concreta, información clara y una compra que puedas resolver desde el celular.</p><Link href="/mayoreo">Conoce nuestra forma de vender <ArrowUpRight size={18} /></Link></div>
+          <div className="home-intro-copy"><p>Anaquelito nace para hacer más fácil el resurtido de negocios pequeños: una selección concreta, información clara y una compra que puedas resolver desde el celular.</p><Link href="/#como-comprar">Conoce nuestra forma de vender <ArrowUpRight size={18} /></Link></div>
         </div>
         <div className="home-marquesina"><div>GOMITAS · DULCES · BOTANAS · MAYOREO · REVENTA · TIENDITAS · GOMITAS · DULCES · BOTANAS · MAYOREO · REVENTA · TIENDITAS ·</div></div>
       </section>
 
-      <section className="home-seccion home-ruta">
+      <section className="home-seccion home-ruta" id="como-comprar">
         <div className="home-contenedor"><p className="home-ceja"><TrendingUp size={16} /> Compra con intención</p><h2>Todo lo importante, en su lugar.</h2>
           <div className="home-ruta-grid">
             <Link href="/catalogo" className="home-ruta-card home-ruta-card--coral"><span>01</span><Store size={35} /><h3>Productos</h3><p>Explora el catálogo real conectado a nuestra base de datos, con presentación, disponibilidad y precio cuando estén confirmados.</p><b>Ir al catálogo →</b></Link>
-            <Link href="/mayoreo" className="home-ruta-card home-ruta-card--amarillo"><span>02</span><PackageCheck size={35} /><h3>Cómo comprar</h3><p>Conoce el proceso, mínimos, entrega, pagos y respuestas a las preguntas que surgen antes del primer pedido.</p><b>Ver cómo funciona →</b></Link>
-            <Link href="/escaner" className="home-ruta-card home-ruta-card--teal"><span>03</span><ScanLine size={35} /><h3>Reordena</h3><p>La herramienta que hará diferente a Anaquelito: escanea una bolsa vacía y encuentra el producto para volver a surtirlo.</p><b>Abrir escáner →</b></Link>
+            <Link href="/mayoreo" className="home-ruta-card home-ruta-card--amarillo"><span>02</span><PackageCheck size={35} /><h3>Cómo comprar</h3><p>1. Elige productos. 2. Agrega las cajas. 3. Confirma entrega y pago. 4. Recibe tu pedido.</p><b>Ver cómo funciona →</b></Link>
+            <Link href="/catalogo" className="home-ruta-card home-ruta-card--teal"><span>03</span><PartyPopper size={35} /><h3>Eventos</h3><p>Compra por volumen para fiestas, mesas de dulces y ocasiones especiales, sujeto a disponibilidad.</p><b>Ver productos →</b></Link>
           </div>
         </div>
       </section>

@@ -33,3 +33,12 @@ Mientras el servidor está corriendo, cualquier cambio que se guarde en el códi
 - [Next.js](https://nextjs.org) — el framework de la página web.
 - [Supabase](https://supabase.com) — la base de datos y autenticación.
 - Pensado para desplegarse en [Vercel](https://vercel.com).
+
+## Variables de entorno
+
+- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` y `SUPABASE_SERVICE_ROLE_KEY` para catálogo, cuentas y pedidos.
+- `NEXT_PUBLIC_SITE_URL` para URLs canónicas (producción: dominio público de Anaquelito).
+- `NEXT_PUBLIC_WHATSAPP_NUMERO` para cotizaciones, en formato internacional sin signos.
+- `NEXT_PUBLIC_GA_ID` para activar GA4 (opcional).
+- `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET` para Mercado Pago.
+- `CHECKOUT_HABILITADO=true` y `NEXT_PUBLIC_CHECKOUT_HABILITADO=true` únicamente cuando precios, disponibilidad, envío y el webhook estén verificados.

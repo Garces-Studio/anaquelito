@@ -3,7 +3,7 @@ import { cache } from 'react';
 import { SELECCION_INICIAL, type ProductoMayoreo } from './mayoreo';
 // Lista explícita. Costos internos en una tabla privada, nunca en productos.
 const CAMPOS = 'id,nombre,descripcion,categoria,unidad,precio_mayoreo,imagen_url';
-const CAMPOS_MAYOREO = CAMPOS + ',slug,piezas_por_caja,bolsas_por_caja,peso_por_bolsa_g,stock,cantidad_minima,disponibilidad';
+const CAMPOS_MAYOREO = CAMPOS + ',slug,sku,marca,tipo_empaque,imagenes,destacado,piezas_por_caja,bolsas_por_caja,peso_por_bolsa_g,peso_total_g,stock,cantidad_minima,disponibilidad';
 export const obtenerCatalogo = cache(async (): Promise<{ productos: ProductoMayoreo[]; disponible: boolean }> => {
   try {
     const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -30,13 +30,21 @@ export const obtenerCatalogo = cache(async (): Promise<{ productos: ProductoMayo
         ...fila,
         slug: fila.slug || borrador.slug,
         imagen_url: fila.imagen_url || borrador.imagen_url,
+        imagenes: Array.isArray(fila.imagenes) && fila.imagenes.length ? fila.imagenes.filter((imagen): imagen is string => typeof imagen === 'string') : borrador.imagenes,
         precio_mayoreo: Number(fila.precio_mayoreo) > 0 ? Number(fila.precio_mayoreo) : null,
         stock: fila.stock !== null && fila.stock !== undefined && Number.isSafeInteger(Number(fila.stock)) && Number(fila.stock) >= 0 ? Number(fila.stock) : null,
         cantidad_minima: fila.cantidad_minima !== null && fila.cantidad_minima !== undefined && Number.isSafeInteger(Number(fila.cantidad_minima)) && Number(fila.cantidad_minima) > 0 ? Number(fila.cantidad_minima) : null,
-        disponibilidad: fila.disponibilidad ?? borrador.disponibilidad,
+        disponibilidad: normalizarDisponibilidad(fila.disponibilidad),
       };
     }) };
   } catch {
     return { productos: SELECCION_INICIAL, disponible: false };
   }
 });
+
+function normalizarDisponibilidad(valor: unknown): ProductoMayoreo['disponibilidad'] {
+  if (valor === 'unconfirmed' || valor === 'in_stock' || valor === 'available_from_supplier' || valor === 'low_stock' || valor === 'out_of_stock') return valor;
+  if (valor === 'disponible') return 'in_stock';
+  if (valor === 'agotado') return 'out_of_stock';
+  return 'unconfirmed';
+}

@@ -168,3 +168,13 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - Se integró el logo oficial proporcionado por Mauricio, optimizado para web y enlazado al Home.
 - El pie de página volvió a tener fondo oscuro y contraste de marca.
 - Se mantuvieron intactos el catálogo de Supabase, cuentas, carrito, checkout preparado y controles de seguridad.
+## 2026-09-09 — Implementación del plan comercial V1 sin rediseño
+
+- Se mantuvieron colores, composición, animaciones y personalidad visual existentes.
+- Se simplificó la navegación comercial y se ocultaron accesos de funciones futuras.
+- Se adoptaron nombres comerciales exactos de los seis empaques y URLs SEO `/productos/[slug]`.
+- Se agregó modelo de disponibilidad propio/proveedor, galería escalable, marca, empaque y destacado.
+- Se incorporaron JSON-LD, canonical, OpenGraph, Twitter cards, sitemap y robots.
+- Se preparó la medición del embudo completo y se añadieron estados de carga.
+- Se completó la cuenta V1 con edición de datos, nuevas direcciones y repetición de pedidos.
+- Se reforzó Checkout Pro con webhook firmado, verificación directa del pago y confirmación segura para invitado.

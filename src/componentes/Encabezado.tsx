@@ -12,7 +12,7 @@ import { usarCarrito } from './carrito/ContextoCarrito';
 import { crearCliente } from '@/lib/supabase/client';
 
 const enlaces = [
-  { href: '/mayoreo', texto: 'Mayoreo' },
+  { href: '/', texto: 'Inicio' },
   { href: '/catalogo', texto: 'Productos' },
   { href: '/#como-comprar', texto: 'Cómo comprar' },
 ];
@@ -88,7 +88,7 @@ export default function Encabezado() {
 
           <nav className="hidden items-center gap-2 md:flex" aria-label="Navegación principal">
             {enlaces.map((enlace) => {
-              const activo = enlace.href.startsWith('/#') ? false : pathname.startsWith(enlace.href);
+              const activo = enlace.href === '/' ? pathname === '/' : enlace.href.startsWith('/#') ? false : pathname.startsWith(enlace.href);
               return (
                 <Link
                   key={enlace.href}
@@ -166,7 +166,6 @@ export default function Encabezado() {
         </div>
         <div className="flex flex-col gap-3 px-5 py-8">
           {[
-            { href: '/', texto: 'Inicio' },
             ...enlaces,
             ...(esAdmin ? [{ href: '/admin', texto: 'Admin' }] : []),
             { href: enlaceCuenta.href, texto: enlaceCuenta.texto },

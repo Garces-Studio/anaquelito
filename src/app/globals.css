@@ -148,6 +148,11 @@
 .b2b-disponibilidad--por_confirmar { color: #7a5630; background: #fff0d5; }
 .b2b-disponibilidad--disponible { color: #08685f; background: #e2f5ef; }
 .b2b-disponibilidad--agotado { color: #a62f34; background: #fde8e8; }
+.b2b-disponibilidad--available_from_supplier { color: #7a5630; background: #fff0d5; }
+.b2b-disponibilidad--in_stock { color: #08685f; background: #e2f5ef; }
+.b2b-disponibilidad--low_stock { color: #9a5d00; background: #fff0d5; }
+.b2b-disponibilidad--out_of_stock { color: #a62f34; background: #fde8e8; }
+.b2b-disponibilidad--unconfirmed { color: #7a5630; background: #fff0d5; }
 .b2b-aviso { background: #fff2d8; padding: 16px; margin: 20px 0; border-left: 3px solid #996017; font-size: .9rem; }
 .b2b-tres article { border-top: 2px solid #00a699; padding: 24px 0; }
 .b2b-tres p { margin-block: 16px; color: #6b5546; }

@@ -35,7 +35,7 @@ type CuerpoCheckout = {
 export async function POST(solicitud: NextRequest) {
   // Mientras no estén listos webhook, envío y cierre transaccional, no crear
   // clientes/pedidos huérfanos ni intentar cobrar con credenciales ausentes.
-  if (process.env.CHECKOUT_HABILITADO !== 'true' || !process.env.MERCADOPAGO_ACCESS_TOKEN?.trim()) {
+  if (process.env.CHECKOUT_HABILITADO !== 'true' || !process.env.MERCADOPAGO_ACCESS_TOKEN?.trim() || !process.env.MERCADOPAGO_WEBHOOK_SECRET?.trim()) {
     return NextResponse.json({ error: 'El pago web aún no está habilitado. Conservamos tu carrito para continuar después o cotizar por WhatsApp.' }, { status: 503 });
   }
   if (solicitud.headers.get('origin') !== solicitud.nextUrl.origin) {
@@ -86,7 +86,8 @@ export async function POST(solicitud: NextRequest) {
     return NextResponse.json({ error: 'No se pudieron verificar los productos' }, { status: 503 });
   }
 
-  const disponibles = (productosDb ?? []).filter((p) => p.activo && p.disponibilidad !== 'agotado' && Number(p.precio_mayoreo) > 0 && p.unidad);
+  const estadosVendibles = new Set(['in_stock', 'available_from_supplier', 'low_stock']);
+  const disponibles = (productosDb ?? []).filter((p) => p.activo && estadosVendibles.has(p.disponibilidad) && Number(p.precio_mayoreo) > 0 && p.unidad);
   if (disponibles.length !== cantidadPorId.size) {
     return NextResponse.json(
       { error: 'Uno o más productos del carrito ya no están disponibles. Actualiza tu carrito.' },
@@ -106,7 +107,7 @@ export async function POST(solicitud: NextRequest) {
     if (producto.cantidad_minima && cantidad < producto.cantidad_minima) {
       return NextResponse.json({ error: `${producto.nombre} requiere un mínimo de ${producto.cantidad_minima} cajas.` }, { status: 409 });
     }
-    if (producto.stock !== null && cantidad > producto.stock) {
+    if ((producto.disponibilidad === 'in_stock' || producto.disponibilidad === 'low_stock') && producto.stock !== null && cantidad > producto.stock) {
       return NextResponse.json({ error: `Solo hay ${producto.stock} cajas disponibles de ${producto.nombre}.` }, { status: 409 });
     }
   }
@@ -149,7 +150,7 @@ export async function POST(solicitud: NextRequest) {
       metodo_pago: 'mercadopago',
       total,
     })
-    .select('id')
+    .select('id, token_confirmacion')
     .single();
 
   if (errorPedido) {
@@ -187,11 +188,12 @@ export async function POST(solicitud: NextRequest) {
         })),
         external_reference: pedido.id,
         back_urls: {
-          success: `${urlBase}/checkout/confirmacion?pedido=${pedido.id}`,
+          success: `${urlBase}/checkout/confirmacion?pedido=${pedido.id}&token=${pedido.token_confirmacion}`,
           failure: `${urlBase}/checkout?error=pago`,
-          pending: `${urlBase}/checkout/confirmacion?pedido=${pedido.id}`,
+          pending: `${urlBase}/checkout/confirmacion?pedido=${pedido.id}&token=${pedido.token_confirmacion}`,
         },
         auto_return: 'approved',
+        notification_url: `${urlBase}/api/mercadopago/webhook`,
       },
     });
 

@@ -6,9 +6,9 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 
 - [ ] **🔴 URGENTE — Revocar dos tokens de GitHub.** El original que quedó expuesto (empezaba `ghp_UxdU...`) y, por precaución, el más reciente (`ghp_xTrC...`) que también estuvo brevemente en texto plano en `.git/config`. Ambos ya se quitaron de los archivos, pero siguen activos en GitHub hasta que los revoques manualmente: [github.com/settings/tokens](https://github.com/settings/tokens) → busca cada uno → Delete/Revoke.
 - [x] ~~Llave `service_role` de Supabase~~ — ya la pasó Mauricio (2026-07-07), guardada en `.env.local`.
-- [ ] **Mercado Pago sigue en pausa a propósito.** Mauricio pidió explícitamente no activarlo todavía (2026-07-07). El código ya existe en `src/app/api/checkout/route.ts`; falta solo `MERCADOPAGO_ACCESS_TOKEN` cuando decidan seguir con esto.
+- [ ] **Mercado Pago sigue en pausa a propósito.** El flujo y webhook ya existen. Para activarlo faltan `MERCADOPAGO_ACCESS_TOKEN`, `MERCADOPAGO_WEBHOOK_SECRET`, configurar la URL de webhook y habilitar `CHECKOUT_HABILITADO=true` + `NEXT_PUBLIC_CHECKOUT_HABILITADO=true` en Vercel.
 - [ ] **Número de WhatsApp del negocio**: confirmado como pendiente por Mauricio (2026-07-06, "por el momento no"). Cuando se tenga, configurarlo como `NEXT_PUBLIC_WHATSAPP_NUMERO` (formato internacional sin signos, ej. `5215512345678`) en `.env.local` y en Vercel. Con eso el botón "Enviar pedido por WhatsApp" del carrito queda funcionando y ya se pueden recibir pedidos reales.
-- [ ] **Licencia de la tipografía PODIUM Sharp**: la versión importada en `globals.css` es un "DEMO" servido por un CDN de terceros (onlinewebfonts.com). Antes de lanzar hay que comprar la licencia comercial y servir la fuente desde nuestro propio proyecto, o elegir una fuente libre equivalente. Usar una fuente demo en un negocio real es una violación de licencia.
+- [x] ~~Licencia de la tipografía PODIUM Sharp~~ — ya no se carga la fuente DEMO ni un CDN de terceros. El sitio usa Plus Jakarta Sans mediante `next/font`.
 - [x] ~~Video de fondo de la portada con posible personaje con copyright~~ — ya se reemplazó por `public/dulces-loop.mp4` (video propio). Resuelto.
 
 ## Decisiones de negocio (necesitan a tu socio)
@@ -25,27 +25,31 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 - [ ] Flujo de autenticación (Supabase Auth) para el botón "Ingresar" del home, conectado a la tabla `clientes`. Una vez que exista, el checkout debería usar la sesión real en vez del checkout de invitado.
 - [ ] Librería/estrategia real de lectura de código de barras para el escáner (`BarcodeDetector` nativo vs `@zxing/browser`).
 - [x] Pasarela de pago: se eligió **Mercado Pago** como prioridad (Stripe queda para después). Integración construida en `src/app/api/checkout/route.ts`, falta activar con credenciales reales.
-- [ ] Webhook de Mercado Pago para actualizar el estado del pedido automáticamente cuando se confirme el pago (hoy el pedido queda en "pendiente" hasta revisarlo a mano).
+- [x] Webhook firmado de Mercado Pago construido para validar origen, consultar el pago y comprobar referencia, moneda y total antes de confirmar.
 - [ ] Evaluar si se necesita una librería de componentes UI antes de que el catálogo crezca (hoy todo es estilo inline).
 - [ ] **Distribución/envío**: falta decidir con el socio qué paquetería(s) usar y cómo se calcula el costo de envío. Por ahora el checkout dice "el envío se confirma por separado".
 - [ ] **URGENTE antes de que la página desplegada funcione:** configurar en Vercel (Project Settings → Environment Variables) las dos variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` (los valores están en el `.env.local` local). Sin esto, el catálogo en producción no puede leer la base de datos.
 
 ## Construcción pendiente (frontend/producto)
 
-### Propuesta de siguiente iteración — claridad de compra (pendiente de aprobación)
+### Iteración de claridad de compra — implementada en código
 
-- Simplificar la navegación superior a Inicio, Productos, Cómo comprar, Ingresar y Carrito; mantener enlaces legales y contacto en el pie. El logo ya funciona como acceso a Inicio, por lo que la decisión es si se desea además el texto visible “Inicio”.
-- Retirar temporalmente del recorrido comercial los accesos a escáner, crédito, membresías, puntos, distribuidores y portal B2B avanzado. Permanecen como arquitectura futura, no como promesa de lanzamiento.
+- [x] Navegación superior simplificada a Inicio, Productos, Cómo comprar, Ingresar/Mi cuenta y Carrito; enlaces informativos y legales en el pie.
+- [x] Escáner, crédito, membresías, puntos, distribuidores y portal B2B avanzado retirados temporalmente del recorrido comercial. Permanecen documentados como arquitectura futura.
 - Completar por producto las presentaciones comerciales reales (tipo de empaque, bolsas o piezas por caja, peso y mínimo) y, cuando se definan, precios de venta. El frontend ya calcula costo por pieza o bolsa desde los datos; no se deben escribir esos valores a mano en tarjetas.
-- Confirmar el modelo de disponibilidad operativo: inventario propio, disponible con proveedor, pocas existencias o agotado. No debe mostrarse una cantidad física que no exista.
+- [x] Modelo técnico de disponibilidad separado en `in_stock`, `available_from_supplier`, `low_stock` y `out_of_stock`. Falta que el negocio capture el estado real de cada producto.
 - Mantener compra como invitado y carrito persistente; activar WhatsApp y Mercado Pago Checkout Pro únicamente al confirmar teléfono, precios, envío y credenciales del negocio.
-- Implementar después analítica de embudo (vista de producto, agregar/eliminar carrito, checkout, pago, WhatsApp, inicio de sesión y registro) antes de hacer campañas pagadas.
+- [x] Capa de analítica preparada para vista de producto, agregar/eliminar carrito, checkout, compra confirmada por webhook, WhatsApp, inicio de sesión y registro. Falta configurar `NEXT_PUBLIC_GA_ID` para enviar a GA4.
+
+- [x] URLs canónicas `/productos/[slug]`, redirección desde las URLs antiguas, metadata social, Product/Offer/BreadcrumbList/Organization, sitemap y robots.
+- [x] Panel de cliente reducido a pedidos, datos personales y direcciones, con recompra real hacia el carrito.
+- [x] Webhook firmado de Mercado Pago y confirmación por token opaco; el retorno de la pasarela no marca pagos como aprobados.
 
 - [ ] Landings específicas por segmento ("Soy tiendita", "Soy café/restaurante", "Soy emprendedor").
-- [ ] Carrito y checkout completo (tablas `pedidos`/`pedido_items` ya existen, falta la lógica y la UI).
+- [x] Carrito persistente, drawer, checkout de invitado y creación de pedido construidos. Activación comercial pendiente de datos y credenciales.
 - [ ] Escáner de código de barras funcional (hoy es solo una animación visual).
-- [ ] Portal de cliente B2B (historial de pedidos, reorden, estado de cuenta).
-- [ ] Panel simple para dar de alta productos sin tocar SQL directamente.
+- [x] Cuenta básica: historial, recompra, datos personales y direcciones. Estado de cuenta/crédito queda fuera de V1.
+- [x] Panel simple para alta y edición de productos.
 - [ ] Página de "cómo funciona el crédito" con condiciones sin ambigüedad.
 - [ ] Plan mínimo de contenido (blog/redes) para los primeros 90 días.
 - [x] Reemplazar los 6 productos de ejemplo por el catálogo inicial acordado (Pingüino, Diente, Oso, Lombriz, Huevito Pinto y Bubulubu Ice). Las muestras anteriores se conservaron inactivas.
