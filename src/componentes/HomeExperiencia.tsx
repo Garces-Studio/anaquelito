@@ -77,7 +77,16 @@ export default function HomeExperiencia() {
             </div>
           </div>
 
-          <div className="portada-col-carrusel animate-fade-in-delay" aria-roledescription="carrusel" aria-label="Ventajas de Anaquelito">
+          <div
+            className="portada-col-carrusel animate-fade-in-delay"
+            aria-roledescription="carrusel"
+            aria-label="Productos destacados de Anaquelito"
+            tabIndex={0}
+            onKeyDown={(evento) => {
+              if (evento.key === 'ArrowLeft') { evento.preventDefault(); navegar(-1); }
+              if (evento.key === 'ArrowRight') { evento.preventDefault(); navegar(1); }
+            }}
+          >
             <div className="home-halo" />
             {ESCENAS.map((escena, indice) => (
               <div className={`home-producto home-producto--${rol(indice)}`} key={escena.nombre} aria-hidden={indice !== activo}>

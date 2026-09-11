@@ -26,13 +26,13 @@ Las etapas de pedidos atómicos, reservas, auditoría, límites, compra móvil, 
 
 ## Decisiones técnicas
 
-- [ ] Flujo de autenticación (Supabase Auth) para el botón "Ingresar" del home, conectado a la tabla `clientes`. Una vez que exista, el checkout debería usar la sesión real en vez del checkout de invitado.
-- [ ] Librería/estrategia real de lectura de código de barras para el escáner (`BarcodeDetector` nativo vs `@zxing/browser`).
+- [x] Flujo de autenticación con Supabase Auth conectado a `clientes`; registro, ingreso, recuperación, panel y reutilización opcional de datos en checkout están construidos.
+- [x] El escáner usa `@zxing/browser` y `@zxing/library` para compatibilidad con iOS Safari, además de entrada manual. Falta solamente probar la cámara en los teléfonos reales del negocio antes de promoverlo.
 - [x] Pasarela de pago: se eligió **Mercado Pago** como prioridad (Stripe queda para después). Integración construida en `src/app/api/checkout/route.ts`, falta activar con credenciales reales.
 - [x] Webhook firmado de Mercado Pago construido para validar origen, consultar el pago y comprobar referencia, moneda y total antes de confirmar.
-- [ ] Evaluar si se necesita una librería de componentes UI antes de que el catálogo crezca (hoy todo es estilo inline).
+- [x] No se incorpora una librería UI en V1: el sistema visual actual ya tiene componentes compartidos y estilos de marca; agregar otra dependencia ahora aumentaría peso y complejidad sin resolver un problema vigente.
 - [ ] **Distribución/envío**: falta decidir con el socio qué paquetería(s) usar y cómo se calcula el costo de envío. Por ahora el checkout dice "el envío se confirma por separado".
-- [ ] **URGENTE antes de que la página desplegada funcione:** configurar en Vercel (Project Settings → Environment Variables) las dos variables `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` (los valores están en el `.env.local` local). Sin esto, el catálogo en producción no puede leer la base de datos.
+- [x] Supabase público está configurado en el despliegue: catálogo, registro y rutas protegidas responden en producción. No se documentan aquí los valores de las llaves.
 
 ## Construcción pendiente (frontend/producto)
 
@@ -49,9 +49,9 @@ Las etapas de pedidos atómicos, reservas, auditoría, límites, compra móvil, 
 - [x] Panel de cliente reducido a pedidos, datos personales y direcciones, con recompra real hacia el carrito.
 - [x] Webhook firmado de Mercado Pago y confirmación por token opaco; el retorno de la pasarela no marca pagos como aprobados.
 
-- [ ] Landings específicas por segmento ("Soy tiendita", "Soy café/restaurante", "Soy emprendedor").
+- [x] Landings específicas por segmento (`/para/tienditas`, `/para/cafes`, `/para/reventa`), enlazadas desde Mayoreo y añadidas al sitemap sin inventar precios ni condiciones.
 - [x] Carrito persistente, drawer, checkout de invitado y creación de pedido construidos. Activación comercial pendiente de datos y credenciales.
-- [ ] Escáner de código de barras funcional (hoy es solo una animación visual).
+- [x] Escáner de código de barras construido con cámara ZXing, consulta a `codigos_barra`, resultado y agregado al carrito; permanece fuera de la navegación de V1 hasta probarlo en dispositivos físicos.
 - [x] Cuenta básica: historial, recompra, datos personales y direcciones. Estado de cuenta/crédito queda fuera de V1.
 - [x] Panel simple para alta y edición de productos.
 - [x] Venta por caja y por tarima de 100 cajas; carrito y pedidos desglosan ambas presentaciones sin duplicar productos.

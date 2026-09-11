@@ -1,6 +1,6 @@
 # 01 — Home / Portada
 
-> Actualización vigente (2026-09-09): el Home conserva íntegros su video, grano, color dinámico, entradas y carrusel 3D con las seis imágenes definitivas. El recorrido público se limita a Inicio, Productos, Cómo comprar, cuenta y carrito. La tarjeta que promovía el escáner ahora atiende Eventos y dirige al catálogo; el escáner continúa construido pero queda fuera del lanzamiento. No se publican precios, mínimos, tiempos ni cobertura hasta confirmarlos.
+> Actualización vigente (2026-09-11): el Home conserva íntegros su video, grano, color dinámico, entradas y carrusel 3D con las seis imágenes definitivas. La composición de productos y su tarjeta se elevó dentro del halo para corregir su centro visual. El recorrido público se limita a Inicio, Productos, Cómo comprar, cuenta y carrito. La tarjeta que promovía el escáner ahora atiende Eventos y dirige al catálogo; el escáner continúa construido pero queda fuera del lanzamiento. No se publican precios, mínimos, tiempos ni cobertura hasta confirmarlos.
 
 ## 1. Qué es
 
@@ -22,7 +22,7 @@ Es la única página que **no** vive dentro del grupo de ruta `(tienda)`, así q
 1. **Hero / carrusel (`<main>`, pantalla completa, `100vh`)**
    - Video de fondo en loop (`mixBlendMode: overlay`, opacidad 0.15) + degradado oscuro + capa de grano analógico (`.grain-overlay`) para look premium.
    - Columna izquierda: propuesta de valor, botones a Productos y Cómo comprar y promesas verificables sin estadísticas inventadas.
-   - Columna derecha: carrusel 3D de 4 productos (`DULCES`), con controles de flecha izquierda/derecha y el nombre + descripción del producto activo.
+   - Columna derecha: carrusel 3D de 6 productos (`ESCENAS`), con controles de flecha izquierda/derecha y el nombre + descripción del producto activo.
    - El color de fondo del `<main>` cambia según el producto activo (`DULCES[activeIndex].bg`), con transición suave.
 2. **Sección "¿Qué es Anaquelito?"** — 4 tarjetas de categoría (frutos secos, gomitas, chocolates, fritos) en grid responsive, con Tailwind.
 3. **Sección de recorridos** — Productos, Cómo comprar y Eventos; todos llevan a funciones disponibles de V1.
@@ -31,17 +31,13 @@ Es la única página que **no** vive dentro del grupo de ruta `(tienda)`, así q
 
 ## 4. Estado y lógica
 
-Todo el estado vive en el propio componente `Inicio`, no hay fetch a Supabase en esta página — los datos del carrusel (`DULCES`) están hardcodeados como constante al inicio del archivo.
+Todo el estado vive en `HomeExperiencia`, no hay fetch a Supabase en esta página — los datos del carrusel (`ESCENAS`) están definidos como constante al inicio del archivo.
 
-- `activeIndex` (`useState<number>`) — índice del producto activo en el carrusel (0 a 3).
-- `isAnimating` (`useState<boolean>`) — bloquea clicks repetidos mientras dura la transición (650ms) para no romper la animación.
-- `isMobile` (`useState<boolean>`) — se recalcula en un `useEffect` con listener de `resize` (`window.innerWidth < 768`); se usa para servir un set de estilos distinto al carrusel en móvil vs. escritorio (tamaños y posiciones distintas, ver `obtenerEstiloRol`).
-- Un segundo `useEffect` precarga las 4 imágenes del carrusel con `new Image()` al montar, para que no haya parpadeo al navegar.
-- `navegar('next' | 'prev')` — avanza/retrocede el índice de forma circular (`% 4`) y arma el flag `isAnimating` con un `setTimeout` de 650ms (debe coincidir con la duración de transición en CSS, es un valor mágico compartido entre JS y CSS — si se cambia la duración de transición hay que cambiar los dos lugares).
-- `obtenerRol(indice)` — traduce el índice a un rol visual (`center`, `left`, `right`, `back`) relativo al `activeIndex`, para que las tarjetas del carrusel roten visualmente.
-- `obtenerEstiloRol(rol)` — devuelve el objeto de estilos inline (posición, escala, blur, opacidad) según el rol y si es móvil o no.
-
-**Nota:** los objetos `IMAGENES_PRODUCTOS`, `EMOJI_CATEGORIA` y `NOMBRE_CATEGORIA` están declarados en este archivo (líneas 39-64) pero **no se usan en ningún lugar del componente** — parecen residuo de una versión anterior de la página o preparación para algo que no se conectó. Candidatos a limpieza (ver sección 7).
+- `activo` (`useState<number>`) — índice del producto activo entre las seis escenas.
+- `moviendo` (`useState<boolean>`) — bloquea activaciones repetidas durante la transición de 650 ms.
+- `navegar(paso)` — avanza o retrocede circularmente y funciona con los botones y con las flechas izquierda/derecha del teclado.
+- `rol(indice)` — asigna `centro`, `izquierda`, `derecha` o `fondo`; CSS controla posición, escala, desenfoque y opacidad.
+- Un `IntersectionObserver` pausa efectos fuera de pantalla. El video solo recibe su archivo y se reproduce en escritorio, cuando el Home es visible y el usuario no pidió reducir movimiento.
 
 ## 5. Estilos
 
@@ -63,7 +59,7 @@ Mezcla deliberada de dos sistemas:
 
 - **Código muerto:** `IMAGENES_PRODUCTOS`, `EMOJI_CATEGORIA` y `NOMBRE_CATEGORIA` no se usan en este archivo — o se conectan a algo (ej. mostrar categorías reales) o se eliminan.
 - **Video de fondo:** no tiene `poster` ni manejo de fallback si `/dulces-loop.mp4` no carga (conexiones lentas en móvil, que es el público objetivo del negocio). Vale la pena revisar peso del archivo de video.
-- **Accesibilidad:** los botones de flecha del carrusel sí tienen `aria-label`, pero el carrusel no es navegable por teclado (flechas del teclado) ni anuncia el cambio de producto a lectores de pantalla (`aria-live`).
+- [x] **Accesibilidad del carrusel:** tiene nombre accesible, foco visible, navegación con flechas del teclado, botones etiquetados y una región `aria-live` que anuncia el producto activo.
 - **Duplicación de estilo por rol:** `obtenerEstiloRol` repite casi toda la estructura entre móvil y escritorio con solo los números distintos — se podría simplificar a una tabla de valores por rol/dispositivo en vez de dos `switch` completos.
 - **Estadísticas fijas:** "1.1M+ tienditas", "24 hrs", "~40% margen" están hardcodeadas en el JSX; si cambian con el tiempo, hoy requieren tocar código en vez de un dato centralizado.
 - **Datos del carrusel hardcodeados:** `DULCES` no viene de Supabase — si el catálogo real cambia de producto estrella, hay que editar este archivo a mano en vez de que salga de la base de datos real que ya usa el catálogo (`/catalogo`).

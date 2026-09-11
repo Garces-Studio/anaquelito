@@ -24,6 +24,7 @@ Está pensado para que cualquier programador (tú, tu socio, o alguien nuevo) pu
 | 12 | Admin — productos | `/admin/productos` | `src/app/(tienda)/admin/productos/page.tsx` | ✅ Altas, edición, precios, disponibilidad e imágenes |
 | 13 | Admin — pedidos | `/admin/pedidos` | `src/app/(tienda)/admin/pedidos/page.tsx` | ✅ Consulta y cambio de estado |
 | 14 | Admin — clientes | `/admin/clientes` | `src/app/(tienda)/admin/clientes/page.tsx` | ✅ Clientes, compras, direcciones y permisos admin |
+| 15 | Segmentos de negocio | `/para/[segmento]` | `src/app/(tienda)/para/[segmento]/page.tsx` | ✅ Tienditas, cafés/fondas y reventa |
 
 ## Piezas compartidas (no son páginas, pero las usan varias)
 

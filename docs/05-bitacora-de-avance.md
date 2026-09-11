@@ -1,5 +1,14 @@
 # Bitácora de avance
 
+## 2026-09-11 — Refinamiento visual y accesible del carrusel del Home
+
+- Se elevó de forma coordinada el conjunto de productos y la tarjeta descriptiva para centrar la composición dentro del halo circular en escritorio.
+- Se ajustó por separado la posición móvil para conservar espacio táctil y evitar que la tarjeta invada las imágenes.
+- El carrusel ahora admite flechas izquierda/derecha del teclado y muestra foco visible, sin cambiar colores, imágenes ni transiciones.
+- Se corrigió la documentación antigua que todavía describía una versión de cuatro productos y lógica ya retirada.
+- Se completaron las páginas para tienditas, cafés/fondas y reventa; Mayoreo ahora funciona como acceso a esos recorridos y las nuevas rutas están en el sitemap.
+- El pie ya no publica un correo no confirmado: usa `NEXT_PUBLIC_CORREO_NEGOCIO` cuando exista y, mientras tanto, informa que estará disponible próximamente.
+
 ## 2026-09-11 — Gestión de direcciones y reutilización al comprar
 
 - El cliente puede editar y eliminar sus direcciones con confirmación y elegir una principal desde su panel, conservando el diseño actual.
@@ -170,7 +179,7 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
   - "Nuestra promesa": frase de valor firmada por "Equipo Anaquelito" — **no** un testimonio de cliente inventado (eso no se fabrica).
   - Conteo de productos calculado en vivo (`productos.length`), no una cifra inventada tipo "10M+".
   - Marquesina con las categorías reales del catálogo (emoji), en vez de iconos de Figma/Framer.
-  - Tarjeta de contacto con el correo real (`hola@anaquelito.mx`) y aviso honesto de "WhatsApp: próximamente" en vez de un teléfono inventado.
+  - En esa etapa se mostró `hola@anaquelito.mx` como correo provisional. El 11 de septiembre se retiró hasta que el negocio confirme y configure su correo real.
 - El botón "Ver todo el catálogo" baja con scroll suave a la cuadrícula real de productos (que sigue funcionando igual: filtros, búsqueda, margen, carrito).
 - Verificado en navegador (móvil): la vitrina se ve bien y el botón de scroll funciona.
 

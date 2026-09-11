@@ -7,6 +7,7 @@ import { enlaceWhatsApp } from '@/lib/mayoreo';
  *  vender en serio (PROFECO) — ver docs/07-legal-y-cumplimiento.md. */
 export default function PieDePagina() {
   const whatsapp = enlaceWhatsApp('Hola, quiero consultar productos de mayoreo.');
+  const correo = process.env.NEXT_PUBLIC_CORREO_NEGOCIO?.trim();
   return (
     <footer className="pie pie-nuevo">
       <div className="pie-nuevo-luz pie-nuevo-luz--coral" />
@@ -42,7 +43,7 @@ export default function PieDePagina() {
             <h4>Contacto</h4>
             <ul>
               <li>{whatsapp ? <a href={whatsapp}>Atención por WhatsApp</a> : 'WhatsApp próximamente'}</li>
-              <li><a className="pie-nuevo-correo" href="mailto:hola@anaquelito.mx"><Mail size={14} /> hola@anaquelito.mx</a></li>
+              <li>{correo ? <a className="pie-nuevo-correo" href={`mailto:${correo}`}><Mail size={14} /> {correo}</a> : 'Correo próximamente'}</li>
             </ul>
           </div>
         </div>

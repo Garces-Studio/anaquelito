@@ -28,6 +28,7 @@ const ESTADO_ETIQUETA: Record<string, string> = {
 
 export default async function PaginaDashboard() {
   const supabase = await crearCliente();
+  const correoSoporte = process.env.NEXT_PUBLIC_CORREO_NEGOCIO?.trim();
 
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/iniciar-sesion');
@@ -47,7 +48,7 @@ export default async function PaginaDashboard() {
             Falta completar tu registro
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-sm font-semibold leading-6 text-[#6B5546]">
-            Tu cuenta existe, pero no encontramos los datos de tu negocio. Escríbenos a hola@anaquelito.mx para ayudarte a dejarlo listo.
+            Tu cuenta existe, pero no encontramos los datos de tu negocio. {correoSoporte ? <>Escríbenos a <a className="font-black underline" href={`mailto:${correoSoporte}`}>{correoSoporte}</a> para ayudarte a dejarlo listo.</> : 'Cierra la sesión e intenta completar nuevamente tu registro; el canal de soporte se publicará próximamente.'}
           </p>
           <div className="mt-7">
             <BotonCerrarSesion />

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Boxes, ClipboardCheck, PackageCheck, Store, Truck } from 'lucide-react';
+import { Boxes, ClipboardCheck, Coffee, RefreshCw, Store, Truck } from 'lucide-react';
 import { ConsultarProducto } from '@/componentes/CatalogoMayoreo';
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export default function Mayoreo() {
       <aside className="b2b-resumen-mayoreo"><Boxes size={44} aria-hidden="true" /><strong>Surtimos tu negocio,<br />no tu antojo.</strong><p>Empieza con una selección concreta y solicita condiciones comerciales cuando necesites más volumen.</p></aside>
     </section>
 
-    <section className="b2b-contenedor b2b-seccion"><p className="b2b-ceja">¿Para quién es?</p><h2>Compra para tu forma de vender.</h2><div className="b2b-tres"><article><Store size={28} aria-hidden="true" /><h3>Tiendita</h3><p>Productos para surtir tu mostrador.</p></article><article><PackageCheck size={28} aria-hidden="true" /><h3>Dulcería</h3><p>Cajas y presentaciones para reventa.</p></article><article><Boxes size={28} aria-hidden="true" /><h3>Eventos</h3><p>Compra por volumen para fiestas y ocasiones especiales.</p></article></div></section>
+    <section className="b2b-contenedor b2b-seccion"><p className="b2b-ceja">¿Para quién es?</p><h2>Compra para tu forma de vender.</h2><div className="b2b-tres"><Link className="b2b-segmento" href="/para/tienditas"><Store size={28} aria-hidden="true" /><h3>Tienditas</h3><p>Productos para surtir tu mostrador.</p><b>Ver opciones →</b></Link><Link className="b2b-segmento" href="/para/cafes"><Coffee size={28} aria-hidden="true" /><h3>Cafés y fondas</h3><p>Una selección para venta complementaria.</p><b>Ver opciones →</b></Link><Link className="b2b-segmento" href="/para/reventa"><RefreshCw size={28} aria-hidden="true" /><h3>Reventa</h3><p>Presentaciones por caja para construir tu oferta.</p><b>Ver opciones →</b></Link></div></section>
 
     <section className="b2b-franja"><div className="b2b-contenedor"><p className="b2b-ceja">Proceso de pedido</p><h2>De la selección a la entrega.</h2><ol className="b2b-pasos">{['Elige tus productos', 'Agrega las cajas necesarias', 'Confirma entrega y pago', 'Recibe tu pedido'].map((paso) => <li key={paso}>{paso}</li>)}</ol><div className="b2b-cobertura"><Truck size={24} aria-hidden="true" /><p><strong>Entrega según cobertura.</strong> El costo y plazo se confirman con tu código postal; no prometemos cobertura nacional sin validarla.</p></div></div></section>
 

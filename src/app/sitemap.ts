@@ -8,6 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: sitio, changeFrequency: 'weekly', priority: 1 },
     { url: `${sitio}/catalogo`, changeFrequency: 'daily', priority: 0.9 },
     { url: `${sitio}/mayoreo`, changeFrequency: 'monthly', priority: 0.7 },
+    ...['tienditas', 'cafes', 'reventa'].map((segmento) => ({ url: `${sitio}/para/${segmento}`, changeFrequency: 'monthly' as const, priority: 0.65 })),
     ...productos.map((p) => ({ url: `${sitio}/productos/${p.slug}`, changeFrequency: 'weekly' as const, priority: 0.8 })),
   ];
 }
