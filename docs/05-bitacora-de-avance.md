@@ -7,6 +7,7 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - Se rediseñó `/crear-cuenta` como un registro mayorista de tres pasos: negocio, entrega y acceso seguro. Conserva los campos y valores enviados a Supabase, incluyendo `tiendita`, `cafe` y `emprendedor`.
 - El registro suma jerarquía visual, tarjetas luminosas, profundidad, microtransiciones, contraseña visible opcional y una introducción compacta en móvil.
 - Se renovaron los estados lleno y vacío de `/carrito` con una cabecera de pedido, tarjetas claras para cantidades, opción de tarima y un resumen de compra con mejor contraste.
+- Se aplicó el mismo rediseño al carrito lateral global (`CajonCarrito`), que es el panel abierto desde el ícono del encabezado. Se corrigió especialmente el CTA vacío que aparecía como una barra café sin texto y ahora muestra “Ir al catálogo” con contraste explícito.
 - Se corrigió el espacio café sobrante al final del Home: `.home-pie` ya no hereda una altura mínima de pantalla y el footer no agrega margen exterior.
 - Las tres pantallas se comprobaron visualmente en escritorio y móvil; el Home termina ahora exactamente al final del footer.
 
