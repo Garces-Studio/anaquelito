@@ -10,8 +10,9 @@ import { obtenerSesionAdmin } from '@/lib/supabase/autorizacion';
 export default async function DisenoAdmin({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const { user, esAdmin } = await obtenerSesionAdmin();
+  const { user, esAdmin, perteneceAAdministradores } = await obtenerSesionAdmin();
   if (!user) redirect('/iniciar-sesion');
+  if (perteneceAAdministradores && !esAdmin) redirect('/seguridad-administrador');
   if (!esAdmin) redirect('/dashboard');
 
   const enlaces = [

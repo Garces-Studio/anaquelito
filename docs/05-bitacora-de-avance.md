@@ -221,3 +221,13 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 - Se preparó la medición del embudo completo y se añadieron estados de carga.
 - Se completó la cuenta V1 con edición de datos, nuevas direcciones y repetición de pedidos.
 - Se reforzó Checkout Pro con webhook firmado, verificación directa del pago y confirmación segura para invitado.
+
+## 2026-09-11 — Seguridad administrativa, conciliación y seguimiento
+
+- Se aplicaron en Supabase las migraciones `0016` y `0017`, ambas precedidas por un respaldo privado validado del esquema público.
+- El panel administrativo exige doble verificación TOTP; contraseña sola ya no satisface las políticas RLS de administración.
+- Las reservas de pedidos no cobrados se liberan atómicamente al cancelar. La mercancía ya descontada exige revisión de devolución o reembolso.
+- Cada intento de pago tiene un registro independiente. Los eventos fuera de orden no degradan un pago aprobado y un cobro adicional genera una alerta sin volver a descontar stock.
+- El administrador puede guardar paquetería, guía y enlace de rastreo; el cliente los consulta desde su historial.
+- El alta de cuenta pide únicamente negocio, correo y contraseña. Teléfono y dirección son opcionales y permanecen disponibles en el mismo formulario o en el dashboard.
+- Las pruebas transaccionales verificaron MFA, liberación de reserva, pago tardío, cobro adicional e inventario único, y terminaron con rollback.

@@ -16,6 +16,10 @@ type Pedido = {
   total: number;
   metodo_pago: string | null;
   creado_en: string;
+  empresa_envio: string | null;
+  guia_envio: string | null;
+  url_rastreo: string | null;
+  pago_requiere_revision?: boolean;
   clientes: { nombre_negocio: string; telefono: string | null; direccion: string | null } | null;
   pedido_items: ItemPedido[];
 };
@@ -79,6 +83,27 @@ export default function PaginaAdminPedidos() {
     } catch (err) {
       setPedidos(anterior);
       setError(err instanceof Error ? err.message : 'Error al actualizar el pedido');
+    } finally {
+      setGuardandoId(null);
+    }
+  };
+
+  const guardarEnvio = async (evento: React.FormEvent<HTMLFormElement>, id: string) => {
+    evento.preventDefault();
+    setGuardandoId(id);
+    setError(null);
+    const formulario = new FormData(evento.currentTarget);
+    try {
+      const respuesta = await fetch('/api/admin/pedidos', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, empresa_envio: formulario.get('empresa_envio'), guia_envio: formulario.get('guia_envio'), url_rastreo: formulario.get('url_rastreo') }),
+      });
+      const datos = await respuesta.json();
+      if (!respuesta.ok) throw new Error(datos.error ?? 'No se pudo guardar el seguimiento');
+      await cargar();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al guardar el seguimiento');
     } finally {
       setGuardandoId(null);
     }
@@ -159,6 +184,7 @@ export default function PaginaAdminPedidos() {
             key={pedido.id}
             className="rounded-lg border border-[#EBD9C3] bg-white/82 p-5 shadow-[0_18px_50px_rgba(43,27,18,0.06)] backdrop-blur-xl"
           >
+            {pedido.pago_requiere_revision && <p className="mb-4 rounded-xl border border-[#D64545]/25 bg-[#FFF1F1] px-4 py-3 text-sm font-black text-[#B73535]">Revisión urgente: Mercado Pago reportó un cobro adicional o un pago después de cancelar.</p>}
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="min-w-0">
                 <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B5546]">
@@ -206,6 +232,12 @@ export default function PaginaAdminPedidos() {
                 ))}
               </ul>
             )}
+            <form onSubmit={(evento) => guardarEnvio(evento, pedido.id)} className="mt-4 grid gap-3 border-t border-[#EBD9C3]/70 pt-4 md:grid-cols-[.8fr_1fr_1.5fr_auto]">
+              <input name="empresa_envio" defaultValue={pedido.empresa_envio ?? ''} maxLength={100} placeholder="Paquetería" aria-label={`Paquetería del pedido ${pedido.id.slice(0, 8)}`} className="min-h-11 rounded-xl border border-[#EBD9C3] bg-[#FFF9F3] px-3 text-sm font-semibold outline-none focus:border-[#00A699]" />
+              <input name="guia_envio" defaultValue={pedido.guia_envio ?? ''} maxLength={160} placeholder="Número de guía" aria-label={`Guía del pedido ${pedido.id.slice(0, 8)}`} className="min-h-11 rounded-xl border border-[#EBD9C3] bg-[#FFF9F3] px-3 text-sm font-semibold outline-none focus:border-[#00A699]" />
+              <input name="url_rastreo" defaultValue={pedido.url_rastreo ?? ''} maxLength={500} placeholder="https://rastreo…" aria-label={`Enlace de rastreo del pedido ${pedido.id.slice(0, 8)}`} className="min-h-11 rounded-xl border border-[#EBD9C3] bg-[#FFF9F3] px-3 text-sm font-semibold outline-none focus:border-[#00A699]" />
+              <button disabled={guardandoId === pedido.id} className="min-h-11 rounded-xl bg-[#00A699] px-5 text-[10px] font-black uppercase tracking-[.12em] text-white disabled:opacity-60">Guardar envío</button>
+            </form>
           </article>
         ))}
       </div>

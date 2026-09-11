@@ -8,8 +8,8 @@ type CuerpoCrearCuenta = {
   password: string;
   nombre_negocio: string;
   tipo_negocio: 'tiendita' | 'cafe' | 'emprendedor';
-  telefono: string;
-  calle_numero: string;
+  telefono?: string;
+  calle_numero?: string;
   colonia?: string;
   municipio?: string;
   estado?: string;
@@ -20,9 +20,8 @@ type CuerpoCrearCuenta = {
 
 /**
  * Crea la cuenta de un negocio: usuario de autenticación (confirmado de
- * inmediato, sin pedir verificación de correo — decisión a propósito para
- * bajar la fricción en esta etapa temprana) + su registro en `clientes`
- * y su primera dirección guardada.
+ * inmediato mientras se configura la entrega de correo) + su registro en
+ * `clientes`. Teléfono y dirección se pueden completar después en el panel.
  */
 export async function POST(solicitud: NextRequest) {
   if (solicitud.headers.get('origin') !== solicitud.nextUrl.origin) {
@@ -37,7 +36,8 @@ export async function POST(solicitud: NextRequest) {
 
   if (!esObjeto(cuerpo) || !textoValido(cuerpo.email, 254) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cuerpo.email) ||
       !textoValido(cuerpo.password, 128, 8) || !textoValido(cuerpo.nombre_negocio, 160) ||
-      !textoValido(cuerpo.telefono, 30, 8) || !textoValido(cuerpo.calle_numero, 300) ||
+      (cuerpo.telefono != null && cuerpo.telefono !== '' && !textoValido(cuerpo.telefono, 30, 8)) ||
+      (cuerpo.calle_numero != null && cuerpo.calle_numero !== '' && !textoValido(cuerpo.calle_numero, 300)) ||
       !['tiendita', 'cafe', 'emprendedor'].includes(cuerpo.tipo_negocio) ||
       (['colonia', 'municipio', 'estado', 'codigo_postal'] as const).some((clave) => cuerpo[clave] != null && !textoValido(cuerpo[clave], 160, 0))) {
     return NextResponse.json({ error: 'Revisa los datos del formulario' }, { status: 400 });
@@ -47,7 +47,7 @@ export async function POST(solicitud: NextRequest) {
     calle_numero, colonia, municipio, estado, codigo_postal,
   } = cuerpo;
 
-  if (!email || !password || !nombre_negocio || !telefono || !calle_numero) {
+  if (!email || !password || !nombre_negocio) {
     return NextResponse.json({ error: 'Faltan datos obligatorios del formulario' }, { status: 400 });
   }
   if (password.length < 8) {
@@ -91,8 +91,8 @@ export async function POST(solicitud: NextRequest) {
       auth_user_id: usuarioCreado.user.id,
       nombre_negocio,
       tipo_negocio,
-      telefono,
-      direccion: direccionResumen,
+      telefono: telefono?.trim() || null,
+      direccion: direccionResumen || null,
     };
     const resultadoCliente = clientePedido
       ? await supabaseAdmin.from('clientes').update(datosCliente).eq('id', clientePedido.cliente_id).is('auth_user_id', null).select('id').single()
@@ -108,17 +108,19 @@ export async function POST(solicitud: NextRequest) {
       );
     }
 
-    // 3. Primera dirección guardada (predeterminada)
-    await supabaseAdmin.from('direcciones').insert({
-      cliente_id: cliente.id,
-      etiqueta: 'Principal',
-      calle_numero,
-      colonia: colonia || null,
-      municipio: municipio || null,
-      estado: estado || null,
-      codigo_postal: codigo_postal || null,
-      predeterminada: true,
-    });
+    // 3. La dirección sólo se crea si el cliente decidió completarla ahora.
+    if (calle_numero?.trim()) {
+      await supabaseAdmin.from('direcciones').insert({
+        cliente_id: cliente.id,
+        etiqueta: 'Principal',
+        calle_numero: calle_numero.trim(),
+        colonia: colonia || null,
+        municipio: municipio || null,
+        estado: estado || null,
+        codigo_postal: codigo_postal || null,
+        predeterminada: true,
+      });
+    }
 
     return NextResponse.json({ ok: true });
   } catch {

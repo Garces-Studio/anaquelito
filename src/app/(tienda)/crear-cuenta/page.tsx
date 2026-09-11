@@ -56,8 +56,7 @@ export default function PaginaCrearCuenta() {
     setCampoError(null);
 
     if (!nombreNegocio.trim()) return avisarCampo('nombre-negocio', 'Escribe el nombre de tu negocio para continuar.');
-    if (telefono.replace(/\D/g, '').length < 8) return avisarCampo('telefono', 'Escribe un teléfono válido de al menos 8 dígitos.');
-    if (!calleNumero.trim()) return avisarCampo('calle-numero', 'Escribe la calle y número donde recibirás tus pedidos.');
+    if (telefono && telefono.replace(/\D/g, '').length < 8) return avisarCampo('telefono', 'Escribe un teléfono válido de al menos 8 dígitos.');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return avisarCampo('correo', 'Escribe un correo electrónico válido.');
     if (password.length < 8) return avisarCampo('password', 'La contraseña debe tener al menos 8 caracteres.');
     if (password !== confirmarPassword) {
@@ -132,7 +131,7 @@ export default function PaginaCrearCuenta() {
         <form noValidate onSubmit={manejarEnvio} className="aparecer retraso-1 grid gap-8 !rounded-none border-0 bg-white/90 p-6 shadow-none sm:p-10 lg:p-12">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E6D8CD] pb-6">
             <div><span className="text-[11px] font-black uppercase tracking-[.18em] text-[#00A699]">Registro de cliente</span><h2 className="mt-2 !text-3xl !font-black text-[#2B1B12]">Configura tu cuenta</h2></div>
-            <div className="flex items-center gap-2" aria-label="Tres pasos del registro">{['1', '2', '3'].map((paso, i) => <span key={paso} className={`grid h-9 w-9 place-items-center rounded-full text-xs font-black ${i === 0 ? 'bg-[#FF5A5F] text-white shadow-[0_8px_20px_rgba(255,90,95,.3)]' : i === 1 ? 'bg-[#E9F8F5] text-[#007A70]' : 'bg-[#FFF0D5] text-[#8A5D00]'}`}>{paso}</span>)}</div>
+            <span className="rounded-full bg-[#E9F8F5] px-4 py-2 text-[10px] font-black uppercase tracking-[.14em] text-[#007A70]">Sólo 3 datos obligatorios</span>
           </div>
 
           <section className="grid gap-5 rounded-[24px] border border-[#E9DED4] bg-white p-5 shadow-[0_14px_40px_rgba(43,27,18,.055)] sm:p-6">
@@ -163,31 +162,10 @@ export default function PaginaCrearCuenta() {
                 </button>
               ))}
             </div>
-            <label className={labelClass}>
-              Teléfono <span className="sr-only">obligatorio</span>
-              <span className={`flex min-h-14 items-center gap-3 rounded-2xl border bg-[#FFF9F3] px-4 transition focus-within:border-[#00A699] focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(0,166,153,.09)] ${campoError === 'telefono' ? 'border-[#D64545] bg-[#FFF1F1]' : 'border-[#E6D8CD]'}`}>
-                <Phone size={17} className="text-[#FF5A5F]" />
-                <input id="telefono" aria-invalid={campoError === 'telefono'} className="min-h-12 w-full bg-transparent text-sm font-semibold outline-none" type="tel" required value={telefono} onChange={(e) => { setTelefono(e.target.value); limpiarCampo('telefono'); }} placeholder="55 1234 5678" />
-              </span>
-            </label>
-          </section>
-
-          <section className="grid gap-5 rounded-[24px] border border-[#DCEDEA] bg-[#FAFFFE] p-5 shadow-[0_14px_40px_rgba(0,166,153,.06)] sm:p-6">
-            <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#00A699] text-white shadow-[0_10px_25px_rgba(0,166,153,.23)]"><MapPin size={19} /></span><div><p className="text-[10px] font-black uppercase tracking-[.15em] text-[#008D82]">Paso 2</p><h2 className="!text-2xl !font-black">Entrega</h2></div></div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <label className={`${labelClass} md:col-span-2`}>
-                Calle y número <span className="sr-only">obligatorio</span>
-                <input id="calle-numero" aria-invalid={campoError === 'calle-numero'} className={claseInput('calle-numero')} type="text" required value={calleNumero} onChange={(e) => { setCalleNumero(e.target.value); limpiarCampo('calle-numero'); }} placeholder="Av. Siempre Viva 123" />
-              </label>
-              <label className={labelClass}>Colonia<input className={inputClass} type="text" value={colonia} onChange={(e) => setColonia(e.target.value)} /></label>
-              <label className={labelClass}>Municipio/Alcaldía<input className={inputClass} type="text" value={municipio} onChange={(e) => setMunicipio(e.target.value)} /></label>
-              <label className={labelClass}>Estado<input className={inputClass} type="text" value={estado} onChange={(e) => setEstado(e.target.value)} /></label>
-              <label className={labelClass}>Código postal<input className={inputClass} type="text" value={codigoPostal} onChange={(e) => setCodigoPostal(e.target.value)} /></label>
-            </div>
           </section>
 
           <section className="grid gap-5 rounded-[24px] border border-[#E8DDF0] bg-[#FEFBFF] p-5 shadow-[0_14px_40px_rgba(118,33,176,.055)] sm:p-6">
-            <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#7621B0] text-white shadow-[0_10px_25px_rgba(118,33,176,.22)]"><Mail size={19} /></span><div><p className="text-[10px] font-black uppercase tracking-[.15em] text-[#7621B0]">Paso 3</p><h2 className="!text-2xl !font-black">Acceso seguro</h2></div></div>
+            <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#7621B0] text-white shadow-[0_10px_25px_rgba(118,33,176,.22)]"><Mail size={19} /></span><div><p className="text-[10px] font-black uppercase tracking-[.15em] text-[#7621B0]">Acceso</p><h2 className="!text-2xl !font-black">Tu cuenta segura</h2></div></div>
             <label className={labelClass}>Correo electrónico <span className="sr-only">obligatorio</span><input id="correo" aria-invalid={campoError === 'correo'} className={claseInput('correo')} type="email" required value={email} onChange={(e) => { setEmail(e.target.value); limpiarCampo('correo'); }} placeholder="tucorreo@ejemplo.com" /></label>
             <div className="grid gap-4 md:grid-cols-2">
               <label className={labelClass}>Contraseña <span className="sr-only">obligatorio</span><span className="relative"><input id="password" aria-invalid={campoError === 'password'} className={`${claseInput('password')} w-full pr-12`} type={passwordVisible ? 'text' : 'password'} required minLength={8} value={password} onChange={(e) => { setPassword(e.target.value); limpiarCampo('password'); }} placeholder="Mínimo 8 caracteres" /><button type="button" onClick={() => setPasswordVisible(!passwordVisible)} aria-label={passwordVisible ? 'Ocultar contraseñas' : 'Mostrar contraseñas'} className="absolute right-1.5 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-xl text-[#6B5546] hover:bg-[#F0E8F5]">{passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}</button></span></label>
@@ -195,6 +173,19 @@ export default function PaginaCrearCuenta() {
             </div>
             <p className="flex items-center gap-2 text-xs font-semibold text-[#6B5546]"><ShieldCheck size={16} className="text-[#00A699]" /> Usa al menos ocho caracteres.</p>
           </section>
+
+          <details className="group rounded-[24px] border border-[#DCEDEA] bg-[#FAFFFE] p-5 shadow-[0_14px_40px_rgba(0,166,153,.06)] sm:p-6">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-black text-[#2B1B12]"><span className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#00A699] text-white"><MapPin size={19} /></span><span><small className="block text-[10px] uppercase tracking-[.15em] text-[#008D82]">Opcional</small>Agregar teléfono y entrega ahora</span></span><span className="text-2xl text-[#00A699] transition group-open:rotate-45">+</span></summary>
+            <p className="mt-4 text-sm font-semibold text-[#6B5546]">Puedes omitirlo y completarlo después desde “Mi cuenta”.</p>
+            <div className="mt-5 grid gap-4 md:grid-cols-2">
+              <label className={`${labelClass} md:col-span-2`}>Teléfono<span className="flex min-h-14 items-center gap-3 rounded-2xl border border-[#E6D8CD] bg-[#FFF9F3] px-4 focus-within:border-[#00A699]"><Phone size={17} className="text-[#FF5A5F]" /><input id="telefono" aria-invalid={campoError === 'telefono'} className="min-h-12 w-full bg-transparent text-sm font-semibold outline-none" type="tel" value={telefono} onChange={(e) => { setTelefono(e.target.value); limpiarCampo('telefono'); }} placeholder="55 1234 5678" /></span></label>
+              <label className={`${labelClass} md:col-span-2`}>Calle y número<input id="calle-numero" className={inputClass} type="text" value={calleNumero} onChange={(e) => setCalleNumero(e.target.value)} placeholder="Av. Siempre Viva 123" /></label>
+              <label className={labelClass}>Colonia<input className={inputClass} type="text" value={colonia} onChange={(e) => setColonia(e.target.value)} /></label>
+              <label className={labelClass}>Municipio/Alcaldía<input className={inputClass} type="text" value={municipio} onChange={(e) => setMunicipio(e.target.value)} /></label>
+              <label className={labelClass}>Estado<input className={inputClass} type="text" value={estado} onChange={(e) => setEstado(e.target.value)} /></label>
+              <label className={labelClass}>Código postal<input className={inputClass} type="text" value={codigoPostal} onChange={(e) => setCodigoPostal(e.target.value)} /></label>
+            </div>
+          </details>
 
           <button type="submit" disabled={enviando} className="group inline-flex min-h-[58px] items-center justify-center gap-2 rounded-2xl bg-[#FF5A5F] px-6 py-4 text-base font-black text-white shadow-[0_16px_38px_rgba(255,90,95,.3)] transition duration-300 hover:-translate-y-1 hover:bg-[#E0484D] hover:shadow-[0_22px_48px_rgba(255,90,95,.38)] disabled:opacity-60" style={{ backgroundColor: '#FF5A5F', color: '#FFFFFF' }}>
             <Zap size={18} /> {enviando ? 'Creando tu cuenta…' : 'Crear mi cuenta mayorista'} <ArrowRight size={17} className="transition group-hover:translate-x-1" />

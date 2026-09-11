@@ -4,7 +4,7 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 
 ## Seguridad y operación — seguimiento actual
 
-La primera etapa de pedidos atómicos, reservas, auditoría, límites y compra móvil está implementada. Los pendientes concretos y límites de esta entrega están en [seguridad y operación](manual/10-seguridad-y-operacion.md): conciliación de reservas, prueba completa de cobro, SMTP, MFA, confirmación de correo, registro abreviado y seguimiento de entrega. No activar cobros solamente por haber aplicado la migración 0015.
+Las etapas de pedidos atómicos, reservas, auditoría, límites, compra móvil, MFA administrativa, cancelación conciliada, registro abreviado y seguimiento de entrega están implementadas. Los pendientes externos están en [seguridad y operación](manual/10-seguridad-y-operacion.md): sandbox de cobro, SMTP/confirmación de correo, primera cuenta administradora, reglas de envío y respaldos integrales. No activar cobros solamente por haber aplicado las migraciones.
 
 ## Para activar YA (rápidas)
 

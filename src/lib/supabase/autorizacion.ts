@@ -4,6 +4,8 @@ import { crearCliente } from '@/lib/supabase/server';
 export type SesionAdmin = {
   user: User | null;
   esAdmin: boolean;
+  perteneceAAdministradores: boolean;
+  nivelAutenticacion: 'aal1' | 'aal2' | null;
 };
 
 /**
@@ -22,7 +24,7 @@ export async function obtenerSesionAdmin(): Promise<SesionAdmin> {
   const supabase = await crearCliente();
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { user: null, esAdmin: false };
+  if (!user) return { user: null, esAdmin: false, perteneceAAdministradores: false, nivelAutenticacion: null };
 
   const { data } = await supabase
     .from('administradores')
@@ -30,5 +32,14 @@ export async function obtenerSesionAdmin(): Promise<SesionAdmin> {
     .eq('auth_user_id', user.id)
     .maybeSingle();
 
-  return { user, esAdmin: Boolean(data) };
+  const { data: nivel } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  const nivelAutenticacion = nivel?.currentLevel === 'aal2' ? 'aal2' : nivel?.currentLevel === 'aal1' ? 'aal1' : null;
+  const perteneceAAdministradores = Boolean(data);
+
+  return {
+    user,
+    perteneceAAdministradores,
+    nivelAutenticacion,
+    esAdmin: perteneceAAdministradores && nivelAutenticacion === 'aal2',
+  };
 }
