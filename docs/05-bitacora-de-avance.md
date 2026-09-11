@@ -1,5 +1,12 @@
 # Bitácora de avance
 
+## 2026-09-11 — Gestión de direcciones y reutilización al comprar
+
+- El cliente puede editar y eliminar sus direcciones con confirmación y elegir una principal desde su panel, conservando el diseño actual.
+- Checkout permite cargar explícitamente los datos del negocio y elegir una dirección guardada; los datos siguen siendo editables antes de enviar.
+- Migración 0019 aplicada con respaldo previo del esquema público y pruebas transaccionales revertidas de propiedad, edición, principal y eliminación. Los domicilios históricos de pedidos no se alteran.
+- Continúan pendientes proveedor de correo/SMTP, pruebas completas de Mercado Pago y definiciones comerciales. No se activaron cobros ni se inventaron precios.
+
 Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fecha + resumen) cada vez que se cierre un bloque de trabajo relevante — no hace falta registrar cada commit, sí cada hito.
 
 ## 2026-09-11 — Primera etapa de seguridad, pedidos y compra móvil

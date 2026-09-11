@@ -10,6 +10,17 @@ async function contexto() {
   return { supabase, cliente };
 }
 
+export async function GET() {
+  const { supabase, cliente } = await contexto();
+  if (!cliente) return NextResponse.json({ error: 'Inicia sesión para usar tus datos guardados.' }, { status: 401 });
+  const [{ data: perfil, error: errorPerfil }, { data: direcciones, error: errorDirecciones }] = await Promise.all([
+    supabase.from('clientes').select('nombre_negocio,telefono,tipo_negocio').eq('id', cliente.id).single(),
+    supabase.from('direcciones').select('id,etiqueta,calle_numero,colonia,municipio,estado,codigo_postal,predeterminada').eq('cliente_id', cliente.id).order('predeterminada', { ascending: false }),
+  ]);
+  if (errorPerfil || errorDirecciones) return NextResponse.json({ error: 'No pudimos cargar tus datos.' }, { status: 503 });
+  return NextResponse.json({ perfil, direcciones }, { headers: { 'Cache-Control': 'private, no-store' } });
+}
+
 export async function PATCH(solicitud: NextRequest) {
   if (solicitud.headers.get('origin') !== solicitud.nextUrl.origin) return NextResponse.json({ error: 'Origen no permitido' }, { status: 403 });
   const cuerpo: unknown = await solicitud.json().catch(() => null);

@@ -24,6 +24,14 @@
 
 ## Verificación
 
+### Direcciones guardadas
+
+El panel del cliente permite editar, eliminar con confirmación y elegir una dirección principal. `PATCH/DELETE /api/direcciones` exige sesión y origen propio. La función `gestionar_direccion` (migración 0019) verifica propiedad y serializa estas operaciones por cliente. Eliminar la principal selecciona otra disponible; los pedidos históricos conservan su dirección original. Las políticas CRUD anteriores permanecen: no se añade un índice global de principal única.
+
+En checkout, «Usar los datos de mi cuenta» carga explícitamente negocio, teléfono y direcciones desde `GET /api/cuenta`, sin caché pública. Se puede elegir una dirección y ajustar los datos antes de enviar. Comprar como invitado sigue disponible cuando se habiliten los cobros. No se activan pagos con este cambio.
+
+`tests/direcciones-transacciones.sql` comprueba propiedad, edición, elección y sustitución de principal, eliminación y restricción anónima dentro de una transacción revertida. La migración 0019 se aplicó con respaldo previo del esquema público.
+
 `tests/pedidos-transacciones.sql` se ejecuta dentro de `BEGIN`/`ROLLBACK`. Verifica repetición del pedido, stock insuficiente, reserva única, envío sin pago, pago repetido, conservación de enviado, pago ajeno rechazado, reembolso, snapshots, límites y permisos de funciones. No envía cobros.
 
 Las pruebas de lectura JSON cubren respuesta vacía, HTML, null, arreglo, error del servidor y éxito. Se verifican compilación de producción y pantallas móviles.

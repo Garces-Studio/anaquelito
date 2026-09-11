@@ -14,6 +14,7 @@ import { crearCliente } from '@/lib/supabase/server';
 import BotonCerrarSesion from '@/componentes/BotonCerrarSesion';
 import PestanasPanel from '@/componentes/PestanasPanel';
 import BotonRepetirPedido from '@/componentes/BotonRepetirPedido';
+import AccionesDireccion from '@/componentes/AccionesDireccion';
 import { FormularioAcceso, FormularioDireccion, FormularioPerfil } from '@/componentes/GestionCuenta';
 import { desgloseCajas } from '@/lib/mayoreo';
 
@@ -287,6 +288,7 @@ export default async function PaginaDashboard() {
                       {dir.estado && `, ${dir.estado}`}
                       {dir.codigo_postal && `, CP ${dir.codigo_postal}`}
                     </p>
+                    <AccionesDireccion direccion={dir} />
                   </article>
                 ))}
               </div>

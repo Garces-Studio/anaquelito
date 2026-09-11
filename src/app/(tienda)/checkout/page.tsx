@@ -7,6 +7,7 @@ import { registrarEvento } from '@/lib/analitica';
 import { leerRespuesta } from '@/lib/respuesta-json';
 
 type TipoNegocio = 'tiendita' | 'cafe' | 'emprendedor';
+type DireccionGuardada = { id: string; etiqueta: string; calle_numero: string; colonia: string | null; municipio: string | null; estado: string | null; codigo_postal: string | null };
 
 export default function PaginaCheckout() {
   const { articulos, subtotal } = usarCarrito();
@@ -16,8 +17,26 @@ export default function PaginaCheckout() {
   const [tipoNegocio, setTipoNegocio] = useState<TipoNegocio>('tiendita');
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [direccionesGuardadas, setDireccionesGuardadas] = useState<DireccionGuardada[]>([]);
+  const [cargandoCuenta, setCargandoCuenta] = useState(false);
+  const [direccionSeleccionada, setDireccionSeleccionada] = useState('');
   const envioActivo = useRef(false);
   const intentoActual = useRef<{ huella: string; clave: string } | null>(null);
+
+  const usarDireccion = (d: DireccionGuardada) => setDireccion([d.calle_numero,d.colonia,d.municipio,d.estado,d.codigo_postal].filter(Boolean).join(', '));
+  const cargarCuenta = async () => {
+    setCargandoCuenta(true); setError(null);
+    try {
+      const datos = await leerRespuesta(await fetch('/api/cuenta', { cache: 'no-store' }));
+      const perfil = datos.perfil as { nombre_negocio: string; telefono: string | null; tipo_negocio: TipoNegocio };
+      const guardadas = datos.direcciones as DireccionGuardada[];
+      setNombreNegocio(perfil.nombre_negocio); setTelefono(perfil.telefono ?? ''); setTipoNegocio(perfil.tipo_negocio);
+      setDireccionesGuardadas(guardadas);
+      setDireccionSeleccionada(guardadas[0]?.id ?? '');
+      if (guardadas[0]) usarDireccion(guardadas[0]);
+    } catch (err) { setError(err instanceof Error ? err.message : 'No pudimos cargar tu cuenta.'); }
+    finally { setCargandoCuenta(false); }
+  };
 
   if (articulos.length === 0) {
     return (
@@ -81,6 +100,8 @@ export default function PaginaCheckout() {
 
       <div className="grid-checkout aparecer retraso-2">
         <form onSubmit={manejarEnvio} className="formulario-checkout">
+          <button type="button" onClick={cargarCuenta} disabled={cargandoCuenta} className="b2b-consultar">{cargandoCuenta ? 'Cargando tu cuenta…' : 'Usar los datos de mi cuenta'}</button>
+          {direccionesGuardadas.length > 0 && <label>Direcciones guardadas<select value={direccionSeleccionada} onChange={e => { setDireccionSeleccionada(e.target.value); const d = direccionesGuardadas.find(d => d.id === e.target.value); if (d) usarDireccion(d); }}>{direccionesGuardadas.map(d => <option key={d.id} value={d.id}>{d.etiqueta} · {d.calle_numero}</option>)}</select></label>}
           <label>
             Nombre del negocio
             <input
