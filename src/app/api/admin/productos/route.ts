@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { crearCliente } from '@/lib/supabase/server';
 import { obtenerSesionAdmin } from '@/lib/supabase/autorizacion';
 
@@ -162,6 +163,7 @@ export async function GET() {
 
 /** POST: crear producto nuevo. */
 export async function POST(solicitud: NextRequest) {
+  if (solicitud.headers.get('origin') !== solicitud.nextUrl.origin) return NextResponse.json({ error: 'Origen no permitido' }, { status: 403 });
   const bloqueo = await exigirAdmin();
   if (bloqueo) return bloqueo;
 
@@ -193,11 +195,13 @@ export async function POST(solicitud: NextRequest) {
     }
   }
 
+  revalidateTag('catalogo', { expire: 0 });
   return NextResponse.json({ ok: true, id: producto.id });
 }
 
 /** PATCH: editar producto existente ({ id, ...campos }). */
 export async function PATCH(solicitud: NextRequest) {
+  if (solicitud.headers.get('origin') !== solicitud.nextUrl.origin) return NextResponse.json({ error: 'Origen no permitido' }, { status: 403 });
   const bloqueo = await exigirAdmin();
   if (bloqueo) return bloqueo;
 
@@ -227,6 +231,7 @@ export async function PATCH(solicitud: NextRequest) {
     if (errorCodigo) return NextResponse.json({ error: errorCodigo }, { status: 400 });
   }
 
+  revalidateTag('catalogo', { expire: 0 });
   return NextResponse.json({ ok: true });
 }
 
@@ -236,6 +241,7 @@ export async function PATCH(solicitud: NextRequest) {
  * (FK con "on delete restrict"); en ese caso se sugiere desactivarlo.
  */
 export async function DELETE(solicitud: NextRequest) {
+  if (solicitud.headers.get('origin') !== solicitud.nextUrl.origin) return NextResponse.json({ error: 'Origen no permitido' }, { status: 403 });
   const bloqueo = await exigirAdmin();
   if (bloqueo) return bloqueo;
 

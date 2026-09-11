@@ -13,7 +13,7 @@ export const obtenerCatalogo = cache(async (): Promise<{ productos: ProductoMayo
     url.searchParams.set('select', CAMPOS_MAYOREO);
     url.searchParams.set('activo', 'eq.true');
     url.searchParams.set('order', 'nombre.asc');
-    const leer = () => fetch(url, { headers: { apikey: llave }, cache: 'no-store', signal: AbortSignal.timeout(5000) });
+    const leer = () => fetch(url, { headers: { apikey: llave }, next: { revalidate: 60, tags: ['catalogo'] }, signal: AbortSignal.timeout(5000) });
     let respuesta = await leer();
     // Compatibilidad durante el despliegue: las columnas se agregan en 0006.
     if (respuesta.status === 400) {

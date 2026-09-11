@@ -21,11 +21,13 @@ La página `/catalogo` es el escaparate mayorista de Anaquelito. Explica rápida
 
 ## Datos y comportamiento
 
-La página intenta leer productos activos desde Supabase. Si la consulta falla, usa el catálogo local de respaldo para no dejar el escaparate vacío. La búsqueda se ejecuta en el navegador y actualiza el número de resultados. Mientras los precios no estén confirmados, la interfaz lo indica sin inventar importes.
+La página intenta leer productos activos desde Supabase con caché de 60 segundos. Si la consulta falla, usa el catálogo local de respaldo para no dejar el escaparate vacío. La búsqueda envía `q` en la URL y se resuelve en el servidor. Mientras los precios no estén confirmados, la interfaz lo indica sin inventar importes.
 
 ## Diseño y accesibilidad
 
 El catálogo usa fondo cálido, un hero ciruela con luces coral y turquesa, tarjetas claras y contraste alto en los botones. Las animaciones son decorativas y respetan las reglas globales de movimiento reducido.
+
+En móvil, el hero y las fotografías ocupan menos altura; el buscador queda en una fila y una barra inferior ofrece Productos, Carrito y Mi cuenta. La barra desaparece al abrir el carrito o el menú, y el footer reserva espacio para no quedar cubierto.
 
 ## Pendiente comercial
 

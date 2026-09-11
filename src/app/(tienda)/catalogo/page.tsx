@@ -8,7 +8,7 @@ export default async function Catalogo({ searchParams }: { searchParams: Promise
   const { productos, disponible } = await obtenerCatalogo();
   const consulta = q.trim().toLocaleLowerCase('es');
   const filtrados = productos.filter((p) => [p.nombre, p.marca, p.sku].some((valor) => valor?.toLocaleLowerCase('es').includes(consulta)));
-  return <main className="relative min-h-screen overflow-hidden bg-[#F7F3F8] pb-20 pt-28 text-[#2B1B12] md:pt-32" id="contenido">
+  return <main className="catalogo-agil relative min-h-screen overflow-hidden bg-[#F7F3F8] pb-20 pt-28 text-[#2B1B12] md:pt-32" id="contenido">
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_7%_8%,rgba(255,90,95,.22),transparent_25%),radial-gradient(circle_at_94%_12%,rgba(0,166,153,.2),transparent_27%),radial-gradient(circle_at_70%_70%,rgba(118,33,176,.09),transparent_30%),linear-gradient(145deg,#FFF6EC,#F8F5FB_55%,#EEF9F7)]" />
     <section className="relative mx-auto w-[min(1240px,calc(100%-32px))]">
       <header className="aparecer relative overflow-hidden rounded-[32px] bg-[#23131F] px-6 py-10 text-white shadow-[0_30px_85px_rgba(43,27,18,.22)] sm:px-10 sm:py-12 lg:px-14">

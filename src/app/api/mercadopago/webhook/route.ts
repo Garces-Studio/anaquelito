@@ -27,6 +27,7 @@ export async function POST(solicitud: NextRequest) {
   const cuerpo = await solicitud.json().catch(() => null) as { type?: string; data?: { id?: string } } | null;
   if (cuerpo?.type !== 'payment' || String(cuerpo.data?.id ?? '') !== dataId) return NextResponse.json({ recibido: true });
 
+  try {
   const pago = await new Payment(crearClienteMercadoPago()).get({ id: dataId });
   const pedidoId = pago.external_reference;
   if (!pedidoId || pago.currency_id !== 'MXN' || typeof pago.transaction_amount !== 'number') {
@@ -34,20 +35,15 @@ export async function POST(solicitud: NextRequest) {
   }
 
   const admin = crearClienteAdmin();
-  const { data: pedido } = await admin.from('pedidos').select('id,total,pago_estado').eq('id', pedidoId).single();
-  if (!pedido || Math.abs(Number(pedido.total) - pago.transaction_amount) > 0.009) {
-    return NextResponse.json({ error: 'El pago no coincide con el pedido' }, { status: 409 });
-  }
-
   const pagoEstado = ESTADOS[pago.status ?? ''] ?? 'pendiente';
-  // Una notificación retrasada de un intento anterior jamás puede degradar
-  // un pedido cuyo pago ya fue verificado como aprobado.
-  if (pedido.pago_estado === 'aprobado' && pagoEstado !== 'aprobado') return NextResponse.json({ recibido: true });
-  const { error } = await admin.from('pedidos').update({
-    pago_estado: pagoEstado,
-    estado: pagoEstado === 'aprobado' ? 'confirmado' : pagoEstado === 'cancelado' || pagoEstado === 'rechazado' ? 'cancelado' : 'pendiente',
-    mercadopago_payment_id: String(pago.id), actualizado_en: new Date().toISOString(),
-  }).eq('id', pedido.id);
+  if (!pago.date_last_updated) return NextResponse.json({ error: 'Pago sin fecha verificable' }, { status: 409 });
+  const { error } = await admin.rpc('aplicar_pago_verificado', {
+    p_pedido: pedidoId, p_pago: String(pago.id), p_estado: pagoEstado,
+    p_total: pago.transaction_amount, p_fecha: pago.date_last_updated,
+  });
   if (error) return NextResponse.json({ error: 'No se pudo actualizar el pedido' }, { status: 500 });
   return NextResponse.json({ recibido: true });
+  } catch {
+    return NextResponse.json({ error: 'No se pudo verificar el pago. Reintentar notificación.' }, { status: 503 });
+  }
 }

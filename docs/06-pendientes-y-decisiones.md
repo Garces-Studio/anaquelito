@@ -2,6 +2,10 @@
 
 Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-avance.md](05-bitacora-de-avance.md)) y se borra de aquí.
 
+## Seguridad y operación — seguimiento actual
+
+La primera etapa de pedidos atómicos, reservas, auditoría, límites y compra móvil está implementada. Los pendientes concretos y límites de esta entrega están en [seguridad y operación](manual/10-seguridad-y-operacion.md): conciliación de reservas, prueba completa de cobro, SMTP, MFA, confirmación de correo, registro abreviado y seguimiento de entrega. No activar cobros solamente por haber aplicado la migración 0015.
+
 ## Para activar YA (rápidas)
 
 - [ ] **🔴 URGENTE — Revocar dos tokens de GitHub.** El original que quedó expuesto (empezaba `ghp_UxdU...`) y, por precaución, el más reciente (`ghp_xTrC...`) que también estuvo brevemente en texto plano en `.git/config`. Ambos ya se quitaron de los archivos, pero siguen activos en GitHub hasta que los revoques manualmente: [github.com/settings/tokens](https://github.com/settings/tokens) → busca cada uno → Delete/Revoke.

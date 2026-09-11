@@ -19,6 +19,7 @@ export default async function DisenoAdmin({
     { href: '/admin/pedidos', texto: 'Pedidos', Icono: Truck },
     { href: '/admin/clientes', texto: 'Clientes', Icono: Store },
     { href: '/admin/productos', texto: 'Productos', Icono: PackageSearch },
+    { href: '/admin/actividad', texto: 'Actividad', Icono: ShieldCheck },
   ];
 
   return (

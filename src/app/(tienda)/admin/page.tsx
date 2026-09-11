@@ -27,7 +27,7 @@ export default async function PaginaAdminResumen() {
     await Promise.all([
       supabase
         .from('pedidos')
-        .select('id, estado, total, creado_en, clientes(nombre_negocio)')
+        .select('id, estado, pago_estado, total, creado_en, clientes(nombre_negocio)')
         .order('creado_en', { ascending: false }),
       supabase.from('productos').select('id', { count: 'exact', head: true }),
       supabase.from('productos').select('id', { count: 'exact', head: true }).eq('activo', true),
@@ -35,15 +35,15 @@ export default async function PaginaAdminResumen() {
     ]);
 
   const ventasTotales = (pedidos ?? [])
-    .filter((pedido) => pedido.estado !== 'cancelado')
+    .filter((pedido) => pedido.pago_estado === 'aprobado')
     .reduce((suma, pedido) => suma + Number(pedido.total), 0);
-  const pendientes = (pedidos ?? []).filter((pedido) => pedido.estado === 'pendiente').length;
+  const pendientes = (pedidos ?? []).filter((pedido) => pedido.pago_estado === 'aprobado' && pedido.estado === 'confirmado').length;
   const recientes = (pedidos ?? []).slice(0, 6);
 
   const tarjetas = [
     { Icono: ShoppingBag, dato: pedidos?.length ?? 0, texto: 'Pedidos totales', color: '#FF5A5F' },
     { Icono: Clock3, dato: pendientes, texto: 'Pendientes por atender', color: '#FFB400' },
-    { Icono: CircleDollarSign, dato: `$${ventasTotales.toFixed(0)}`, texto: 'Ventas (sin cancelados)', color: '#00A699' },
+    { Icono: CircleDollarSign, dato: `$${ventasTotales.toFixed(0)}`, texto: 'Pagos aprobados', color: '#00A699' },
     { Icono: Store, dato: totalClientes ?? 0, texto: 'Negocios registrados', color: '#7621B0' },
   ];
 

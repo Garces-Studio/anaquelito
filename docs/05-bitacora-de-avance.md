@@ -2,6 +2,14 @@
 
 Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fecha + resumen) cada vez que se cierre un bloque de trabajo relevante — no hace falta registrar cada commit, sí cada hito.
 
+## 2026-09-11 — Primera etapa de seguridad, pedidos y compra móvil
+
+- Migración 0015: reservas y pedidos atómicos, snapshots comerciales, auditoría y límites persistentes.
+- Webhook con actualización atómica que conserva avance logístico y reconoce reembolsos.
+- Recuperación de acceso construida, navegación inferior móvil y catálogo compacto; video del Home sólo carga en escritorio con movimiento permitido.
+- Caché corta del catálogo para reducir solicitudes a Supabase; panel de ventas cuenta pagos aprobados.
+- Detalle de pruebas y pendientes de activación en `manual/10-seguridad-y-operacion.md`. Esta etapa no activa cobros ni completa por sí sola el plan completo de lanzamiento.
+
 ## 2026-09-11 — Catálogo, fichas, footer y registro robusto
 
 - Se llevó `/catalogo` al lenguaje visual profesional aprobado: hero iluminado, explicación de compra mayorista, búsqueda clara y tarjetas de producto con mejor jerarquía, contraste y movimiento.

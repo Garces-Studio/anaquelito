@@ -16,6 +16,7 @@ Este es el documento maestro del proyecto **Anaquelito**. Aquí se centraliza to
 | [06-pendientes-y-decisiones.md](06-pendientes-y-decisiones.md) | Lista viva de lo que falta decidir o construir, con dueño y prioridad |
 | [07-legal-y-cumplimiento.md](07-legal-y-cumplimiento.md) | Sociedad, PROFECO, protección de datos, NOM-051 — lo mínimo indispensable |
 | [manual/README.md](manual/README.md) | Manual técnico página por página del sitio (qué hace cada pantalla, con qué código) — empieza en [manual/01-home.md](manual/01-home.md) |
+| [manual/10-seguridad-y-operacion.md](manual/10-seguridad-y-operacion.md) | Pedidos atómicos, reservas, recuperación, compra móvil y pendientes antes de cobrar |
 
 ## Estado actual en una frase
 

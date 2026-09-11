@@ -109,6 +109,7 @@ export default function PaginaIniciarSesion() {
               {enviando ? 'Entrando…' : 'Entrar a mi cuenta'} <ArrowRight size={17} className="transition group-hover:translate-x-1" />
             </button>
 
+            <Link href="/recuperar-contrasena" className="inline-flex min-h-11 items-center justify-center text-sm font-bold text-[#007A70] underline underline-offset-4">Olvidé mi contraseña</Link>
             <Link href="/crear-cuenta" className="inline-flex min-h-[54px] items-center justify-center rounded-xl border border-[#EBD9C3] bg-white px-5 text-sm font-black text-[#2B1B12] transition hover:border-[#00A699] hover:bg-[#E9F8F5] hover:text-[#007A70]">Crear una cuenta nueva</Link>
           </form>
           <div className="mt-7 flex items-start gap-3 border-t border-[#EBD9C3] pt-5 text-xs font-semibold leading-5 text-[#6B5546]"><CheckCircle2 size={17} className="mt-0.5 shrink-0 text-[#00A699]" /><p>Tu carrito se conserva aunque todavía no hayas iniciado sesión.</p></div>

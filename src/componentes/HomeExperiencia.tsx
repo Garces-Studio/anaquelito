@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Boxes, Camera, CheckCircle2, Crown, PackageCheck, PartyPopper, Sparkles, Store, TrendingUp, Truck } from 'lucide-react';
 
 const ESCENAS = [
@@ -17,6 +17,30 @@ const ESCENAS = [
 export default function HomeExperiencia() {
   const [activo, setActivo] = useState(0);
   const [moviendo, setMoviendo] = useState(false);
+  const superficie = useRef<HTMLElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const raiz = superficie.current;
+    if (!raiz) return;
+    const media = matchMedia('(min-width: 769px) and (prefers-reduced-motion: no-preference)');
+    const actualizarVideo = () => {
+      const elemento = video.current;
+      if (!elemento) return;
+      const visible = elemento.parentElement?.dataset.visible === 'true' && !document.hidden;
+      if (media.matches && visible) {
+        if (!elemento.getAttribute('src')) elemento.src = '/dulces-loop.mp4';
+        void elemento.play().catch(() => undefined);
+      } else elemento.pause();
+    };
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => { (entry.target as HTMLElement).dataset.visible = String(entry.isIntersecting); });
+      actualizarVideo();
+    });
+    raiz.querySelectorAll('section').forEach(section => observer.observe(section));
+    document.addEventListener('visibilitychange', actualizarVideo);
+    media.addEventListener('change', actualizarVideo);
+    return () => { observer.disconnect(); document.removeEventListener('visibilitychange', actualizarVideo); media.removeEventListener('change', actualizarVideo); };
+  }, []);
 
   const navegar = (paso: number) => {
     if (moviendo) return;
@@ -34,11 +58,9 @@ export default function HomeExperiencia() {
   };
 
   return (
-    <main id="contenido" className="home-vivo">
+    <main ref={superficie} id="contenido" className="home-vivo">
       <section className="home-hero" style={{ '--color-escena': ESCENAS[activo].color } as CSSProperties}>
-        <video className="video-background" autoPlay muted loop playsInline aria-hidden="true">
-          <source src="/dulces-loop.mp4" type="video/mp4" />
-        </video>
+        <video ref={video} className="video-background" preload="none" muted loop playsInline aria-hidden="true" />
         <div className="home-hero-sombra" />
         <div className="grain-overlay" />
         <div className="portada-grid">
@@ -82,7 +104,7 @@ export default function HomeExperiencia() {
       <section className="home-seccion home-ruta" id="como-comprar">
         <div className="home-contenedor"><p className="home-ceja"><TrendingUp size={16} /> Compra con intención</p><h2>Todo lo importante, en su lugar.</h2>
           <div className="home-ruta-grid">
-            <Link href="/catalogo" className="home-ruta-card home-ruta-card--coral"><span>01</span><Store size={35} /><h3>Productos</h3><p>Explora el catálogo real conectado a nuestra base de datos, con presentación, disponibilidad y precio cuando estén confirmados.</p><b>Ir al catálogo →</b></Link>
+            <Link href="/catalogo" className="home-ruta-card home-ruta-card--coral"><span>01</span><Store size={35} /><h3>Productos</h3><p>Encuentra tu siguiente surtido con presentación, disponibilidad y precio en un solo lugar.</p><b>Ir al catálogo →</b></Link>
             <Link href="/mayoreo" className="home-ruta-card home-ruta-card--amarillo"><span>02</span><PackageCheck size={35} /><h3>Cómo comprar</h3><p>1. Elige productos. 2. Agrega las cajas. 3. Confirma entrega y pago. 4. Recibe tu pedido.</p><b>Ver cómo funciona →</b></Link>
             <Link href="/catalogo" className="home-ruta-card home-ruta-card--teal"><span>03</span><PartyPopper size={35} /><h3>Eventos</h3><p>Compra por volumen para fiestas, mesas de dulces y ocasiones especiales, sujeto a disponibilidad.</p><b>Ver productos →</b></Link>
           </div>

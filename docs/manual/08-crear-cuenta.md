@@ -24,4 +24,6 @@ Cuando falta un dato obligatorio o es incorrecto, la página resalta el campo, d
 
 ## Regla importante
 
+Desde la etapa de seguridad del 11 de septiembre, la API limita intentos repetidos mediante una ventana persistente en Supabase. Recuperar acceso está disponible desde `/iniciar-sesion`; requiere configurar entrega de correo y redirección de Supabase antes de verificarlo con una cuenta real. Ver `10-seguridad-y-operacion.md`.
+
 Los identificadores de tipo de negocio forman parte del contrato con la base de datos. El texto visible puede cambiar, pero no deben renombrarse `tiendita`, `cafe` o `emprendedor` sin una migración coordinada.

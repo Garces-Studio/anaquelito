@@ -23,19 +23,20 @@ export async function GET() {
   const { data: pedidos, error } = await supabase
     .from('pedidos')
     .select(`
-      id, estado, total, metodo_pago, creado_en,
+      id, estado, pago_estado, total, metodo_pago, creado_en, datos_entrega,
       clientes ( nombre_negocio, telefono, direccion ),
-      pedido_items ( cantidad, precio_unitario, productos ( nombre, unidad ) )
+      pedido_items ( cantidad, precio_unitario, nombre_producto, presentacion, productos ( nombre, unidad ) )
     `)
     .order('creado_en', { ascending: false });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-  return NextResponse.json({ pedidos });
+  return NextResponse.json({ pedidos: pedidos?.map(p => ({ ...p, clientes: p.datos_entrega ?? p.clientes, pedido_items: p.pedido_items.map(i => ({ ...i, productos: i.nombre_producto ? { nombre: i.nombre_producto, unidad: i.presentacion } : i.productos })) })) });
 }
 
 export async function PATCH(solicitud: NextRequest) {
+  if (solicitud.headers.get('origin') !== solicitud.nextUrl.origin) return NextResponse.json({ error: 'Origen no permitido' }, { status: 403 });
   const { user, esAdmin } = await obtenerSesionAdmin();
   if (!user || !esAdmin) {
     return NextResponse.json({ error: 'Solo administradores' }, { status: 403 });
@@ -60,7 +61,7 @@ export async function PATCH(solicitud: NextRequest) {
   const { error } = await supabase.from('pedidos').update({ estado }).eq('id', id);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'No se puede realizar ese cambio. Revisa el pago y el estado actual; las cancelaciones con mercancía reservada requieren conciliación.' }, { status: 409 });
   }
   return NextResponse.json({ ok: true });
 }

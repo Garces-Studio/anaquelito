@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { usarCarrito } from '@/componentes/carrito/ContextoCarrito';
 import { registrarEvento } from '@/lib/analitica';
+import { leerRespuesta } from '@/lib/respuesta-json';
 
 type TipoNegocio = 'tiendita' | 'cafe' | 'emprendedor';
 
@@ -15,6 +16,8 @@ export default function PaginaCheckout() {
   const [tipoNegocio, setTipoNegocio] = useState<TipoNegocio>('tiendita');
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const envioActivo = useRef(false);
+  const intentoActual = useRef<{ huella: string; clave: string } | null>(null);
 
   if (articulos.length === 0) {
     return (
@@ -32,34 +35,40 @@ export default function PaginaCheckout() {
 
   const manejarEnvio = async (evento: React.FormEvent) => {
     evento.preventDefault();
+    if (envioActivo.current) return;
+    envioActivo.current = true;
     setEnviando(true);
     setError(null);
     registrarEvento('begin_checkout', { currency: 'MXN', value: subtotal, items: articulos.map((a) => ({ item_id: a.id, item_name: a.nombre, price: a.precio_mayoreo, quantity: a.cantidad })) });
 
     try {
+      const cuerpo = { articulos: articulos.map(({ id, cantidad }) => ({ id, cantidad })), negocio: { nombre_negocio: nombreNegocio, telefono, direccion, tipo_negocio: tipoNegocio } };
+      const bytes = new TextEncoder().encode(JSON.stringify(cuerpo));
+      const huella = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), b => b.toString(16).padStart(2, '0')).join('');
+      let clave = intentoActual.current?.huella === huella ? intentoActual.current.clave : crypto.randomUUID();
+      try {
+        const anterior = JSON.parse(sessionStorage.getItem('anaquelito-checkout') ?? 'null');
+        if (anterior?.huella === huella && typeof anterior.clave === 'string') clave = anterior.clave;
+        sessionStorage.setItem('anaquelito-checkout', JSON.stringify({ huella, clave }));
+      } catch { /* Mantener la clave en memoria si el almacenamiento está desactivado. */ }
+      intentoActual.current = { huella, clave };
       const respuesta = await fetch('/api/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          articulos,
-          negocio: { nombre_negocio: nombreNegocio, telefono, direccion, tipo_negocio: tipoNegocio },
-        }),
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': clave },
+        body: JSON.stringify(cuerpo),
       });
 
-      const datos = await respuesta.json();
-
-      if (!respuesta.ok) {
-        throw new Error(datos.error ?? 'No se pudo procesar el pedido');
-      }
+      const datos = await leerRespuesta(respuesta);
 
       // Al pagador se le redirige a Mercado Pago; el carrito se vacía
       // hasta que vuelva a la página de confirmación (pago aprobado).
-      const destino = new URL(datos.urlPago);
+      const destino = new URL(String(datos.urlPago));
       if (destino.protocol !== 'https:' || !['www.mercadopago.com.mx', 'sandbox.mercadopago.com.mx'].includes(destino.hostname)) throw new Error('No se recibió un enlace de pago válido');
       window.location.assign(destino.href);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ocurrió un error inesperado');
       setEnviando(false);
+      envioActivo.current = false;
     }
   };
 
@@ -114,7 +123,7 @@ export default function PaginaCheckout() {
             />
           </label>
 
-          {error && <p className="error-checkout">{error}</p>}
+          {error && <p role="alert" className="error-checkout">{error}</p>}
 
           <button type="submit" className="boton boton-primario" disabled={enviando} style={{ width: '100%' }}>
             {enviando ? 'Redirigiendo a Mercado Pago…' : `Pagar $${subtotal.toFixed(2)} con Mercado Pago`}
@@ -134,7 +143,8 @@ export default function PaginaCheckout() {
             <span>Subtotal</span>
             <strong>${subtotal.toFixed(2)}</strong>
           </div>
-          <p className="resumen-nota">Envío se confirma por separado según tu zona.</p>
+          <div className="resumen-linea"><span>Envío</span><strong>Por confirmar</strong></div>
+          <p className="resumen-nota">El total con envío se confirma antes de cerrar tu compra.</p>
         </aside>
       </div>
     </main>

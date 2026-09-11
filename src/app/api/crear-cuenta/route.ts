@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { crearClienteAdmin } from '@/lib/supabase/admin';
 import { esObjeto, textoValido } from '@/lib/validacion';
+import { limitarSolicitud } from '@/lib/limites';
 
 type CuerpoCrearCuenta = {
   email: string;
@@ -55,6 +56,8 @@ export async function POST(solicitud: NextRequest) {
 
   try {
     const supabaseAdmin = crearClienteAdmin();
+    const limite = await limitarSolicitud(solicitud, 'registro');
+    if (limite) return limite;
 
     // 1. Cuenta de autenticación, confirmada de inmediato
     const { data: usuarioCreado, error: errorUsuario } = await supabaseAdmin.auth.admin.createUser({

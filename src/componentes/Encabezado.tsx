@@ -5,7 +5,7 @@ import { usePanelAccesible } from './usarPanelAccesible';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Package, ShoppingBag, UserRound } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import EnlaceCarrito from './carrito/EnlaceCarrito';
 import { usarCarrito } from './carrito/ContextoCarrito';
@@ -27,7 +27,8 @@ export default function Encabezado() {
   const esAdmin = Boolean(usuario && adminUserId === usuario.id);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const { subtotal, totalArticulos } = usarCarrito();
+  const { subtotal, totalArticulos, cajonAbierto, abrirCajon } = usarCarrito();
+  const barraMovil = pathname === '/catalogo' || pathname.startsWith('/productos/') || pathname === '/dashboard';
 
   useEffect(() => {
     const manejarScroll = () => {
@@ -138,7 +139,7 @@ export default function Encabezado() {
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
-            <span className="grid h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] bg-white text-[#2B1B12]" style={{ backgroundColor: '#FFFFFF', color: '#2B1B12' }}>
+            <span className={`${barraMovil ? 'hidden' : 'grid'} h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] bg-white text-[#2B1B12]`} style={{ backgroundColor: '#FFFFFF', color: '#2B1B12' }}>
               <EnlaceCarrito />
             </span>
             <button
@@ -155,6 +156,11 @@ export default function Encabezado() {
           </div>
         </div>
       </header>
+      {barraMovil && !menuOpen && !cajonAbierto && <nav className="compra-nav-movil" aria-label="Accesos de compra">
+        <Link href="/catalogo" aria-current={pathname === '/catalogo' ? 'page' : undefined}><Package size={21} /><span>Productos</span></Link>
+        <button type="button" onClick={abrirCajon}><ShoppingBag size={21} /><span>Carrito{totalArticulos > 0 ? ` (${totalArticulos})` : ''}</span></button>
+        <Link href={enlaceCuenta.href} aria-current={pathname === '/dashboard' ? 'page' : undefined}><UserRound size={21} /><span>Mi cuenta</span></Link>
+      </nav>}
 
       <div ref={panelMenu} id="menu-principal-movil" role="dialog" aria-modal={menuOpen || undefined} aria-label="Navegación" aria-hidden={!menuOpen} inert={!menuOpen} className={`fixed inset-0 z-[999] overflow-y-auto bg-[#2B1B12] text-[#FFF6EC] transition duration-300 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         <div className="flex items-center justify-between border-b border-white/10 px-5 py-5">
