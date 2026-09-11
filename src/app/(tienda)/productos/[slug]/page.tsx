@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { obtenerCatalogo } from '@/lib/catalogo-publico';
-import { pesos, presentacion, precioPorContenido, textoDisponibilidad } from '@/lib/mayoreo';
+import { CAJAS_POR_TARIMA, pesos, presentacion, precioPorContenido, textoDisponibilidad } from '@/lib/mayoreo';
 import { ConsultarProducto } from '@/componentes/CatalogoMayoreo';
 import BotonAgregar from '@/componentes/carrito/BotonAgregar';
 import EventoProducto from '@/componentes/EventoProducto';
@@ -51,7 +51,7 @@ export default async function Detalle({ params }: Props) {
     <EventoProducto id={p.id} nombre={p.nombre} precio={p.precio_mayoreo} />
     <section className="b2b-contenedor b2b-seccion">
       <nav aria-label="Ruta de navegación"><Link href="/">Inicio</Link> / <Link href="/catalogo">Productos</Link> / {p.nombre}</nav>
-      <div className="b2b-detalle"><GaleriaProducto producto={p} /><div><p className="b2b-ceja">Selección inicial de mayoreo</p><h1>{p.nombre}</h1><p className="b2b-intro">{presentacion(p)}</p>{p.descripcion && <p>{p.descripcion}</p>}<p className="b2b-precio">{p.precio_mayoreo ? `${pesos(p.precio_mayoreo)} por caja` : 'Precio por confirmar'}</p>{precioPorContenido(p) && <p>{precioPorContenido(p)}</p>}<p className={`b2b-disponibilidad b2b-disponibilidad--${p.disponibilidad}`}>{textoDisponibilidad(p)}</p><p className="b2b-nota">Entrega y envío sujetos a confirmación.</p>{p.precio_mayoreo && p.unidad && p.id !== p.slug && vendible && <BotonAgregar producto={{ ...p, unidad: p.unidad, precio_mayoreo: p.precio_mayoreo }} />}<ConsultarProducto nombre={p.nombre} /></div></div>
+      <div className="b2b-detalle"><GaleriaProducto producto={p} /><div><p className="b2b-ceja">Selección inicial de mayoreo</p><h1>{p.nombre}</h1><p className="b2b-intro">{presentacion(p)}</p>{p.descripcion && <p>{p.descripcion}</p>}<p className="b2b-precio">{p.precio_mayoreo ? `${pesos(p.precio_mayoreo)} por caja` : 'Precio por confirmar'}</p>{p.precio_mayoreo && <p className="b2b-nota">Tarima de {CAJAS_POR_TARIMA} cajas: {pesos(p.precio_mayoreo * CAJAS_POR_TARIMA)}</p>}{!p.precio_mayoreo && <p className="b2b-nota">Venta por caja o por tarima de {CAJAS_POR_TARIMA} cajas.</p>}{precioPorContenido(p) && <p>{precioPorContenido(p)}</p>}<p className={`b2b-disponibilidad b2b-disponibilidad--${p.disponibilidad}`}>{textoDisponibilidad(p)}</p><p className="b2b-nota">Entrega y envío sujetos a confirmación.</p>{p.precio_mayoreo && p.unidad && p.id !== p.slug && vendible && <BotonAgregar producto={{ ...p, unidad: p.unidad, precio_mayoreo: p.precio_mayoreo }} />}<ConsultarProducto nombre={p.nombre} /></div></div>
       <div className="b2b-tres"><article><h2>Ideal para</h2><p>Tienditas, dulcerías, reventa y eventos.</p></article><article><h2>Contenido de caja</h2><p>{presentacion(p)}{p.peso_total_g ? ` · ${p.peso_total_g / 1000} kg totales` : ''}.</p></article><article><h2>Información de envío</h2><p>Cobertura, costo y fecha se confirman antes de cerrar el pedido.</p></article></div>
     </section>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaProducto).replace(/</g, '\\u003c') }} />

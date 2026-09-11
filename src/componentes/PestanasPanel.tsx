@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MapPin, ShoppingBag, UserRound } from 'lucide-react';
+import { MapPin, Settings, ShoppingBag, UserRound } from 'lucide-react';
 
-const ICONOS = { pedidos: ShoppingBag, datos: UserRound, direcciones: MapPin } as const;
+const ICONOS = { pedidos: ShoppingBag, datos: UserRound, direcciones: MapPin, configuracion: Settings } as const;
 
 export type PestanaPanel = {
   id: keyof typeof ICONOS;

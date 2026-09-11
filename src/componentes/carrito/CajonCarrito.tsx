@@ -6,6 +6,7 @@ import { ArrowRight, Check, Minus, Plus, ShoppingBag, Trash2, Truck, X } from 'l
 import { usarCarrito } from './ContextoCarrito';
 import EnlaceWhatsApp from '@/componentes/EnlaceWhatsApp';
 import { registrarEvento } from '@/lib/analitica';
+import { CAJAS_POR_TARIMA, desgloseCajas } from '@/lib/mayoreo';
 
 const PAGO_ACTIVO = process.env.NEXT_PUBLIC_CHECKOUT_HABILITADO === 'true';
 const NUMERO_WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMERO;
@@ -27,7 +28,7 @@ export default function CajonCarrito() {
     aviso,
     descartarAviso,
   } = usarCarrito();
-  const mensajePedido = encodeURIComponent(`Hola, quiero realizar un pedido en Anaquelito:\n\n${articulos.map((a) => `${a.cantidad} ${a.cantidad === 1 ? 'caja' : 'cajas'} de ${a.nombre}`).join('\n')}\n\nTotal estimado: $${subtotal.toFixed(2)}\n\n¿Me confirman disponibilidad y opciones de entrega?`);
+  const mensajePedido = encodeURIComponent(`Hola, quiero realizar un pedido en Anaquelito:\n\n${articulos.map((a) => `${desgloseCajas(a.cantidad)} de ${a.nombre}`).join('\n')}\n\nTotal estimado: $${subtotal.toFixed(2)}\n\n¿Me confirman disponibilidad y opciones de entrega?`);
 
   // Bloquear el scroll del fondo mientras el cajón está abierto
   useEffect(() => {
@@ -74,7 +75,7 @@ export default function CajonCarrito() {
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-black text-[#2B1B12]">{aviso.nombre}</p>
               <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#6B5546]">
-                Agregado al pedido · {totalArticulos} art.
+                Agregado al pedido · {desgloseCajas(totalArticulos)}
               </p>
             </div>
             <button
@@ -122,7 +123,7 @@ export default function CajonCarrito() {
             <div>
               <h2 className="font-titulo text-2xl !font-black uppercase leading-none">Tu pedido</h2>
               <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B5546]">
-                {totalArticulos} {totalArticulos === 1 ? 'artículo' : 'artículos'}
+                {desgloseCajas(totalArticulos)}
               </p>
             </div>
           </div>
@@ -176,7 +177,7 @@ export default function CajonCarrito() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-black uppercase leading-tight">{articulo.nombre}</p>
                     <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#6B5546]">
-                      ${articulo.precio_mayoreo} / {articulo.unidad}
+                      ${articulo.precio_mayoreo} / caja · {desgloseCajas(articulo.cantidad)}
                     </p>
                     {(articulo.piezas_por_caja || articulo.bolsas_por_caja) && <p className="text-[10px] font-bold text-[#6B5546]">{articulo.cantidad * (articulo.piezas_por_caja ?? articulo.bolsas_por_caja ?? 0)} {articulo.piezas_por_caja ? 'piezas' : 'bolsas'} totales</p>}
                     <div className="mt-2 flex items-center gap-2">
@@ -206,6 +207,9 @@ export default function CajonCarrito() {
                         aria-label={`Eliminar ${articulo.nombre}`}
                       >
                         <Trash2 size={14} />
+                      </button>
+                      <button type="button" onClick={() => cambiarCantidad(articulo.id, Math.min(10000, articulo.cantidad + CAJAS_POR_TARIMA))} className="rounded-full border border-[#EBD9C3] bg-white px-2.5 py-1.5 text-[9px] font-black uppercase tracking-[0.08em] transition hover:border-[#FF5A5F] hover:text-[#FF5A5F]">
+                        + Tarima
                       </button>
                     </div>
                   </div>

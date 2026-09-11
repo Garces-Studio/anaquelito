@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, CircleDollarSign, Clock3, PackageSearch, ShoppingBag, Store } from 'lucide-react';
+import { ArrowRight, CircleDollarSign, Clock3, PackageSearch, ShoppingBag, Store, Users } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/server';
 
 const ESTADO_ETIQUETA: Record<string, string> = {
@@ -117,7 +117,7 @@ export default async function PaginaAdminResumen() {
         )}
       </section>
 
-      <div className="aparecer retraso-3 mt-6 grid gap-4 sm:grid-cols-2">
+      <div className="aparecer retraso-3 mt-6 grid gap-4 lg:grid-cols-3">
         <Link
           href="/admin/productos"
           className="group flex items-center justify-between rounded-lg bg-[#2B1B12] p-6 text-[#FFF6EC] shadow-[0_24px_70px_rgba(43,27,18,0.14)] transition hover:bg-[#FF5A5F]"
@@ -137,6 +137,16 @@ export default async function PaginaAdminResumen() {
             <p className="mt-2 text-2xl !font-black uppercase leading-none">Atender pedidos pendientes</p>
           </div>
           <ArrowRight size={28} className="shrink-0 text-[#00A699] transition group-hover:translate-x-1" />
+        </Link>
+        <Link
+          href="/admin/clientes"
+          className="group flex items-center justify-between rounded-lg border border-[#EBD9C3] bg-white/80 p-6 shadow-[0_18px_50px_rgba(43,27,18,0.06)] backdrop-blur-xl transition hover:border-[#7621B0]"
+        >
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B5546]">Cuentas</p>
+            <p className="mt-2 text-2xl !font-black uppercase leading-none">Ver clientes y administradores</p>
+          </div>
+          <Users size={28} className="shrink-0 text-[#7621B0] transition group-hover:scale-110" />
         </Link>
       </div>
     </>

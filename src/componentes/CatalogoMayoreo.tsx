@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Package } from 'lucide-react';
 import BotonAgregar from './carrito/BotonAgregar';
-import { enlaceWhatsApp, pesos, presentacion, precioPorContenido, textoDisponibilidad, type ProductoMayoreo } from '@/lib/mayoreo';
+import { CAJAS_POR_TARIMA, enlaceWhatsApp, pesos, presentacion, precioPorContenido, textoDisponibilidad, type ProductoMayoreo } from '@/lib/mayoreo';
 import EnlaceWhatsApp from './EnlaceWhatsApp';
 
 export function ConsultarProducto({ nombre = 'productos de mayoreo' }: { nombre?: string }) {
@@ -22,6 +22,7 @@ export default function CatalogoMayoreo({ productos }: { productos: ProductoMayo
       {precioPorContenido(p) && <p>{precioPorContenido(p)}</p>}
       <p className={`b2b-disponibilidad b2b-disponibilidad--${p.disponibilidad}`}>{textoDisponibilidad(p)}</p>
       {p.cantidad_minima && <p className="b2b-nota">Pedido mínimo: {p.cantidad_minima} {p.cantidad_minima === 1 ? 'caja' : 'cajas'}</p>}
+      <p className="b2b-nota">También disponible por tarima de {CAJAS_POR_TARIMA} cajas.</p>
       {p.precio_mayoreo && p.unidad && p.id !== p.slug && ['in_stock', 'available_from_supplier', 'low_stock'].includes(p.disponibilidad) ? <BotonAgregar producto={{ ...p, unidad: p.unidad, precio_mayoreo: p.precio_mayoreo }} /> : <span className="b2b-pendiente">Próximamente disponible para compra</span>}
       <Link className="b2b-consultar" href={`/productos/${p.slug}`}>Ver producto</Link>
       <ConsultarProducto nombre={p.nombre} />

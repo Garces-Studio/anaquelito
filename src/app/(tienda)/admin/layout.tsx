@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { LayoutDashboard, PackageSearch, ShieldCheck, Truck } from 'lucide-react';
+import { LayoutDashboard, PackageSearch, ShieldCheck, Store, Truck } from 'lucide-react';
 import { obtenerSesionAdmin } from '@/lib/supabase/autorizacion';
 
 /**
@@ -17,6 +17,7 @@ export default async function DisenoAdmin({
   const enlaces = [
     { href: '/admin', texto: 'Resumen', Icono: LayoutDashboard },
     { href: '/admin/pedidos', texto: 'Pedidos', Icono: Truck },
+    { href: '/admin/clientes', texto: 'Clientes', Icono: Store },
     { href: '/admin/productos', texto: 'Productos', Icono: PackageSearch },
   ];
 

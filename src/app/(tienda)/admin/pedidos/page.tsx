@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { MapPin, Phone, RefreshCw, Truck } from 'lucide-react';
+import { desgloseCajas } from '@/lib/mayoreo';
 
 type ItemPedido = {
   cantidad: number;
@@ -199,7 +200,7 @@ export default function PaginaAdminPedidos() {
                     key={indice}
                     className="rounded-full bg-[#FFF6EC] px-3 py-1.5 text-xs font-bold text-[#2B1B12]"
                   >
-                    {item.cantidad}× {item.productos?.nombre ?? 'Producto'}{' '}
+                    {desgloseCajas(item.cantidad)} de {item.productos?.nombre ?? 'Producto'}{' '}
                     <span className="text-[#6B5546]">(${Number(item.precio_unitario).toFixed(2)} c/u)</span>
                   </li>
                 ))}

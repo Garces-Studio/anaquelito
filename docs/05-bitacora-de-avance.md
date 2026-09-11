@@ -2,6 +2,14 @@
 
 Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fecha + resumen) cada vez que se cierre un bloque de trabajo relevante — no hace falta registrar cada commit, sí cada hito.
 
+## 2026-09-10 — Tarimas, cuenta completa y administración de clientes
+
+- Se confirmó una segunda presentación comercial: cada producto puede pedirse por caja o por tarima de 100 cajas. El precio de tarima se calcula con el precio vigente por caja mientras no exista un descuento específico aprobado.
+- Catálogo, ficha y carrito muestran la opción de tarima; el carrito conserva cantidades en cajas para mantener inventario, cobro y pedidos en una sola unidad segura, pero las presenta como “tarimas + cajas”.
+- El dashboard de cliente reúne historial, recompra, datos del negocio, direcciones y configuración de contraseña.
+- Las cuentas con permiso ven un acceso directo al panel administrativo. Se agregó `/admin/clientes` para consultar negocios, correos vinculados, pedidos, gasto y direcciones.
+- Un administrador existente puede promover por correo otra cuenta ya registrada. Nadie puede autoasignarse el rol; el primer dueño se nombra desde Supabase.
+
 ## 2026-09-09 (fotografías del catálogo)
 
 - Se integraron las seis fotografías oficiales entregadas por Mauricio en el catálogo, las fichas y el carrusel del Home.

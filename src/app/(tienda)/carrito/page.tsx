@@ -7,6 +7,7 @@ import { ArrowRight, Minus, Plus, ShoppingBag, Trash2, Truck } from 'lucide-reac
 import { usarCarrito } from '@/componentes/carrito/ContextoCarrito';
 import { registrarEvento } from '@/lib/analitica';
 import EnlaceWhatsApp from '@/componentes/EnlaceWhatsApp';
+import { CAJAS_POR_TARIMA, desgloseCajas } from '@/lib/mayoreo';
 
 const NUMERO_WHATSAPP = process.env.NEXT_PUBLIC_WHATSAPP_NUMERO;
 const PAGO_ACTIVO = process.env.NEXT_PUBLIC_CHECKOUT_HABILITADO === 'true';
@@ -25,7 +26,7 @@ export default function PaginaCarrito() {
   const mensajePedido = encodeURIComponent(
     `¡Hola! Quiero hacer este pedido en Anaquelito:\n\n` +
       articulos
-        .map((a) => `• ${a.cantidad} × ${a.nombre} (${a.unidad}) — $${(a.cantidad * a.precio_mayoreo).toFixed(2)}`)
+        .map((a) => `• ${desgloseCajas(a.cantidad)} de ${a.nombre} — $${(a.cantidad * a.precio_mayoreo).toFixed(2)}`)
         .join('\n') +
       `\n\nSubtotal estimado: ${subtotal.toFixed(2)}\nQuedo atento a disponibilidad y envío.`
   );
@@ -71,7 +72,7 @@ export default function PaginaCarrito() {
           </div>
           <div className="grid gap-3 rounded-lg border border-[#EBD9C3] bg-white/80 p-5 shadow-sm backdrop-blur sm:grid-cols-2 lg:min-w-[360px]">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B5546]">Artículos</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B5546]">Cajas totales</p>
               <strong className="text-4xl font-black">{totalArticulos}</strong>
             </div>
             <div>
@@ -101,7 +102,7 @@ export default function PaginaCarrito() {
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#FF5A5F]">{articulo.unidad}</p>
                     <h2 className="font-titulo !font-black text-3xl uppercase leading-none">{articulo.nombre}</h2>
-                    <p className="mt-2 text-sm font-semibold text-[#6B5546]">${articulo.precio_mayoreo} por {articulo.unidad}</p>
+                    <p className="mt-2 text-sm font-semibold text-[#6B5546]">${articulo.precio_mayoreo} por caja · {desgloseCajas(articulo.cantidad)}</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-3 md:justify-end">
@@ -114,6 +115,9 @@ export default function PaginaCarrito() {
                       <Plus size={15} />
                     </button>
                   </div>
+                  <button type="button" onClick={() => cambiarCantidad(articulo.id, Math.min(10000, articulo.cantidad + CAJAS_POR_TARIMA))} className="rounded-full border border-[#EBD9C3] bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.1em] transition hover:border-[#FF5A5F] hover:text-[#FF5A5F]">
+                    + 1 tarima
+                  </button>
                   <strong className="min-w-24 text-right text-2xl font-black">${(articulo.cantidad * articulo.precio_mayoreo).toFixed(2)}</strong>
                   <button type="button" onClick={() => quitar(articulo.id)} className="grid h-10 w-10 place-items-center rounded-full border border-[#EBD9C3] text-[#6B5546] transition hover:border-[#D64545] hover:text-[#D64545]" aria-label={`Quitar ${articulo.nombre}`}>
                     <Trash2 size={17} />

@@ -45,6 +45,17 @@ export function precioPorContenido(p: ProductoMayoreo): string | null {
   return `${pesos(p.precio_mayoreo / unidades)} por ${p.piezas_por_caja ? 'pieza' : 'bolsa'} para tu negocio`;
 }
 export const pesos = (valor: number) => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(valor);
+export const CAJAS_POR_TARIMA = 100;
+
+/** Convierte una cantidad guardada en cajas a una descripción comercial. */
+export function desgloseCajas(cajas: number): string {
+  const tarimas = Math.floor(cajas / CAJAS_POR_TARIMA);
+  const sueltas = cajas % CAJAS_POR_TARIMA;
+  const partes = [];
+  if (tarimas) partes.push(`${tarimas} ${tarimas === 1 ? 'tarima' : 'tarimas'}`);
+  if (sueltas || !tarimas) partes.push(`${sueltas} ${sueltas === 1 ? 'caja' : 'cajas'}`);
+  return partes.join(' + ');
+}
 export function enlaceWhatsApp(mensaje: string): string | null {
   const numero = process.env.NEXT_PUBLIC_WHATSAPP_NUMERO;
   return numero && /^\d{10,15}$/.test(numero) ? `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}` : null;

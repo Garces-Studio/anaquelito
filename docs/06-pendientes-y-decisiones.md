@@ -50,6 +50,9 @@ Lista viva. Cuando algo se resuelve, se mueve a la bitácora ([05-bitacora-de-av
 - [ ] Escáner de código de barras funcional (hoy es solo una animación visual).
 - [x] Cuenta básica: historial, recompra, datos personales y direcciones. Estado de cuenta/crédito queda fuera de V1.
 - [x] Panel simple para alta y edición de productos.
+- [x] Venta por caja y por tarima de 100 cajas; carrito y pedidos desglosan ambas presentaciones sin duplicar productos.
+- [x] Panel administrativo completo para resumen, pedidos, productos y clientes; los administradores existentes pueden promover otra cuenta registrada por correo.
+- [ ] Nombrar al primer administrador: registrar primero la cuenta del dueño y agregar su `auth_user_id` en `public.administradores` desde Supabase. Después, los siguientes permisos se asignan desde `/admin/clientes`.
 - [ ] Página de "cómo funciona el crédito" con condiciones sin ambigüedad.
 - [ ] Plan mínimo de contenido (blog/redes) para los primeros 90 días.
 - [x] Reemplazar los 6 productos de ejemplo por el catálogo inicial acordado (Pingüino, Diente, Oso, Lombriz, Huevito Pinto y Bubulubu Ice). Las muestras anteriores se conservaron inactivas.

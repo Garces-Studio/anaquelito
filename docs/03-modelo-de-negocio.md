@@ -12,6 +12,12 @@ Cada segmento debería tener, a futuro, un kit de entrada con precio cerrado y m
 
 ## Estructura de precios (propuesta, simple a propósito)
 
+### Presentaciones de venta confirmadas
+
+- Venta por caja.
+- Venta por tarima, con **100 cajas por tarima**.
+- Mientras no exista un precio especial de tarima confirmado, el sistema calcula su importe como 100 veces el precio vigente por caja. Cualquier descuento adicional de tarima deberá capturarse sólo cuando el negocio lo apruebe.
+
 En vez de copiar la cascada confusa de K-Botanas, usar niveles claros:
 
 - **Nivel 1 — Compra pequeña:** sin descuento.

@@ -7,12 +7,15 @@ import {
   ShoppingBag,
   Store,
   Truck,
+  ShieldCheck,
+  Settings,
 } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/server';
 import BotonCerrarSesion from '@/componentes/BotonCerrarSesion';
 import PestanasPanel from '@/componentes/PestanasPanel';
 import BotonRepetirPedido from '@/componentes/BotonRepetirPedido';
-import { FormularioDireccion, FormularioPerfil } from '@/componentes/GestionCuenta';
+import { FormularioAcceso, FormularioDireccion, FormularioPerfil } from '@/componentes/GestionCuenta';
+import { desgloseCajas } from '@/lib/mayoreo';
 
 const ESTADO_ETIQUETA: Record<string, string> = {
   pendiente: 'Pendiente',
@@ -65,6 +68,8 @@ export default async function PaginaDashboard() {
       .eq('cliente_id', cliente.id)
       .order('predeterminada', { ascending: false }),
   ]);
+  const { data: administrador } = await supabase.from('administradores').select('auth_user_id').eq('auth_user_id', user.id).maybeSingle();
+  const esAdmin = Boolean(administrador);
 
   const totalGastado = (pedidos ?? []).reduce((suma, pedido) => suma + Number(pedido.total), 0);
   const ultimoPedido = pedidos?.[0];
@@ -109,6 +114,9 @@ export default async function PaginaDashboard() {
                 <ShoppingBag size={15} /> {ultimoPedido ? 'Ver pedidos' : 'Primer pedido'}
               </Link>
             </div>
+            {esAdmin && <Link href="/admin" className="mt-3 inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-lg bg-[#7621B0] px-5 text-[11px] font-black uppercase tracking-[0.16em] text-white transition hover:bg-[#2B1B12]" style={{ color: '#FFFFFF' }}>
+              <ShieldCheck size={15} /> Abrir panel de administrador
+            </Link>}
           </div>
         </header>
 
@@ -215,7 +223,7 @@ export default async function PaginaDashboard() {
                       </p>
                       <h3 className="mt-2 text-2xl !font-black uppercase leading-none">Pedido #{pedido.id.slice(0, 8)}</h3>
                       <p className="mt-3 text-sm font-semibold leading-6 text-[#6B5546]">
-                        {(pedido.pedido_items ?? []).map((item) => `${item.cantidad}x ${(Array.isArray(item.productos) ? item.productos[0]?.nombre : (item.productos as { nombre: string } | null)?.nombre) ?? 'Producto'}`).join(', ')}
+                        {(pedido.pedido_items ?? []).map((item) => `${desgloseCajas(item.cantidad)} de ${(Array.isArray(item.productos) ? item.productos[0]?.nombre : (item.productos as { nombre: string } | null)?.nombre) ?? 'Producto'}`).join(', ')}
                       </p>
                       <BotonRepetirPedido articulos={(pedido.pedido_items ?? []).flatMap((item) => {
                         const producto = Array.isArray(item.productos) ? item.productos[0] : item.productos;
@@ -283,6 +291,20 @@ export default async function PaginaDashboard() {
               </div>
             )}
             <FormularioDireccion />
+                </div>
+              ),
+            },
+            {
+              id: 'configuracion',
+              titulo: 'Configuración',
+              conteo: 1,
+              contenido: (
+                <div>
+                  <div className="mb-5 flex items-center gap-3">
+                    <span className="grid h-10 w-10 place-items-center rounded-full bg-[#7621B0]/10 text-[#7621B0]"><Settings size={18} /></span>
+                    <div><span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#7621B0]">Seguridad</span><h2 className="text-4xl !font-black uppercase leading-none">Configuración de cuenta</h2></div>
+                  </div>
+                  <FormularioAcceso correo={user.email ?? 'Correo no disponible'} />
                 </div>
               ),
             },

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { crearCliente } from '@/lib/supabase/client';
 
 const CAMPO = 'min-h-11 rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] px-3 text-sm font-semibold outline-none';
 const ETIQUETA = 'grid gap-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-[#6B5546]';
@@ -38,4 +39,36 @@ export function FormularioDireccion() {
     <label className={ETIQUETA}>Estado<input name="estado" className={CAMPO} /></label>
     <button className="b2b-boton" type="submit">Agregar dirección</button>{estado && <p role="status" className="md:col-span-2">{estado}</p>}
   </form>;
+}
+
+export function FormularioAcceso({ correo }: { correo: string }) {
+  const [estado, setEstado] = useState<string | null>(null);
+  const [guardando, setGuardando] = useState(false);
+  return <div className="grid gap-6 lg:grid-cols-2">
+    <article className="rounded-lg border border-[#EBD9C3] bg-white/78 p-5">
+      <p className="text-[11px] font-black uppercase tracking-[0.14em] text-[#6B5546]">Correo de acceso</p>
+      <p className="mt-2 break-all text-lg font-black">{correo}</p>
+      <p className="mt-3 text-sm font-semibold leading-6 text-[#6B5546]">Este correo identifica tu cuenta y se usa para iniciar sesión.</p>
+    </article>
+    <form className="grid gap-4 rounded-lg border border-[#EBD9C3] bg-white/78 p-5" onSubmit={async (e) => {
+      e.preventDefault();
+      const formulario = e.currentTarget;
+      const datos = new FormData(formulario);
+      const password = String(datos.get('password') ?? '');
+      const confirmar = String(datos.get('confirmar') ?? '');
+      if (password.length < 10) return setEstado('Usa al menos 10 caracteres.');
+      if (password !== confirmar) return setEstado('Las contraseñas no coinciden.');
+      setGuardando(true); setEstado('Actualizando…');
+      const { error } = await crearCliente().auth.updateUser({ password });
+      setGuardando(false);
+      setEstado(error ? 'No se pudo actualizar la contraseña.' : 'Contraseña actualizada correctamente.');
+      if (!error) formulario.reset();
+    }}>
+      <h3 className="text-2xl !font-black uppercase leading-none">Cambiar contraseña</h3>
+      <label className={ETIQUETA}>Nueva contraseña<input name="password" type="password" required minLength={10} autoComplete="new-password" className={CAMPO} /></label>
+      <label className={ETIQUETA}>Confirmar contraseña<input name="confirmar" type="password" required minLength={10} autoComplete="new-password" className={CAMPO} /></label>
+      <button className="b2b-boton" type="submit" disabled={guardando}>{guardando ? 'Guardando…' : 'Actualizar contraseña'}</button>
+      {estado && <p role="status" className="text-sm font-bold text-[#6B5546]">{estado}</p>}
+    </form>
+  </div>;
 }

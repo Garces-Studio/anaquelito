@@ -19,10 +19,11 @@ Está pensado para que cualquier programador (tú, tu socio, o alguien nuevo) pu
 | 07 | Confirmación de compra | `/checkout/confirmacion` | `src/app/(tienda)/checkout/confirmacion/page.tsx` | ✅ Verificación segura construida |
 | 08 | Crear cuenta | `/crear-cuenta` | `src/app/(tienda)/crear-cuenta/page.tsx` | ⏳ Pendiente |
 | 09 | Iniciar sesión | `/iniciar-sesion` | `src/app/(tienda)/iniciar-sesion/page.tsx` | ⏳ Pendiente |
-| 10 | Dashboard / Mi cuenta | `/dashboard` | `src/app/(tienda)/dashboard/page.tsx` | ✅ Pedidos, recompra, datos y direcciones |
-| 11 | Panel admin | `/admin` | `src/app/(tienda)/admin/page.tsx` | ⏳ Pendiente |
-| 12 | Admin — productos | `/admin/productos` | `src/app/(tienda)/admin/productos/page.tsx` | ⏳ Pendiente |
-| 13 | Admin — pedidos | `/admin/pedidos` | `src/app/(tienda)/admin/pedidos/page.tsx` | ⏳ Pendiente |
+| 10 | Dashboard / Mi cuenta | `/dashboard` | `src/app/(tienda)/dashboard/page.tsx` | ✅ Pedidos, recompra, datos, direcciones y seguridad |
+| 11 | Panel admin | `/admin` | `src/app/(tienda)/admin/page.tsx` | ✅ Resumen operativo |
+| 12 | Admin — productos | `/admin/productos` | `src/app/(tienda)/admin/productos/page.tsx` | ✅ Altas, edición, precios, disponibilidad e imágenes |
+| 13 | Admin — pedidos | `/admin/pedidos` | `src/app/(tienda)/admin/pedidos/page.tsx` | ✅ Consulta y cambio de estado |
+| 14 | Admin — clientes | `/admin/clientes` | `src/app/(tienda)/admin/clientes/page.tsx` | ✅ Clientes, compras, direcciones y permisos admin |
 
 ## Piezas compartidas (no son páginas, pero las usan varias)
 
