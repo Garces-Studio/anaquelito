@@ -5,7 +5,7 @@ import PieDePagina from "@/componentes/PieDePagina";
 
 // Diseño de las páginas de la tienda. El Encabezado ya lo pone el layout raíz
 // para TODO el sitio, así que aquí solo se agrega el tema cálido y el pie.
-// El catálogo es una experiencia inmersiva a pantalla completa y va sin pie.
+// El catálogo conserva su composición inmersiva, pero comparte el pie global.
 export default function DisenoTienda({
   children,
 }: Readonly<{
@@ -15,7 +15,14 @@ export default function DisenoTienda({
   const esCatalogoInmersivo = pathname === '/catalogo';
 
   if (esCatalogoInmersivo) {
-    return <>{children}</>;
+    return (
+      <>
+        {children}
+        <div className="tema-tienda home-pie">
+          <PieDePagina />
+        </div>
+      </>
+    );
   }
 
   return (

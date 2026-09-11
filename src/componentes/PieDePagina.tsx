@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import { ArrowUpRight, Mail, PackageCheck, Sparkles, Truck } from 'lucide-react';
 import { enlaceWhatsApp } from '@/lib/mayoreo';
 
 /** Pie de página compartido. Las páginas legales son obligatorias antes de
@@ -6,20 +8,21 @@ import { enlaceWhatsApp } from '@/lib/mayoreo';
 export default function PieDePagina() {
   const whatsapp = enlaceWhatsApp('Hola, quiero consultar productos de mayoreo.');
   return (
-    <footer className="pie">
-      <div className="contenedor">
-        <div className="pie-interior">
-          <div style={{ maxWidth: '280px' }}>
-            <Link href="/" className="marca" style={{ marginBottom: '0.75rem' }}>
-              <span className="marca-logo">A</span>
-              Anaquelito
-            </Link>
-            <p style={{ color: 'var(--tinta-suave)', fontSize: '0.92rem', marginTop: '0.75rem' }}>
-              Surtimos tu tiendita, café o punto de venta con dulces y botanas
-              por caja. Consulta presentación, precio y entrega.
-            </p>
+    <footer className="pie pie-nuevo">
+      <div className="pie-nuevo-luz pie-nuevo-luz--coral" />
+      <div className="pie-nuevo-luz pie-nuevo-luz--teal" />
+      <div className="contenedor pie-nuevo-contenido">
+        <div className="pie-nuevo-cta">
+          <div><p><Sparkles size={14} /> Tu siguiente surtido empieza aquí</p><h2>Dale más movimiento a tu anaquel.</h2></div>
+          <Link href="/catalogo">Explorar productos <ArrowUpRight size={18} /></Link>
+        </div>
+        <div className="pie-interior pie-nuevo-grid">
+          <div className="pie-nuevo-marca">
+            <Link href="/" aria-label="Anaquelito, ir al inicio"><Image src="/anaquelito-logo.png" width={600} height={454} sizes="120px" alt="Anaquelito" /></Link>
+            <p>Surtimos tu tiendita, café o punto de venta con dulces y botanas por caja, con información clara para comprar mejor.</p>
+            <div className="pie-nuevo-sellos"><span><PackageCheck size={15} /> Mayoreo</span><span><Truck size={15} /> Entrega por confirmar</span></div>
           </div>
-          <div>
+          <div className="pie-nuevo-columna">
             <h4>Tienda</h4>
             <ul>
               <li><Link href="/catalogo">Catálogo mayorista</Link></li>
@@ -27,7 +30,7 @@ export default function PieDePagina() {
               <li><Link href="/#como-comprar">Cómo comprar</Link></li>
             </ul>
           </div>
-          <div>
+          <div className="pie-nuevo-columna">
             <h4>Anaquelito</h4>
             <ul>
               <li><Link href="/#por-que">Nosotros</Link></li>
@@ -35,15 +38,15 @@ export default function PieDePagina() {
               <li><Link href="/mayoreo#preguntas">Preguntas frecuentes</Link></li>
             </ul>
           </div>
-          <div>
+          <div className="pie-nuevo-columna">
             <h4>Contacto</h4>
             <ul>
               <li>{whatsapp ? <a href={whatsapp}>Atención por WhatsApp</a> : 'WhatsApp próximamente'}</li>
-              <li><a href="mailto:hola@anaquelito.mx">hola@anaquelito.mx</a></li>
+              <li><a className="pie-nuevo-correo" href="mailto:hola@anaquelito.mx"><Mail size={14} /> hola@anaquelito.mx</a></li>
             </ul>
           </div>
         </div>
-        <div className="pie-legal">
+        <div className="pie-legal pie-nuevo-legal">
           <span>© {new Date().getFullYear()} Anaquelito · México</span>
           <span className="pie-legal-enlaces"><Link href="/legal/terminos">Términos</Link><Link href="/legal/privacidad">Privacidad</Link><Link href="/legal/envios">Envíos</Link><Link href="/legal/devoluciones">Cambios y devoluciones</Link><Link href="/legal/facturacion">Facturación</Link></span>
         </div>

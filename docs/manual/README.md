@@ -11,13 +11,13 @@ Está pensado para que cualquier programador (tú, tu socio, o alguien nuevo) pu
 | # | Página | Ruta en el sitio | Archivo | Estado del manual |
 |---|---|---|---|---|
 | 01 | Home / Portada | `/` | `src/app/page.tsx` | ✅ Documentada |
-| 02 | Catálogo | `/catalogo` | `src/app/(tienda)/catalogo/page.tsx` | ⏳ Pendiente |
-| 03 | Detalle de producto | `/productos/[slug]` | `src/app/(tienda)/productos/[slug]/page.tsx` | ✅ Documentada en arquitectura |
+| 02 | Catálogo | `/catalogo` | `src/app/(tienda)/catalogo/page.tsx` | ✅ Catálogo mayorista profesional documentado |
+| 03 | Detalle de producto | `/productos/[slug]` | `src/app/(tienda)/productos/[slug]/page.tsx` | ✅ Ficha comercial profesional documentada |
 | 04 | Escáner | `/escaner` | `src/app/(tienda)/escaner/page.tsx` | ⏳ Pendiente |
 | 05 | Carrito | `/carrito` | `src/app/(tienda)/carrito/page.tsx` | ✅ Funcional y rediseño premium; activación de pago pendiente |
 | 06 | Checkout | `/checkout` | `src/app/(tienda)/checkout/page.tsx` | ✅ Construido, pago desactivado |
 | 07 | Confirmación de compra | `/checkout/confirmacion` | `src/app/(tienda)/checkout/confirmacion/page.tsx` | ✅ Verificación segura construida |
-| 08 | Crear cuenta | `/crear-cuenta` | `src/app/(tienda)/crear-cuenta/page.tsx` | ✅ Flujo profesional de tres pasos conectado a Supabase |
+| 08 | Crear cuenta | `/crear-cuenta` | `src/app/(tienda)/crear-cuenta/page.tsx` | ✅ Flujo profesional, validación guiada y respuesta segura |
 | 09 | Iniciar sesión | `/iniciar-sesion` | `src/app/(tienda)/iniciar-sesion/page.tsx` | ✅ Rediseño profesional verificado en escritorio y móvil |
 | 10 | Dashboard / Mi cuenta | `/dashboard` | `src/app/(tienda)/dashboard/page.tsx` | ✅ Pedidos, recompra, datos, direcciones y seguridad |
 | 11 | Panel admin | `/admin` | `src/app/(tienda)/admin/page.tsx` | ✅ Resumen operativo |
@@ -30,9 +30,9 @@ Está pensado para que cualquier programador (tú, tu socio, o alguien nuevo) pu
 | Pieza | Archivo | Para qué sirve |
 |---|---|---|
 | Layout raíz | `src/app/layout.tsx` | Carga la fuente única del sitio (Plus Jakarta Sans), metadatos, viewport móvil y envuelve todo en el `ProveedorCarrito` + `Encabezado` |
-| Layout de tienda | `src/app/(tienda)/layout.tsx` | Envuelve las páginas interiores (todo menos Home) con el tema visual `.tema-tienda` y el pie de página |
+| Layout de tienda | `src/app/(tienda)/layout.tsx` | Envuelve las páginas interiores con el tema visual y agrega el pie global; el catálogo conserva su composición inmersiva |
 | Encabezado | `src/componentes/Encabezado.tsx` | Barra de navegación global, visible en todas las páginas |
-| Pie de página | `src/componentes/PieDePagina.tsx` | Pie de página compartido |
+| Pie de página | `src/componentes/PieDePagina.tsx` | Pie nocturno compartido con logo, propuesta mayorista, navegación, soporte y CTA al catálogo |
 | Carrito (contexto) | `src/componentes/carrito/ContextoCarrito.tsx` | Estado global del carrito de compra (React Context), disponible en todo el sitio |
 | Estilos globales | `src/app/globals.css` | Variables de fuente, tema de colores, clases custom de la portada y el tema `.tema-tienda` |
 

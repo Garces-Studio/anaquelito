@@ -1021,6 +1021,34 @@ input { font-family: inherit; }
   flex-wrap: wrap;
 }
 
+/* Footer nocturno de marca: cierre común de Home y páginas interiores. */
+.pie.pie-nuevo { position: relative; overflow: hidden; margin-top: 0; padding: 0 0 2rem; border-top: 0; background: #171018; color: #fff6ec; }
+.pie-nuevo-contenido { position: relative; z-index: 2; }
+.pie-nuevo-luz { position: absolute; border-radius: 999px; filter: blur(90px); pointer-events: none; opacity: .28; }
+.pie-nuevo-luz--coral { width: 360px; height: 260px; left: -90px; top: -90px; background: #ff5a5f; }
+.pie-nuevo-luz--teal { width: 320px; height: 250px; right: -70px; bottom: -80px; background: #00a699; }
+.pie-nuevo-cta { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 2.2rem 0; margin-bottom: 2.8rem; border-bottom: 1px solid rgba(255,255,255,.12); }
+.pie-nuevo-cta p { display: flex; align-items: center; gap: .5rem; margin-bottom: .55rem; color: #ffb400; font-size: .7rem; font-weight: 850; letter-spacing: .15em; text-transform: uppercase; }
+.pie-nuevo-cta h2 { max-width: 690px; color: #fff; font-size: clamp(1.8rem,3.5vw,3.4rem); font-weight: 850; letter-spacing: -.045em; line-height: 1.05; text-transform: none; }
+.pie-nuevo-cta > a { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; min-height: 52px; padding: .85rem 1.2rem; border-radius: 16px; background: #ff5a5f; color: #fff; font-size: .82rem; font-weight: 850; white-space: nowrap; box-shadow: 0 14px 32px rgba(255,90,95,.28); }
+.pie-nuevo-cta > a:hover { color: #fff; background: #e0484d; transform: translateY(-2px); }
+.pie-nuevo-grid { display: grid; grid-template-columns: 1.6fr repeat(3,1fr); gap: 3rem; }
+.pie-nuevo-marca { max-width: 330px; }
+.pie-nuevo-marca > a { display: block; width: 120px; }
+.pie-nuevo-marca img { display: block; width: 100%; height: auto; filter: drop-shadow(0 10px 18px rgba(0,0,0,.28)); }
+.pie-nuevo-marca > p { margin-top: 1rem; color: rgba(255,246,236,.62); font-size: .9rem; line-height: 1.7; }
+.pie-nuevo-sellos { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.2rem; }
+.pie-nuevo-sellos span { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .65rem; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; color: rgba(255,246,236,.75); font-size: .68rem; font-weight: 750; }
+.pie.pie-nuevo h4 { margin-bottom: 1rem; color: #ffb400; font-size: .72rem; font-weight: 850; letter-spacing: .14em; }
+.pie.pie-nuevo ul { gap: .7rem; }
+.pie.pie-nuevo a { color: rgba(255,246,236,.68); }
+.pie.pie-nuevo .pie-nuevo-columna a:hover { color: #45cbbf; }
+.pie-nuevo-correo { display: inline-flex; align-items: center; gap: .4rem; }
+.pie.pie-nuevo .pie-nuevo-legal { margin-top: 2.8rem; padding-top: 1.4rem; border-color: rgba(255,255,255,.1); color: rgba(255,246,236,.5); }
+.pie.pie-nuevo .pie-nuevo-legal a { color: rgba(255,246,236,.55); }
+@media (max-width: 850px) { .pie-nuevo-grid { grid-template-columns: 1.4fr repeat(2,1fr); } .pie-nuevo-columna:last-child { grid-column: 2; } }
+@media (max-width: 640px) { .pie-nuevo-cta { align-items: stretch; flex-direction: column; } .pie-nuevo-cta > a { width: 100%; } .pie-nuevo-grid { grid-template-columns: 1fr 1fr; gap: 2.2rem 1.4rem; } .pie-nuevo-marca { grid-column: 1 / -1; } .pie-nuevo-columna:last-child { grid-column: auto; } }
+
 /* ---------- Animaciones de entrada ---------- */
 @keyframes aparecer {
   from { opacity: 0; transform: translateY(18px); }
@@ -1782,3 +1810,9 @@ a, button, [role="button"], input[type="submit"] {
   scrollbar-width: none;
 }
 .scroll-tactil::-webkit-scrollbar { display: none; }
+
+/* Superficies de producto usadas por catálogo y ficha detallada. */
+.catalogo-foto { aspect-ratio: 1 / .82; overflow: hidden; border-radius: 20px; background: radial-gradient(circle at 50% 42%, rgba(255,180,0,.16), transparent 38%), linear-gradient(145deg,#fff8f1,#eef9f7); }
+.detalle-galeria > div { height: 100%; }
+.detalle-foto { height: 100%; min-height: 380px; aspect-ratio: auto; overflow: hidden; border-radius: 24px; background: transparent; }
+@media (max-width: 640px) { .detalle-foto { min-height: 390px; } }

@@ -2,6 +2,15 @@
 
 Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fecha + resumen) cada vez que se cierre un bloque de trabajo relevante — no hace falta registrar cada commit, sí cada hito.
 
+## 2026-09-11 — Catálogo, fichas, footer y registro robusto
+
+- Se llevó `/catalogo` al lenguaje visual profesional aprobado: hero iluminado, explicación de compra mayorista, búsqueda clara y tarjetas de producto con mejor jerarquía, contraste y movimiento.
+- Se rediseñaron las fichas `/productos/[slug]` con fotografía protagonista, precio por caja, equivalencia por tarima, disponibilidad y bloques de confianza.
+- Se renovó el footer con fondo ciruela nocturno, el logo real de Anaquelito, CTA al catálogo y navegación legible; ahora también cierra el catálogo sin modificar su composición inmersiva.
+- Se corrigió el fallo `Unexpected end of JSON input` del registro: el cliente tolera respuestas vacías o no válidas y la API entrega un mensaje JSON incluso ante fallos inesperados.
+- Los campos obligatorios ahora se validan en orden, se resaltan, reciben el foco y muestran una notificación visible que guía al dato faltante.
+- Catálogo, producto, footer y registro se verificaron en escritorio y móvil, además de superar tipos, pruebas y compilación de producción.
+
 ## 2026-09-11 — Registro y carrito con experiencia premium
 
 - Se rediseñó `/crear-cuenta` como un registro mayorista de tres pasos: negocio, entrega y acceso seguro. Conserva los campos y valores enviados a Supabase, incluyendo `tiendita`, `cafe` y `emprendedor`.
