@@ -59,6 +59,8 @@ Mezcla deliberada de dos sistemas:
 
 ## 7. Pendientes / ideas de mejora
 
+> Ajuste de cierre (2026-09-11): el Home agrega `PieDePagina` dentro de `.tema-tienda.home-pie`. Este contenedor debe conservar `min-height: 0` y el footer `margin-top: 0`; de otra forma hereda la altura mínima general de `.tema-tienda` y aparece un bloque café vacío después del contenido legal.
+
 - **Código muerto:** `IMAGENES_PRODUCTOS`, `EMOJI_CATEGORIA` y `NOMBRE_CATEGORIA` no se usan en este archivo — o se conectan a algo (ej. mostrar categorías reales) o se eliminan.
 - **Video de fondo:** no tiene `poster` ni manejo de fallback si `/dulces-loop.mp4` no carga (conexiones lentas en móvil, que es el público objetivo del negocio). Vale la pena revisar peso del archivo de video.
 - **Accesibilidad:** los botones de flecha del carrusel sí tienen `aria-label`, pero el carrusel no es navegable por teclado (flechas del teclado) ni anuncia el cambio de producto a lectores de pantalla (`aria-live`).

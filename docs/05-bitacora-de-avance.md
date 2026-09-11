@@ -2,6 +2,14 @@
 
 Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fecha + resumen) cada vez que se cierre un bloque de trabajo relevante — no hace falta registrar cada commit, sí cada hito.
 
+## 2026-09-11 — Registro y carrito con experiencia premium
+
+- Se rediseñó `/crear-cuenta` como un registro mayorista de tres pasos: negocio, entrega y acceso seguro. Conserva los campos y valores enviados a Supabase, incluyendo `tiendita`, `cafe` y `emprendedor`.
+- El registro suma jerarquía visual, tarjetas luminosas, profundidad, microtransiciones, contraseña visible opcional y una introducción compacta en móvil.
+- Se renovaron los estados lleno y vacío de `/carrito` con una cabecera de pedido, tarjetas claras para cantidades, opción de tarima y un resumen de compra con mejor contraste.
+- Se corrigió el espacio café sobrante al final del Home: `.home-pie` ya no hereda una altura mínima de pantalla y el footer no agrega margen exterior.
+- Las tres pantallas se comprobaron visualmente en escritorio y móvil; el Home termina ahora exactamente al final del footer.
+
 ## 2026-09-11 — Acceso profesional y navegación activa de marca
 
 - Se rediseñó `/iniciar-sesion` como una experiencia de acceso profesional: panel de valor para el negocio, formulario con jerarquía clara, campos accesibles, contraste corregido y llamados a la acción visibles.

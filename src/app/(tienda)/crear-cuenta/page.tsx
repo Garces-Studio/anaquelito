@@ -3,16 +3,16 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Building2, Check, Mail, MapPin, Phone, Store } from 'lucide-react';
+import { ArrowRight, Building2, Check, Coffee, Eye, EyeOff, Mail, MapPin, PackageCheck, Phone, RefreshCw, ShieldCheck, Sparkles, Store, Zap } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/client';
 import { registrarEvento } from '@/lib/analitica';
 
 type TipoNegocio = 'tiendita' | 'cafe' | 'emprendedor';
 
-const tipos: Array<{ id: TipoNegocio; titulo: string; texto: string }> = [
-  { id: 'tiendita', titulo: 'Tiendita', texto: 'Anaquel, mostrador y reorden frecuente.' },
-  { id: 'cafe', titulo: 'Café / fonda', texto: 'Dulce adicional para subir ticket.' },
-  { id: 'emprendedor', titulo: 'Reventa', texto: 'Mezclas listas para vender por pieza.' },
+const tipos = [
+  { id: 'tiendita' as const, titulo: 'Tiendita', texto: 'Anaquel, mostrador y reorden frecuente.', Icono: Store },
+  { id: 'cafe' as const, titulo: 'Café / fonda', texto: 'Dulce adicional para subir ticket.', Icono: Coffee },
+  { id: 'emprendedor' as const, titulo: 'Reventa', texto: 'Producto listo para vender por pieza.', Icono: RefreshCw },
 ];
 
 export default function PaginaCrearCuenta() {
@@ -28,6 +28,7 @@ export default function PaginaCrearCuenta() {
   const [municipio, setMunicipio] = useState('');
   const [estado, setEstado] = useState('');
   const [codigoPostal, setCodigoPostal] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -69,32 +70,44 @@ export default function PaginaCrearCuenta() {
     }
   };
 
-  const inputClass = 'min-h-12 rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] px-4 text-sm font-semibold text-[#2B1B12] outline-none transition focus:border-[#FF5A5F]';
-  const labelClass = 'grid gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#6B5546]';
+  const inputClass = 'min-h-14 rounded-2xl border border-[#E6D8CD] bg-[#FFF9F3] px-4 text-sm font-semibold text-[#2B1B12] outline-none transition duration-300 placeholder:text-[#8B7465]/55 focus:border-[#00A699] focus:bg-white focus:shadow-[0_0_0_4px_rgba(0,166,153,.09)]';
+  const labelClass = 'grid gap-2 text-sm font-extrabold text-[#503D31]';
 
   return (
-    <main className="cuenta-comercial relative min-h-screen overflow-hidden bg-[#FFF6EC] px-4 pb-16 pt-28 text-[#2B1B12] md:px-8 md:pt-32">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_16%_18%,rgba(255,180,0,0.18),transparent_28%),radial-gradient(circle_at_84%_22%,rgba(255,90,95,0.14),transparent_28%)]" />
-      <div className="relative mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
-        <aside className="aparecer lg:sticky lg:top-28">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#EBD9C3] bg-white/75 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#FF5A5F] shadow-sm">
-            <Store size={14} /> Nuevo negocio
+    <main className="cuenta-comercial relative min-h-screen overflow-hidden bg-[#F7F3F8] px-4 pb-20 pt-28 text-[#2B1B12] md:px-8 md:pt-32">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_12%,rgba(255,90,95,.23),transparent_28%),radial-gradient(circle_at_92%_14%,rgba(0,166,153,.2),transparent_29%),radial-gradient(circle_at_62%_82%,rgba(118,33,176,.12),transparent_30%),linear-gradient(145deg,#FFF6EC_0%,#F8F5FB_52%,#EEF9F7_100%)]" />
+      <div className="absolute left-[6%] top-40 h-44 w-44 animate-pulse rounded-full border border-[#FF5A5F]/20 shadow-[0_0_70px_rgba(255,90,95,.16)]" />
+      <div className="absolute right-[4%] top-[30%] h-64 w-64 animate-pulse rounded-full border border-[#00A699]/20 shadow-[0_0_90px_rgba(0,166,153,.15)] [animation-delay:1s]" />
+
+      <div className="relative mx-auto grid max-w-7xl overflow-hidden rounded-[32px] border border-white/80 bg-white/55 shadow-[0_35px_100px_rgba(43,27,18,.14)] backdrop-blur-xl lg:grid-cols-[.78fr_1.22fr]">
+        <aside className="aparecer relative isolate overflow-hidden bg-[#23131F] p-7 text-white sm:p-10 lg:sticky lg:top-28 lg:min-h-[860px] lg:p-12">
+          <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_85%_16%,rgba(255,90,95,.7),transparent_28%),radial-gradient(circle_at_10%_90%,rgba(118,33,176,.55),transparent_34%),linear-gradient(145deg,#21131B_0%,#432035_52%,#6B2943_100%)]" />
+          <div className="absolute inset-0 -z-10 opacity-20 [background-image:linear-gradient(rgba(255,255,255,.13)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.13)_1px,transparent_1px)] [background-size:42px_42px]" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[.18em] text-white backdrop-blur">
+            <Sparkles size={14} className="text-[#FFB400]" /> Tu cuenta mayorista
           </span>
-          <h1 className="mt-5 font-titulo !font-black text-[clamp(3.2rem,7vw,6.5rem)] uppercase leading-[0.84]">
-            Crea tu cuenta mayorista.
-          </h1>
-          <p className="mt-5 max-w-xl text-base font-semibold leading-7 text-[#6B5546]">
-            Organiza tus pedidos y guarda la información de entrega de tu negocio. Puedes explorar los productos antes de registrarte.
-          </p>
-          <Link href="/catalogo" className="mt-6 inline-flex min-h-11 items-center gap-2 font-bold underline underline-offset-4">Explorar los seis productos <ArrowRight size={18} /></Link>
+          <h1 className="mt-7 max-w-lg !font-black text-[clamp(2.8rem,5vw,5rem)] leading-[.92] text-white">Tu negocio merece comprar mejor.</h1>
+          <p className="mt-6 max-w-md text-base font-semibold leading-7 text-white/70">Crea un espacio para organizar pedidos, guardar entregas y volver a surtir sin empezar desde cero.</p>
+
+          <div className="mt-10 hidden gap-3 sm:grid">
+            {[{ Icono: PackageCheck, titulo: 'Pedidos bajo control', texto: 'Historial y recompra en un solo lugar.', color: '#FFB400' }, { Icono: MapPin, titulo: 'Entrega más sencilla', texto: 'Tu dirección queda lista para el próximo pedido.', color: '#45CBBF' }, { Icono: ShieldCheck, titulo: 'Información protegida', texto: 'Tus datos viven dentro de tu cuenta.', color: '#FF7B80' }].map(({ Icono, titulo, texto, color }) => (
+              <div key={titulo} className="flex items-start gap-4 rounded-2xl border border-white/15 bg-white/[.08] p-4 backdrop-blur transition duration-300 hover:-translate-y-1 hover:bg-white/[.12]">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white/10" style={{ color }}><Icono size={20} /></span>
+                <div><strong className="block text-sm font-black uppercase tracking-[.07em] text-white">{titulo}</strong><p className="mt-1 text-sm font-medium leading-5 text-white/60">{texto}</p></div>
+              </div>
+            ))}
+          </div>
+          <Link href="/catalogo" className="mt-8 inline-flex min-h-11 items-center gap-2 text-sm font-black text-white underline decoration-[#FFB400] decoration-2 underline-offset-8 transition hover:text-[#FFB400] sm:mt-9">Explorar los seis productos <ArrowRight size={18} /></Link>
         </aside>
 
-        <form onSubmit={manejarEnvio} className="aparecer retraso-1 grid gap-5 rounded-lg border border-[#EBD9C3] bg-white/88 p-4 shadow-[0_24px_70px_rgba(43,27,18,0.12)] backdrop-blur md:p-6">
-          <section className="grid gap-4">
-            <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-[#FF5A5F] text-white"><Building2 size={18} /></span>
-              <h2 className="font-titulo !font-black text-3xl uppercase leading-none">Tu negocio</h2>
-            </div>
+        <form onSubmit={manejarEnvio} className="aparecer retraso-1 grid gap-8 !rounded-none border-0 bg-white/90 p-6 shadow-none sm:p-10 lg:p-12">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E6D8CD] pb-6">
+            <div><span className="text-[11px] font-black uppercase tracking-[.18em] text-[#00A699]">Registro de cliente</span><h2 className="mt-2 !text-3xl !font-black text-[#2B1B12]">Configura tu cuenta</h2></div>
+            <div className="flex items-center gap-2" aria-label="Tres pasos del registro">{['1', '2', '3'].map((paso, i) => <span key={paso} className={`grid h-9 w-9 place-items-center rounded-full text-xs font-black ${i === 0 ? 'bg-[#FF5A5F] text-white shadow-[0_8px_20px_rgba(255,90,95,.3)]' : i === 1 ? 'bg-[#E9F8F5] text-[#007A70]' : 'bg-[#FFF0D5] text-[#8A5D00]'}`}>{paso}</span>)}</div>
+          </div>
+
+          <section className="grid gap-5 rounded-[24px] border border-[#E9DED4] bg-white p-5 shadow-[0_14px_40px_rgba(43,27,18,.055)] sm:p-6">
+            <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#FF5A5F] text-white shadow-[0_10px_25px_rgba(255,90,95,.28)]"><Building2 size={19} /></span><div><p className="text-[10px] font-black uppercase tracking-[.15em] text-[#FF5A5F]">Paso 1</p><h2 className="!text-2xl !font-black">Tu negocio</h2></div></div>
             <label className={labelClass}>
               Nombre del negocio
               <input className={inputClass} type="text" required value={nombreNegocio} onChange={(e) => setNombreNegocio(e.target.value)} placeholder="Ej. Miscelánea Don Beto" />
@@ -106,15 +119,15 @@ export default function PaginaCrearCuenta() {
                   type="button"
                   aria-pressed={tipoNegocio === tipo.id}
                   onClick={() => setTipoNegocio(tipo.id)}
-                  className={`rounded-lg border p-4 text-left transition ${
-                    tipoNegocio === tipo.id ? 'border-[#FF5A5F] bg-[#FF5A5F] text-white shadow-[0_10px_28px_rgba(255,90,95,0.2)]' : 'border-[#EBD9C3] bg-[#FFF6EC] text-[#2B1B12] hover:border-[#FF5A5F]'
+                  className={`group rounded-2xl border p-4 text-left transition duration-300 ${
+                    tipoNegocio === tipo.id ? 'border-[#FF5A5F] bg-[#FF5A5F] text-white shadow-[0_12px_30px_rgba(255,90,95,.25)]' : 'border-[#E6D8CD] bg-[#FFF9F3] text-[#2B1B12] hover:-translate-y-1 hover:border-[#FF5A5F] hover:bg-white'
                   }`}
                   style={tipoNegocio === tipo.id ? { backgroundColor: '#FF5A5F', color: '#FFFFFF' } : undefined}
                 >
-                  <span className="mb-3 flex items-center justify-between">
-                    <strong className="text-sm font-black uppercase tracking-[0.12em]">{tipo.titulo}</strong>
+                  <span className="mb-4 flex items-center justify-between"><tipo.Icono size={19} />
                     {tipoNegocio === tipo.id && <Check size={16} />}
                   </span>
+                  <strong className="block text-sm font-black uppercase tracking-[0.1em]">{tipo.titulo}</strong>
                   <span className={tipoNegocio === tipo.id ? 'text-xs font-semibold text-white/75' : 'text-xs font-semibold text-[#6B5546]'}>
                     {tipo.texto}
                   </span>
@@ -123,18 +136,15 @@ export default function PaginaCrearCuenta() {
             </div>
             <label className={labelClass}>
               Teléfono
-              <span className="flex items-center gap-3 rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] px-4">
+              <span className="flex min-h-14 items-center gap-3 rounded-2xl border border-[#E6D8CD] bg-[#FFF9F3] px-4 transition focus-within:border-[#00A699] focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(0,166,153,.09)]">
                 <Phone size={17} className="text-[#FF5A5F]" />
                 <input className="min-h-12 w-full bg-transparent text-sm font-semibold outline-none" type="tel" required value={telefono} onChange={(e) => setTelefono(e.target.value)} placeholder="55 1234 5678" />
               </span>
             </label>
           </section>
 
-          <section className="grid gap-4 border-t border-[#EBD9C3] pt-5">
-            <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-[#00A699] text-white"><MapPin size={18} /></span>
-              <h2 className="font-titulo !font-black text-3xl uppercase leading-none">Entrega</h2>
-            </div>
+          <section className="grid gap-5 rounded-[24px] border border-[#DCEDEA] bg-[#FAFFFE] p-5 shadow-[0_14px_40px_rgba(0,166,153,.06)] sm:p-6">
+            <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#00A699] text-white shadow-[0_10px_25px_rgba(0,166,153,.23)]"><MapPin size={19} /></span><div><p className="text-[10px] font-black uppercase tracking-[.15em] text-[#008D82]">Paso 2</p><h2 className="!text-2xl !font-black">Entrega</h2></div></div>
             <div className="grid gap-4 md:grid-cols-2">
               <label className={`${labelClass} md:col-span-2`}>
                 Calle y número
@@ -147,22 +157,20 @@ export default function PaginaCrearCuenta() {
             </div>
           </section>
 
-          <section className="grid gap-4 border-t border-[#EBD9C3] pt-5">
-            <div className="flex items-center gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-[#FFB400] text-[#2B1B12]"><Mail size={18} /></span>
-              <h2 className="font-titulo !font-black text-3xl uppercase leading-none">Acceso</h2>
-            </div>
+          <section className="grid gap-5 rounded-[24px] border border-[#E8DDF0] bg-[#FEFBFF] p-5 shadow-[0_14px_40px_rgba(118,33,176,.055)] sm:p-6">
+            <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#7621B0] text-white shadow-[0_10px_25px_rgba(118,33,176,.22)]"><Mail size={19} /></span><div><p className="text-[10px] font-black uppercase tracking-[.15em] text-[#7621B0]">Paso 3</p><h2 className="!text-2xl !font-black">Acceso seguro</h2></div></div>
             <label className={labelClass}>Correo electrónico<input className={inputClass} type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tucorreo@ejemplo.com" /></label>
             <div className="grid gap-4 md:grid-cols-2">
-              <label className={labelClass}>Contraseña<input className={inputClass} type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 8 caracteres" /></label>
-              <label className={labelClass}>Confirmar contraseña<input className={inputClass} type="password" required value={confirmarPassword} onChange={(e) => setConfirmarPassword(e.target.value)} /></label>
+              <label className={labelClass}>Contraseña<span className="relative"><input className={`${inputClass} w-full pr-12`} type={passwordVisible ? 'text' : 'password'} required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 8 caracteres" /><button type="button" onClick={() => setPasswordVisible(!passwordVisible)} aria-label={passwordVisible ? 'Ocultar contraseñas' : 'Mostrar contraseñas'} className="absolute right-1.5 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-xl text-[#6B5546] hover:bg-[#F0E8F5]">{passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}</button></span></label>
+              <label className={labelClass}>Confirmar contraseña<input className={inputClass} type={passwordVisible ? 'text' : 'password'} required value={confirmarPassword} onChange={(e) => setConfirmarPassword(e.target.value)} /></label>
             </div>
+            <p className="flex items-center gap-2 text-xs font-semibold text-[#6B5546]"><ShieldCheck size={16} className="text-[#00A699]" /> Usa al menos ocho caracteres.</p>
           </section>
 
           {error && <p role="alert" className="rounded-lg border border-[#D64545]/30 bg-[#D64545]/10 px-4 py-3 text-sm font-bold text-[#D64545]">{error}</p>}
 
-          <button type="submit" disabled={enviando} className="inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-[#FF5A5F] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white shadow-[0_14px_34px_rgba(255,90,95,0.28)] transition hover:-translate-y-0.5 hover:bg-[#E0484D] disabled:opacity-60" style={{ backgroundColor: '#FF5A5F', color: '#FFFFFF' }}>
-            {enviando ? 'Creando cuenta...' : 'Crear cuenta'} <ArrowRight size={16} />
+          <button type="submit" disabled={enviando} className="group inline-flex min-h-[58px] items-center justify-center gap-2 rounded-2xl bg-[#FF5A5F] px-6 py-4 text-base font-black text-white shadow-[0_16px_38px_rgba(255,90,95,.3)] transition duration-300 hover:-translate-y-1 hover:bg-[#E0484D] hover:shadow-[0_22px_48px_rgba(255,90,95,.38)] disabled:opacity-60" style={{ backgroundColor: '#FF5A5F', color: '#FFFFFF' }}>
+            <Zap size={18} /> {enviando ? 'Creando tu cuenta…' : 'Crear mi cuenta mayorista'} <ArrowRight size={17} className="transition group-hover:translate-x-1" />
           </button>
 
           <p className="text-center text-sm font-semibold text-[#6B5546]">

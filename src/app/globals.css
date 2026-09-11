@@ -61,8 +61,8 @@
 .home-cierre p { margin-bottom: 1rem; font-size: .75rem; font-weight: 900; letter-spacing: .18em; text-transform: uppercase; }
 .home-cierre h2 { font-size: clamp(3.2rem, 8.5vw, 8.5rem); text-shadow: 8px 8px 0 rgba(77,21,10,.28); }
 .home-cierre a { display: inline-flex; align-items: center; gap: .7rem; margin-top: 38px; padding: 17px 24px; border-radius: 999px; background: #24140d; color: white; font-weight: 850; }
-.home-pie { min-height: auto; background: #24140d; color: #fff6ec; --papel: #2d1b13; --borde: #543b2d; --tinta: #fff6ec; --tinta-suave: #d6bfa9; }
-.home-pie .pie { background: #24140d; border-color: #543b2d; }
+.tema-tienda.home-pie { min-height: 0; background: #24140d; color: #fff6ec; --papel: #2d1b13; --borde: #543b2d; --tinta: #fff6ec; --tinta-suave: #d6bfa9; }
+.home-pie .pie { margin-top: 0; background: #24140d; border-color: #543b2d; }
 .home-pie .marca-logo { background: #ff5a5f; color: white; }
 .logo-encabezado { display: block; width: 82px; height: 52px; flex: 0 0 auto; filter: drop-shadow(0 6px 10px rgba(50,12,8,.2)); transition: transform .2s ease; }
 .logo-encabezado:hover { transform: scale(1.04) rotate(-1deg); }
