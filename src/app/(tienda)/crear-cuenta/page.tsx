@@ -107,8 +107,9 @@ export default function PaginaCrearCuenta() {
                   aria-pressed={tipoNegocio === tipo.id}
                   onClick={() => setTipoNegocio(tipo.id)}
                   className={`rounded-lg border p-4 text-left transition ${
-                    tipoNegocio === tipo.id ? 'border-[#2B1B12] bg-[#2B1B12] text-white' : 'border-[#EBD9C3] bg-[#FFF6EC] text-[#2B1B12] hover:border-[#FF5A5F]'
+                    tipoNegocio === tipo.id ? 'border-[#FF5A5F] bg-[#FF5A5F] text-white shadow-[0_10px_28px_rgba(255,90,95,0.2)]' : 'border-[#EBD9C3] bg-[#FFF6EC] text-[#2B1B12] hover:border-[#FF5A5F]'
                   }`}
+                  style={tipoNegocio === tipo.id ? { backgroundColor: '#FF5A5F', color: '#FFFFFF' } : undefined}
                 >
                   <span className="mb-3 flex items-center justify-between">
                     <strong className="text-sm font-black uppercase tracking-[0.12em]">{tipo.titulo}</strong>
@@ -160,7 +161,7 @@ export default function PaginaCrearCuenta() {
 
           {error && <p role="alert" className="rounded-lg border border-[#D64545]/30 bg-[#D64545]/10 px-4 py-3 text-sm font-bold text-[#D64545]">{error}</p>}
 
-          <button type="submit" disabled={enviando} className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full bg-[#2B1B12] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white transition hover:bg-[#FF5A5F] disabled:opacity-60">
+          <button type="submit" disabled={enviando} className="inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-[#FF5A5F] px-6 py-4 text-[11px] font-black uppercase tracking-[0.18em] text-white shadow-[0_14px_34px_rgba(255,90,95,0.28)] transition hover:-translate-y-0.5 hover:bg-[#E0484D] disabled:opacity-60" style={{ backgroundColor: '#FF5A5F', color: '#FFFFFF' }}>
             {enviando ? 'Creando cuenta...' : 'Crear cuenta'} <ArrowRight size={16} />
           </button>
 

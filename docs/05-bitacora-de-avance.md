@@ -2,6 +2,15 @@
 
 Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fecha + resumen) cada vez que se cierre un bloque de trabajo relevante — no hace falta registrar cada commit, sí cada hito.
 
+## 2026-09-11 — Acceso profesional y navegación activa de marca
+
+- Se rediseñó `/iniciar-sesion` como una experiencia de acceso profesional: panel de valor para el negocio, formulario con jerarquía clara, campos accesibles, contraste corregido y llamados a la acción visibles.
+- Los beneficios de pedidos, direcciones de entrega y cuenta protegida ahora se presentan en tarjetas verticales; así se eliminó el choque de textos que aparecía en la composición anterior.
+- Se compactó el panel introductorio en móvil para que el formulario aparezca antes y no deje un espacio vacío innecesario.
+- El estado activo del encabezado dejó de usar negro: las secciones principales usan el degradado coral/naranja de Anaquelito y el acceso de cuenta usa turquesa.
+- Se corrigió también el contraste de botones seleccionados y del botón principal en `/crear-cuenta`.
+- El resultado fue revisado visualmente en escritorio y móvil, además de pasar compilación, tipos y pruebas automatizadas.
+
 ## 2026-09-10 — Tarimas, cuenta completa y administración de clientes
 
 - Se confirmó una segunda presentación comercial: cada producto puede pedirse por caja o por tarima de 100 cajas. El precio de tarima se calcula con el precio vigente por caja mientras no exista un descuento específico aprobado.

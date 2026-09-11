@@ -64,6 +64,7 @@ export default function Encabezado() {
   const enlaceCuenta = usuario
     ? { href: '/dashboard', texto: 'Mi cuenta' }
     : { href: '/iniciar-sesion', texto: 'Entrar' };
+  const cuentaActiva = pathname === '/iniciar-sesion' || pathname === '/crear-cuenta' || pathname === '/dashboard';
 
   return (
     <>
@@ -95,10 +96,10 @@ export default function Encabezado() {
                   href={enlace.href}
                   className={`rounded-full px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] transition ${
                     activo
-                      ? 'bg-[#2B1B12] text-white shadow-[0_10px_24px_rgba(43,27,18,0.14)]'
+                      ? 'bg-[#FF5A5F] text-white shadow-[0_10px_26px_rgba(255,90,95,0.28)]'
                       : 'text-[#6B5546] hover:bg-[#FFEFDD] hover:text-[#2B1B12]'
                   }`}
-                  style={activo ? { backgroundColor: '#2B1B12', color: '#FFFFFF' } : { color: '#6B5546' }}
+                  style={activo ? { background: 'linear-gradient(135deg, #FF5A5F 0%, #FF8A3D 100%)', color: '#FFFFFF' } : { color: '#6B5546' }}
                 >
                   {enlace.texto}
                 </Link>
@@ -121,8 +122,8 @@ export default function Encabezado() {
           <div className="hidden items-center gap-2 md:flex">
             <Link
               href={enlaceCuenta.href}
-              className="rounded-full border border-[#EBD9C3] bg-white px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition hover:border-[#FF5A5F] hover:text-[#FF5A5F]"
-              style={{ backgroundColor: '#FFFFFF', color: '#2B1B12' }}
+              className={`rounded-full border px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] transition ${cuentaActiva ? 'border-[#00A699] text-white shadow-[0_10px_26px_rgba(0,166,153,0.22)]' : 'border-[#EBD9C3] bg-white text-[#2B1B12] hover:border-[#FF5A5F] hover:text-[#FF5A5F]'}`}
+              style={cuentaActiva ? { backgroundColor: '#00A699', color: '#FFFFFF' } : { backgroundColor: '#FFFFFF', color: '#2B1B12' }}
             >
               {enlaceCuenta.texto}
             </Link>

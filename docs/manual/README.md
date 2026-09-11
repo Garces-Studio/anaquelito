@@ -17,8 +17,8 @@ Está pensado para que cualquier programador (tú, tu socio, o alguien nuevo) pu
 | 05 | Carrito | `/carrito` | `src/app/(tienda)/carrito/page.tsx` | ✅ Funcional, activación comercial pendiente |
 | 06 | Checkout | `/checkout` | `src/app/(tienda)/checkout/page.tsx` | ✅ Construido, pago desactivado |
 | 07 | Confirmación de compra | `/checkout/confirmacion` | `src/app/(tienda)/checkout/confirmacion/page.tsx` | ✅ Verificación segura construida |
-| 08 | Crear cuenta | `/crear-cuenta` | `src/app/(tienda)/crear-cuenta/page.tsx` | ⏳ Pendiente |
-| 09 | Iniciar sesión | `/iniciar-sesion` | `src/app/(tienda)/iniciar-sesion/page.tsx` | ⏳ Pendiente |
+| 08 | Crear cuenta | `/crear-cuenta` | `src/app/(tienda)/crear-cuenta/page.tsx` | ✅ Flujo completo y estados de selección corregidos |
+| 09 | Iniciar sesión | `/iniciar-sesion` | `src/app/(tienda)/iniciar-sesion/page.tsx` | ✅ Rediseño profesional verificado en escritorio y móvil |
 | 10 | Dashboard / Mi cuenta | `/dashboard` | `src/app/(tienda)/dashboard/page.tsx` | ✅ Pedidos, recompra, datos, direcciones y seguridad |
 | 11 | Panel admin | `/admin` | `src/app/(tienda)/admin/page.tsx` | ✅ Resumen operativo |
 | 12 | Admin — productos | `/admin/productos` | `src/app/(tienda)/admin/productos/page.tsx` | ✅ Altas, edición, precios, disponibilidad e imágenes |
