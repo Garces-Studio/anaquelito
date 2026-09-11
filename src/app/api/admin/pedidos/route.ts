@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { crearCliente } from '@/lib/supabase/server';
 import { obtenerSesionAdmin } from '@/lib/supabase/autorizacion';
+import { esObjeto } from '@/lib/validacion';
 
 const ESTADOS_VALIDOS = ['pendiente', 'confirmado', 'enviado', 'entregado', 'cancelado'] as const;
 
@@ -50,6 +51,7 @@ export async function PATCH(solicitud: NextRequest) {
     return NextResponse.json({ error: 'Cuerpo de la solicitud inválido' }, { status: 400 });
   }
 
+  if (!esObjeto(cuerpo)) return NextResponse.json({ error: 'Revisa los datos del pedido.' }, { status: 400 });
   const { id, estado } = cuerpo;
   const formatoUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   const editaEnvio = cuerpo.empresa_envio !== undefined || cuerpo.guia_envio !== undefined || cuerpo.url_rastreo !== undefined;
@@ -83,6 +85,7 @@ export async function PATCH(solicitud: NextRequest) {
   }
 
   if (error) {
+    if (error.message.includes('CONCILIAR_PASARELA')) return NextResponse.json({ error: 'Este pedido tiene un intento de pago. Antes de liberar existencias hay que conciliar y cerrar el cobro en Mercado Pago.' }, { status: 409 });
     const requiereDevolucion = error.message.includes('REQUIERE_DEVOLUCION');
     return NextResponse.json({ error: requiereDevolucion ? 'Este pedido ya descontó mercancía. Primero confirma la devolución o el reembolso antes de cancelarlo.' : 'No se puede realizar ese cambio. Revisa el pago y el estado actual.' }, { status: 409 });
   }

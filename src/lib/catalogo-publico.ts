@@ -22,9 +22,14 @@ export const obtenerCatalogo = cache(async (): Promise<{ productos: ProductoMayo
     }
     if (!respuesta.ok) throw new Error('Catálogo no disponible');
     const filas = await respuesta.json() as Array<Partial<ProductoMayoreo> & { id: string; nombre: string }>;
-    return { disponible: true, productos: SELECCION_INICIAL.map((borrador) => {
-      const fila = filas.find((p) => p.slug === borrador.slug || p.nombre.toLocaleLowerCase('es') === borrador.nombre.toLocaleLowerCase('es'));
-      if (!fila) return borrador;
+    return { disponible: true, productos: filas.map((fila) => {
+      const borrador = SELECCION_INICIAL.find((p) => p.slug === fila.slug || p.nombre.toLocaleLowerCase('es') === fila.nombre.toLocaleLowerCase('es')) ?? {
+        id: fila.id, slug: fila.slug || fila.id, nombre: fila.nombre, categoria: 'dulces',
+        descripcion: null, unidad: null, sku: null, marca: null, tipo_empaque: null, destacado: false,
+        imagenes: [], piezas_por_caja: null, bolsas_por_caja: null, peso_por_bolsa_g: null,
+        peso_total_g: null, precio_mayoreo: null, imagen_url: null, stock: null,
+        cantidad_minima: null, disponibilidad: 'unconfirmed' as const,
+      };
       return {
         ...borrador,
         ...fila,

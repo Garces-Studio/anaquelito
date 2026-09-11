@@ -36,10 +36,11 @@ export async function obtenerSesionAdmin(): Promise<SesionAdmin> {
   const nivelAutenticacion = nivel?.currentLevel === 'aal2' ? 'aal2' : nivel?.currentLevel === 'aal1' ? 'aal1' : null;
   const perteneceAAdministradores = Boolean(data);
 
+  const { data: autorizado, error: errorAutorizacion } = await supabase.rpc('es_admin');
   return {
     user,
     perteneceAAdministradores,
     nivelAutenticacion,
-    esAdmin: perteneceAAdministradores && nivelAutenticacion === 'aal2',
+    esAdmin: perteneceAAdministradores && !errorAutorizacion && autorizado === true,
   };
 }

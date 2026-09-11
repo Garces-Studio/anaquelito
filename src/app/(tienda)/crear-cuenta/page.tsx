@@ -38,6 +38,8 @@ export default function PaginaCrearCuenta() {
     setError(mensaje);
     window.requestAnimationFrame(() => {
       const elemento = document.getElementById(campo);
+      const seccion = elemento?.closest('details');
+      if (seccion) seccion.open = true;
       elemento?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       elemento?.focus({ preventScroll: true });
     });

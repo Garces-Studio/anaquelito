@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { crearCliente } from '@/lib/supabase/client';
+import { leerRespuesta } from '@/lib/respuesta-json';
 
 const CAMPO = 'min-h-11 rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] px-3 text-sm font-semibold outline-none';
 const ETIQUETA = 'grid gap-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-[#6B5546]';
@@ -13,8 +14,10 @@ export function FormularioPerfil({ cliente }: { cliente: { nombre_negocio: strin
   return <form className="grid gap-4 md:grid-cols-2" onSubmit={async (e) => {
     e.preventDefault(); setEstado('Guardando…');
     const datos = Object.fromEntries(new FormData(e.currentTarget));
-    const respuesta = await fetch('/api/cuenta', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
-    const json = await respuesta.json(); setEstado(respuesta.ok ? 'Datos guardados.' : json.error); if (respuesta.ok) router.refresh();
+    try {
+      await leerRespuesta(await fetch('/api/cuenta', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) }));
+      setEstado('Datos guardados.'); router.refresh();
+    } catch { setEstado('No pudimos guardar tus datos. Revisa la conexión y vuelve a intentarlo.'); }
   }}>
     <label className={`${ETIQUETA} md:col-span-2`}>Nombre del negocio<input name="nombre_negocio" required defaultValue={cliente.nombre_negocio} className={CAMPO} /></label>
     <label className={ETIQUETA}>Tipo de negocio<select name="tipo_negocio" defaultValue={cliente.tipo_negocio} className={CAMPO}><option value="tiendita">Tiendita</option><option value="cafe">Café / fonda</option><option value="emprendedor">Reventa</option></select></label>
@@ -29,8 +32,10 @@ export function FormularioDireccion() {
   return <form className="mt-5 grid gap-4 md:grid-cols-2" onSubmit={async (e) => {
     e.preventDefault(); setEstado('Guardando…');
     const formulario = e.currentTarget; const datos = Object.fromEntries(new FormData(formulario));
-    const respuesta = await fetch('/api/cuenta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
-    const json = await respuesta.json(); setEstado(respuesta.ok ? 'Dirección guardada.' : json.error); if (respuesta.ok) { formulario.reset(); router.refresh(); }
+    try {
+      await leerRespuesta(await fetch('/api/cuenta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) }));
+      setEstado('Dirección guardada.'); formulario.reset(); router.refresh();
+    } catch { setEstado('No pudimos guardar la dirección. Revisa tus datos y la conexión e inténtalo de nuevo.'); }
   }}>
     <label className={ETIQUETA}>Etiqueta<input name="etiqueta" required defaultValue="Sucursal" className={CAMPO} /></label>
     <label className={ETIQUETA}>Código postal<input name="codigo_postal" required minLength={5} className={CAMPO} /></label>

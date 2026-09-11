@@ -267,5 +267,6 @@ export async function DELETE(solicitud: NextRequest) {
       { status: esRestriccion ? 409 : 500 }
     );
   }
+  revalidateTag('catalogo', { expire: 0 });
   return NextResponse.json({ ok: true });
 }

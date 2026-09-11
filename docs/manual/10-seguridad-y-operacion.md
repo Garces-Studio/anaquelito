@@ -1,5 +1,15 @@
 # Seguridad, pedidos y experiencia móvil
 
+## Correcciones de cierre — estado vigente
+
+- Migración 0018 aplicada con respaldo público privado y pruebas con rollback: los administradores sólo pueden actualizar estado logístico y datos de envío, nunca pagos ni inventario reservado directamente.
+- Corrección de la etapa 2: una cancelación NO demuestra que Mercado Pago haya cerrado el cobro. Cualquier pedido con clave de checkout, preferencia, enlace o pago conserva su reserva hasta disponer de conciliación de pasarela. La liberación automática sólo admite pedidos manuales sin intentos de pago. Sigue pendiente implementar y probar el cierre remoto en sandbox.
+- El servidor consulta `es_admin()` con el JWT validado por la base para autorizar operaciones; el nivel leído de la sesión sólo informa la interfaz.
+- Catálogo: las filas activas reales incluyen productos nuevos; los desactivados no reaparecen como borradores. El borrado administrativo invalida la caché.
+- Cuenta: total comprado suma pagos aprobados; recompra usa precios actuales y el historial conserva los nombres comprados. Los fallos de conexión al guardar perfil/dirección muestran mensajes recuperables.
+- Los campos opcionales de registro se abren automáticamente si contienen un dato inválido que requiere corrección.
+- El resumen administrativo muestra alertas por cobros a revisar, stock agotado o bajo y productos con precio/presentación/disponibilidad pendientes. Se calculan con existencias libres (stock menos reserva); no se inventa un umbral de stock bajo. Son avisos en el panel, no correos.
+
 ## Implementado el 11 de septiembre de 2026
 
 - Migración `0015_pedidos_atomicos.sql` aplicada a Supabase tras pruebas con rollback y respaldo del esquema público (estructura y datos). El respaldo es local, privado y no está en Git; no sustituye un respaldo integral de Auth, Storage ni una prueba de restauración.

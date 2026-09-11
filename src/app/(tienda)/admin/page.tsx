@@ -23,15 +23,16 @@ const ESTADO_COLOR: Record<string, string> = {
 export default async function PaginaAdminResumen() {
   const supabase = await crearCliente();
 
-  const [{ data: pedidos }, { count: totalProductos }, { count: productosActivos }, { count: totalClientes }] =
+  const [{ data: pedidos }, { count: totalProductos }, { count: productosActivos }, { count: totalClientes }, { data: existencias }] =
     await Promise.all([
       supabase
         .from('pedidos')
-        .select('id, estado, pago_estado, total, creado_en, clientes(nombre_negocio)')
+        .select('id, estado, pago_estado, pago_requiere_revision, total, creado_en, clientes(nombre_negocio)')
         .order('creado_en', { ascending: false }),
       supabase.from('productos').select('id', { count: 'exact', head: true }),
       supabase.from('productos').select('id', { count: 'exact', head: true }).eq('activo', true),
       supabase.from('clientes').select('id', { count: 'exact', head: true }),
+      supabase.from('productos').select('id,nombre,stock,stock_reservado,disponibilidad,precio_mayoreo,unidad').eq('activo', true),
     ]);
 
   const ventasTotales = (pedidos ?? [])
@@ -39,6 +40,15 @@ export default async function PaginaAdminResumen() {
     .reduce((suma, pedido) => suma + Number(pedido.total), 0);
   const pendientes = (pedidos ?? []).filter((pedido) => pedido.pago_estado === 'aprobado' && pedido.estado === 'confirmado').length;
   const recientes = (pedidos ?? []).slice(0, 6);
+  const revisarPagos = (pedidos ?? []).filter(p => p.pago_requiere_revision).length;
+  const alertas = (existencias ?? []).flatMap(p => {
+    const disponible = p.stock === null ? null : p.stock - p.stock_reservado;
+    const motivo = p.disponibilidad === 'out_of_stock' || (['in_stock', 'low_stock'].includes(p.disponibilidad) && disponible !== null && disponible <= 0)
+      ? 'Sin existencias libres para vender'
+      : p.disponibilidad === 'low_stock' ? `Pocas existencias${disponible === null ? '' : `: ${disponible} cajas libres`}`
+      : !p.unidad || !(Number(p.precio_mayoreo) > 0) || p.disponibilidad === 'unconfirmed' ? 'Completar precio, presentación o disponibilidad' : null;
+    return motivo ? [{ id: p.id, nombre: p.nombre, motivo }] : [];
+  });
 
   const tarjetas = [
     { Icono: ShoppingBag, dato: pedidos?.length ?? 0, texto: 'Pedidos totales', color: '#FF5A5F' },
@@ -58,6 +68,13 @@ export default async function PaginaAdminResumen() {
           {' '}{productosActivos ?? 0} de {totalProductos ?? 0} productos activos en el catálogo.
         </p>
       </header>
+
+      {(alertas.length > 0 || revisarPagos > 0) && <section aria-label="Pendientes de operación" className="mt-6 rounded-2xl border border-[#FFB400]/40 bg-[#FFF0D5] p-5 text-[#6B4A00]">
+        <h2 className="!text-2xl !font-black">Requiere tu atención</h2>
+        {revisarPagos > 0 && <Link href="/admin/pedidos" className="mt-3 block font-black text-[#B73535] underline">Revisar {revisarPagos} pedido(s) con incidencias de pago</Link>}
+        <ul className="mt-3 grid gap-2 text-sm font-semibold">{alertas.map(p => <li key={p.id}><strong>{p.nombre}:</strong> {p.motivo}</li>)}</ul>
+        {alertas.length > 0 && <Link href="/admin/productos" className="mt-4 inline-block font-black underline">Actualizar catálogo e inventario</Link>}
+      </section>}
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {tarjetas.map(({ Icono, dato, texto, color }, indice) => (

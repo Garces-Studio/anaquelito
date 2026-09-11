@@ -59,7 +59,7 @@ export default async function PaginaDashboard() {
   const [{ data: pedidos }, { data: direcciones }] = await Promise.all([
     supabase
       .from('pedidos')
-      .select('id, estado, total, creado_en, empresa_envio, guia_envio, url_rastreo, pedido_items(cantidad, precio_unitario, productos(id,nombre,unidad,imagen_url,piezas_por_caja,bolsas_por_caja,activo,disponibilidad))')
+      .select('id, estado, pago_estado, total, creado_en, empresa_envio, guia_envio, url_rastreo, pedido_items(cantidad, precio_unitario, nombre_producto, productos(id,nombre,unidad,precio_mayoreo,imagen_url,piezas_por_caja,bolsas_por_caja,activo,disponibilidad))')
       .eq('cliente_id', cliente.id)
       .order('creado_en', { ascending: false }),
     supabase
@@ -71,7 +71,7 @@ export default async function PaginaDashboard() {
   const { data: administrador } = await supabase.from('administradores').select('auth_user_id').eq('auth_user_id', user.id).maybeSingle();
   const esAdmin = Boolean(administrador);
 
-  const totalGastado = (pedidos ?? []).reduce((suma, pedido) => suma + Number(pedido.total), 0);
+  const totalGastado = (pedidos ?? []).filter(pedido => pedido.pago_estado === 'aprobado').reduce((suma, pedido) => suma + Number(pedido.total), 0);
   const ultimoPedido = pedidos?.[0];
   const direccionPrincipal = direcciones?.find((direccion) => direccion.predeterminada) ?? direcciones?.[0];
 
@@ -223,13 +223,13 @@ export default async function PaginaDashboard() {
                       </p>
                       <h3 className="mt-2 text-2xl !font-black uppercase leading-none">Pedido #{pedido.id.slice(0, 8)}</h3>
                       <p className="mt-3 text-sm font-semibold leading-6 text-[#6B5546]">
-                        {(pedido.pedido_items ?? []).map((item) => `${desgloseCajas(item.cantidad)} de ${(Array.isArray(item.productos) ? item.productos[0]?.nombre : (item.productos as { nombre: string } | null)?.nombre) ?? 'Producto'}`).join(', ')}
+                        {(pedido.pedido_items ?? []).map((item) => `${desgloseCajas(item.cantidad)} de ${item.nombre_producto ?? (Array.isArray(item.productos) ? item.productos[0]?.nombre : (item.productos as { nombre: string } | null)?.nombre) ?? 'Producto'}`).join(', ')}
                       </p>
                       {(pedido.empresa_envio || pedido.guia_envio) && <p className="mt-3 rounded-xl bg-[#E9F8F5] px-4 py-3 text-sm font-bold text-[#007A70]">Envío: {pedido.empresa_envio ?? 'Paquetería'}{pedido.guia_envio ? ` · Guía ${pedido.guia_envio}` : ''}{pedido.url_rastreo && <a href={pedido.url_rastreo} target="_blank" rel="noreferrer" className="ml-2 underline underline-offset-4">Rastrear paquete</a>}</p>}
                       <BotonRepetirPedido articulos={(pedido.pedido_items ?? []).flatMap((item) => {
                         const producto = Array.isArray(item.productos) ? item.productos[0] : item.productos;
-                        if (!producto?.id || !producto.unidad || !producto.activo || !['in_stock', 'available_from_supplier', 'low_stock'].includes(producto.disponibilidad)) return [];
-                        return [{ id: producto.id, nombre: producto.nombre, unidad: producto.unidad, precio_mayoreo: Number(item.precio_unitario), cantidad: item.cantidad, imagen: producto.imagen_url ?? undefined, piezas_por_caja: producto.piezas_por_caja, bolsas_por_caja: producto.bolsas_por_caja }];
+                        if (!producto?.id || !producto.unidad || !producto.activo || !(Number(producto.precio_mayoreo) > 0) || !['in_stock', 'available_from_supplier', 'low_stock'].includes(producto.disponibilidad)) return [];
+                        return [{ id: producto.id, nombre: producto.nombre, unidad: producto.unidad, precio_mayoreo: Number(producto.precio_mayoreo), cantidad: item.cantidad, imagen: producto.imagen_url ?? undefined, piezas_por_caja: producto.piezas_por_caja, bolsas_por_caja: producto.bolsas_por_caja }];
                       })} />
                     </div>
                     <div className="text-right">

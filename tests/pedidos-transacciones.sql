@@ -59,6 +59,9 @@ begin
   insert into public.administradores(auth_user_id,nota) values(administrador,'Prueba transaccional');
   perform set_config('request.jwt.claims',json_build_object('sub',administrador,'role','authenticated','aal','aal1')::text,true);
   assert not public.es_admin(),'Un administrador con sólo contraseña obtuvo acceso';
+  assert not has_column_privilege('authenticated','public.pedidos','pago_estado','UPDATE'),'Pago editable desde navegador';
+  assert not has_column_privilege('authenticated','public.pedidos','inventario_estado','UPDATE'),'Reserva editable desde navegador';
+  assert has_column_privilege('authenticated','public.pedidos','guia_envio','UPDATE'),'No se puede capturar guia';
   perform set_config('request.jwt.claims',json_build_object('sub',administrador,'role','authenticated','aal','aal2')::text,true);
   assert public.es_admin(),'La doble verificación no habilitó al administrador';
   insert into public.productos(id,nombre,unidad,precio_mayoreo,stock,disponibilidad)
@@ -66,6 +69,13 @@ begin
   pedido := public.crear_pedido_atomico(gen_random_uuid(),'reserva-cancelable',null,
     '{"nombre_negocio":"Prueba","telefono":"5555555555","direccion":"Prueba","tipo_negocio":"tiendita"}',
     jsonb_build_array(jsonb_build_object('id',producto,'cantidad',2)));
+  begin
+    perform public.cancelar_pedido_y_liberar_reserva((pedido->>'id')::uuid);
+    raise exception 'FALLO: cancelacion sin conciliar permitida';
+  exception when others then if SQLERRM <> 'CONCILIAR_PASARELA' then raise; end if; end;
+  assert (select stock_reservado from public.productos where id=producto)=2,'Cancelacion fallida libero inventario';
+  -- Simular un pedido manual sin intento de pasarela, dentro de esta transacción.
+  update public.pedidos set clave_checkout=null where id=(pedido->>'id')::uuid;
   perform public.cancelar_pedido_y_liberar_reserva((pedido->>'id')::uuid);
   assert (select stock_reservado from public.productos where id=producto)=0,'La cancelación no liberó la reserva';
   assert (select inventario_estado from public.pedidos where id=(pedido->>'id')::uuid)='liberado','Inventario sin conciliar';

@@ -225,6 +225,7 @@ Registro cronológico de lo que se ha construido. Agregar una entrada nueva (fec
 ## 2026-09-11 — Seguridad administrativa, conciliación y seguimiento
 
 - Se aplicaron en Supabase las migraciones `0016` y `0017`, ambas precedidas por un respaldo privado validado del esquema público.
+- Revisión posterior: migración 0018 restringe edición directa de pagos/reservas e impide cancelar intentos de pasarela sin conciliación. Corregidos catálogo extensible, recompra con precios actuales, total de pagos aprobados y errores recuperables de perfil/dirección.
 - El panel administrativo exige doble verificación TOTP; contraseña sola ya no satisface las políticas RLS de administración.
 - Las reservas de pedidos no cobrados se liberan atómicamente al cancelar. La mercancía ya descontada exige revisión de devolución o reembolso.
 - Cada intento de pago tiene un registro independiente. Los eventos fuera de orden no degradan un pago aprobado y un cobro adicional genera una alerta sin volver a descontar stock.
