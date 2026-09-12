@@ -1,6 +1,6 @@
 # 01 — Home / Portada
 
-> Actualización vigente (2026-09-11): el Home conserva íntegros su video, grano, color dinámico, entradas y carrusel 3D con las seis imágenes definitivas. La composición de productos y su tarjeta se elevó dentro del halo para corregir su centro visual. El recorrido público se limita a Inicio, Productos, Cómo comprar, cuenta y carrito. La tarjeta que promovía el escáner ahora atiende Eventos y dirige al catálogo; el escáner continúa construido pero queda fuera del lanzamiento. No se publican precios, mínimos, tiempos ni cobertura hasta confirmarlos.
+> Actualización vigente (2026-09-11): el Home conserva íntegros su video, grano, color dinámico, entradas y carrusel 3D con las seis imágenes definitivas. La composición de productos y su tarjeta se elevó dentro del halo y recibió un ajuste adicional de 22 px para afinar su centro visual. El recorrido público se limita a Inicio, Productos, Cómo comprar, cuenta y carrito. La tarjeta que promovía el escáner ahora atiende Eventos y dirige al catálogo; el escáner continúa construido pero queda fuera del lanzamiento. No se publican precios, mínimos, tiempos ni cobertura hasta confirmarlos.
 
 ## 1. Qué es
 

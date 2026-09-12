@@ -2,7 +2,7 @@
 
 ## 2026-09-11 — Refinamiento visual y accesible del carrusel del Home
 
-- Se elevó de forma coordinada el conjunto de productos y la tarjeta descriptiva para centrar la composición dentro del halo circular en escritorio.
+- Se elevó de forma coordinada el conjunto de productos y la tarjeta descriptiva para centrar la composición dentro del halo circular; después de la revisión visual se subieron juntos 22 px adicionales.
 - Se ajustó por separado la posición móvil para conservar espacio táctil y evitar que la tarjeta invada las imágenes.
 - El carrusel ahora admite flechas izquierda/derecha del teclado y muestra foco visible, sin cambiar colores, imágenes ni transiciones.
 - Se corrigió la documentación antigua que todavía describía una versión de cuatro productos y lógica ya retirada.
