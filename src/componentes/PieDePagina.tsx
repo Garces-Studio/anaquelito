@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpRight, Mail, PackageCheck, Sparkles, Truck } from 'lucide-react';
+import { Mail, PackageCheck, Truck } from 'lucide-react';
 import { enlaceWhatsApp } from '@/lib/mayoreo';
 
 /** Pie de página compartido. Las páginas legales son obligatorias antes de
@@ -13,10 +13,6 @@ export default function PieDePagina() {
       <div className="pie-nuevo-luz pie-nuevo-luz--coral" />
       <div className="pie-nuevo-luz pie-nuevo-luz--teal" />
       <div className="contenedor pie-nuevo-contenido">
-        <div className="pie-nuevo-cta">
-          <div><p><Sparkles size={14} /> Tu siguiente surtido empieza aquí</p><h2>Dale más movimiento a tu anaquel.</h2></div>
-          <Link href="/catalogo">Explorar productos <ArrowUpRight size={18} /></Link>
-        </div>
         <div className="pie-interior pie-nuevo-grid">
           <div className="pie-nuevo-marca">
             <Link href="/" aria-label="Anaquelito, ir al inicio"><Image src="/anaquelito-logo.png" width={600} height={454} sizes="120px" alt="Anaquelito" /></Link>

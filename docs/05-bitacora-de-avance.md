@@ -1,5 +1,12 @@
 # Bitácora de avance
 
+## 2026-09-12 — Identidad personal, Dashboard y footer compacto
+
+- Se separó `nombre_contacto` de `nombre_negocio`: los registros nuevos capturan ambos y las cuentas existentes pueden completar el nombre personal desde el Dashboard.
+- El Dashboard saluda a la persona, mantiene visible el establecimiento como contexto y estrena una portada ciruela/coral/teal alineada con Anaquelito; también se renovaron el bloque de estado y la selección de pestañas.
+- Se decidió conservar el inicio de sesión por correo y contraseña, sin nombre de usuario adicional, para evitar duplicados y mantener sencilla la recuperación.
+- El footer perdió el CTA grande “Tu siguiente surtido empieza aquí / Dale más movimiento a tu anaquel”, redujo su altura y conserva movimiento ambiental accesible en sus luces.
+
 ## 2026-09-11 — Refinamiento visual y accesible del carrusel del Home
 
 - Se elevó de forma coordinada el conjunto de productos y la tarjeta descriptiva para centrar la composición dentro del halo circular; después de la revisión visual se subieron juntos 22 px adicionales.

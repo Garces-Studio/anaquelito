@@ -52,7 +52,7 @@ Los pagos continúan deshabilitados hasta completar estos puntos y confirmar pre
 - La cancelación administrativa libera una reserva no cobrada y cambia pedido e inventario en la misma transacción. Un pedido que ya descontó mercancía se bloquea hasta confirmar devolución o reembolso; no se repone automáticamente.
 - Los pedidos guardan paquetería, número de guía, enlace HTTPS de rastreo y fechas de envío/entrega. El administrador los captura en Pedidos y el cliente los ve en su panel.
 - Migración `0017_eventos_de_pago.sql`: cada intento de Mercado Pago queda registrado con su propio orden temporal. Un rechazo de un intento no puede ocultar la aprobación de otro. Un segundo cobro aprobado o un pago posterior a una cancelación se marca para revisión humana y jamás descuenta inventario dos veces.
-- El registro se redujo: nombre del negocio, correo y contraseña son esenciales; teléfono y domicilio son opcionales y se pueden completar después.
+- El registro conserva sólo cuatro conceptos esenciales: nombre de la persona, nombre del negocio, correo y contraseña; teléfono y domicilio son opcionales. El acceso permanece exclusivamente por correo para evitar alias duplicados y simplificar recuperación y soporte.
 - Antes de cada migración se creó y validó un respaldo privado del esquema público. Las pruebas se ejecutaron dentro de transacciones revertidas y después contra el esquema aplicado; no crearon cuentas reales ni enviaron cobros.
 
 ## Pendiente externo antes de activar cobros

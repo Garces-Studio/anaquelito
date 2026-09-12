@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Building2, Check, Coffee, Eye, EyeOff, Mail, MapPin, PackageCheck, Phone, RefreshCw, ShieldCheck, Sparkles, Store, Zap } from 'lucide-react';
+import { ArrowRight, Building2, Check, Coffee, Eye, EyeOff, Mail, MapPin, PackageCheck, Phone, RefreshCw, ShieldCheck, Sparkles, Store, UserRound, Zap } from 'lucide-react';
 import { crearCliente } from '@/lib/supabase/client';
 import { registrarEvento } from '@/lib/analitica';
 
@@ -20,6 +20,7 @@ export default function PaginaCrearCuenta() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmarPassword, setConfirmarPassword] = useState('');
+  const [nombreContacto, setNombreContacto] = useState('');
   const [nombreNegocio, setNombreNegocio] = useState('');
   const [tipoNegocio, setTipoNegocio] = useState<TipoNegocio>('tiendita');
   const [telefono, setTelefono] = useState('');
@@ -57,6 +58,7 @@ export default function PaginaCrearCuenta() {
     setError(null);
     setCampoError(null);
 
+    if (nombreContacto.trim().length < 2) return avisarCampo('nombre-contacto', 'Escribe tu nombre para personalizar tu cuenta.');
     if (!nombreNegocio.trim()) return avisarCampo('nombre-negocio', 'Escribe el nombre de tu negocio para continuar.');
     if (telefono && telefono.replace(/\D/g, '').length < 8) return avisarCampo('telefono', 'Escribe un teléfono válido de al menos 8 dígitos.');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return avisarCampo('correo', 'Escribe un correo electrónico válido.');
@@ -71,7 +73,7 @@ export default function PaginaCrearCuenta() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email, password, nombre_negocio: nombreNegocio, tipo_negocio: tipoNegocio,
+          email, password, nombre_contacto: nombreContacto, nombre_negocio: nombreNegocio, tipo_negocio: tipoNegocio,
           telefono, calle_numero: calleNumero, colonia, municipio, estado, codigo_postal: codigoPostal,
           pedido: new URLSearchParams(window.location.search).get('pedido'), token_pedido: new URLSearchParams(window.location.search).get('token'),
         }),
@@ -133,11 +135,15 @@ export default function PaginaCrearCuenta() {
         <form noValidate onSubmit={manejarEnvio} className="aparecer retraso-1 grid gap-8 !rounded-none border-0 bg-white/90 p-6 shadow-none sm:p-10 lg:p-12">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E6D8CD] pb-6">
             <div><span className="text-[11px] font-black uppercase tracking-[.18em] text-[#00A699]">Registro de cliente</span><h2 className="mt-2 !text-3xl !font-black text-[#2B1B12]">Configura tu cuenta</h2></div>
-            <span className="rounded-full bg-[#E9F8F5] px-4 py-2 text-[10px] font-black uppercase tracking-[.14em] text-[#007A70]">Sólo 3 datos obligatorios</span>
+            <span className="rounded-full bg-[#E9F8F5] px-4 py-2 text-[10px] font-black uppercase tracking-[.14em] text-[#007A70]">Sólo 4 datos obligatorios</span>
           </div>
 
           <section className="grid gap-5 rounded-[24px] border border-[#E9DED4] bg-white p-5 shadow-[0_14px_40px_rgba(43,27,18,.055)] sm:p-6">
-            <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#FF5A5F] text-white shadow-[0_10px_25px_rgba(255,90,95,.28)]"><Building2 size={19} /></span><div><p className="text-[10px] font-black uppercase tracking-[.15em] text-[#FF5A5F]">Paso 1</p><h2 className="!text-2xl !font-black">Tu negocio</h2></div></div>
+            <div className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#FF5A5F] text-white shadow-[0_10px_25px_rgba(255,90,95,.28)]"><Building2 size={19} /></span><div><p className="text-[10px] font-black uppercase tracking-[.15em] text-[#FF5A5F]">Paso 1</p><h2 className="!text-2xl !font-black">Tú y tu negocio</h2></div></div>
+            <label className={labelClass}>
+              Tu nombre <span className="sr-only">obligatorio</span>
+              <span className="relative"><UserRound size={18} className="pointer-events-none absolute left-4 top-1/2 z-10 -translate-y-1/2 text-[#7621B0]" /><input id="nombre-contacto" aria-invalid={campoError === 'nombre-contacto'} className={`${claseInput('nombre-contacto')} w-full pl-11`} type="text" required minLength={2} autoComplete="name" value={nombreContacto} onChange={(e) => { setNombreContacto(e.target.value); limpiarCampo('nombre-contacto'); }} placeholder="Ej. Mauricio Garcés" /></span>
+            </label>
             <label className={labelClass}>
               Nombre del negocio <span className="sr-only">obligatorio</span>
               <input id="nombre-negocio" aria-invalid={campoError === 'nombre-negocio'} className={claseInput('nombre-negocio')} type="text" required value={nombreNegocio} onChange={(e) => { setNombreNegocio(e.target.value); limpiarCampo('nombre-negocio'); }} placeholder="Ej. Miscelánea Don Beto" />

@@ -6,6 +6,7 @@ import { limitarSolicitud } from '@/lib/limites';
 type CuerpoCrearCuenta = {
   email: string;
   password: string;
+  nombre_contacto: string;
   nombre_negocio: string;
   tipo_negocio: 'tiendita' | 'cafe' | 'emprendedor';
   telefono?: string;
@@ -35,7 +36,8 @@ export async function POST(solicitud: NextRequest) {
   }
 
   if (!esObjeto(cuerpo) || !textoValido(cuerpo.email, 254) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cuerpo.email) ||
-      !textoValido(cuerpo.password, 128, 8) || !textoValido(cuerpo.nombre_negocio, 160) ||
+      !textoValido(cuerpo.password, 128, 8) || !textoValido(cuerpo.nombre_contacto, 120, 2) ||
+      !textoValido(cuerpo.nombre_negocio, 160) ||
       (cuerpo.telefono != null && cuerpo.telefono !== '' && !textoValido(cuerpo.telefono, 30, 8)) ||
       (cuerpo.calle_numero != null && cuerpo.calle_numero !== '' && !textoValido(cuerpo.calle_numero, 300)) ||
       !['tiendita', 'cafe', 'emprendedor'].includes(cuerpo.tipo_negocio) ||
@@ -43,11 +45,11 @@ export async function POST(solicitud: NextRequest) {
     return NextResponse.json({ error: 'Revisa los datos del formulario' }, { status: 400 });
   }
   const {
-    email, password, nombre_negocio, tipo_negocio, telefono,
+    email, password, nombre_contacto, nombre_negocio, tipo_negocio, telefono,
     calle_numero, colonia, municipio, estado, codigo_postal,
   } = cuerpo;
 
-  if (!email || !password || !nombre_negocio) {
+  if (!email || !password || !nombre_contacto || !nombre_negocio) {
     return NextResponse.json({ error: 'Faltan datos obligatorios del formulario' }, { status: 400 });
   }
   if (password.length < 8) {
@@ -64,6 +66,7 @@ export async function POST(solicitud: NextRequest) {
       email,
       password,
       email_confirm: true,
+      user_metadata: { nombre_contacto: nombre_contacto.trim() },
     });
 
     if (errorUsuario) {
@@ -89,6 +92,7 @@ export async function POST(solicitud: NextRequest) {
 
     const datosCliente = {
       auth_user_id: usuarioCreado.user.id,
+      nombre_contacto: nombre_contacto.trim(),
       nombre_negocio,
       tipo_negocio,
       telefono: telefono?.trim() || null,

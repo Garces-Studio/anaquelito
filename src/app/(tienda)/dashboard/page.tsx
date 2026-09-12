@@ -35,7 +35,7 @@ export default async function PaginaDashboard() {
 
   const { data: cliente } = await supabase
     .from('clientes')
-    .select('id, nombre_negocio, tipo_negocio, telefono, nivel_precio')
+    .select('id, nombre_contacto, nombre_negocio, tipo_negocio, telefono, nivel_precio')
     .eq('auth_user_id', user.id)
     .single();
 
@@ -78,40 +78,40 @@ export default async function PaginaDashboard() {
   const direccionPrincipal = direcciones?.find((direccion) => direccion.predeterminada) ?? direcciones?.[0];
 
   return (
-    <main className="pagina-colorida px-4 pb-20 pt-32 text-[#2B1B12] md:px-8">
+    <main className="dashboard-anaquelito pagina-colorida px-4 pb-20 pt-32 text-[#2B1B12] md:px-8">
       <section className="mx-auto max-w-7xl">
-        <header className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+        <header className="dashboard-portada grid gap-6 overflow-hidden rounded-[32px] p-6 sm:p-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:p-10">
           <div className="aparecer">
-            <span className="inline-flex items-center gap-2 rounded-full bg-[#FF5A5F]/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#FF5A5F]">
-              <Store size={14} /> Panel de negocio
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#FFD06A] backdrop-blur">
+              <Store size={14} /> Tu espacio Anaquelito
             </span>
-            <h1 className="mt-5 max-w-4xl text-[clamp(3rem,8vw,7.25rem)] !font-black uppercase leading-[0.84] tracking-normal">
-              Hola, {cliente.nombre_negocio}
+            <h1 className="mt-5 max-w-4xl text-[clamp(3rem,8vw,7.25rem)] !font-black leading-[0.84] tracking-normal text-white">
+              {cliente.nombre_contacto ? <>Hola, {cliente.nombre_contacto}</> : 'Hola, qué gusto verte'}
             </h1>
-            <p className="mt-5 max-w-2xl text-sm font-semibold leading-6 text-[#6B5546] md:text-base">
+            <p className="mt-5 max-w-2xl text-sm font-semibold leading-6 text-white/70 md:text-base">
               Revisa pedidos, direcciones y promociones desde un panel simple, limpio y listo para que vuelvas a surtir rápido.
             </p>
           </div>
 
-          <div className="aparecer retraso-1 rounded-lg border border-[#EBD9C3] bg-white/82 p-5 shadow-[0_24px_70px_rgba(43,27,18,0.08)] backdrop-blur-xl">
+          <div className="aparecer retraso-1 rounded-[24px] border border-white/20 bg-white/10 p-5 text-white shadow-[0_24px_70px_rgba(20,8,28,0.22)] backdrop-blur-xl">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B5546]">Nivel de precio</p>
-                <p className="mt-1 text-3xl !font-black uppercase leading-none">{cliente.nivel_precio ?? 'Mayoreo'}</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/55">Cuenta de {cliente.nombre_negocio}</p>
+                <p className="mt-1 text-3xl !font-black uppercase leading-none text-white">{cliente.nivel_precio ?? 'Mayoreo'}</p>
               </div>
               <BotonCerrarSesion />
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               <Link
                 href="/catalogo"
-                className="group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-lg bg-[#2B1B12] px-5 text-[11px] font-black uppercase tracking-[0.16em] text-white transition hover:bg-[#FF5A5F]"
+                className="group inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-[#FF5A5F] px-5 text-[11px] font-black uppercase tracking-[0.16em] text-white shadow-[0_12px_28px_rgba(255,90,95,.28)] transition hover:-translate-y-0.5 hover:bg-[#FF7478]"
                 style={{ color: '#FFFFFF' }}
               >
                 Surtir ahora <ArrowRight size={15} className="transition group-hover:translate-x-0.5" />
               </Link>
               <Link
                 href={ultimoPedido ? '#pedidos' : '/catalogo'}
-                className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] px-5 text-[11px] font-black uppercase tracking-[0.16em] text-[#2B1B12] transition hover:border-[#00A699] hover:text-[#00A699]"
+                className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-5 text-[11px] font-black uppercase tracking-[0.16em] text-white transition hover:bg-white/20"
               >
                 <ShoppingBag size={15} /> {ultimoPedido ? 'Ver pedidos' : 'Primer pedido'}
               </Link>
@@ -146,7 +146,7 @@ export default async function PaginaDashboard() {
         </div>
 
         <div className="mt-5 grid gap-4 lg:grid-cols-3">
-          <article className="aparecer retraso-2 rounded-lg border border-[#EBD9C3] bg-[#2B1B12] p-6 text-[#FFF6EC] shadow-[0_24px_70px_rgba(43,27,18,0.14)] lg:col-span-2">
+          <article className="aparecer retraso-2 rounded-[24px] border border-[#B64AD4]/20 bg-[linear-gradient(135deg,#4A153D_0%,#7621B0_58%,#A62E73_100%)] p-6 text-[#FFF6EC] shadow-[0_24px_70px_rgba(76,19,84,0.22)] lg:col-span-2">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/50">Estado rápido</p>

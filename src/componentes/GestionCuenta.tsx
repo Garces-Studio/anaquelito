@@ -8,7 +8,7 @@ import { leerRespuesta } from '@/lib/respuesta-json';
 const CAMPO = 'min-h-11 rounded-lg border border-[#EBD9C3] bg-[#FFF6EC] px-3 text-sm font-semibold outline-none';
 const ETIQUETA = 'grid gap-1.5 text-[11px] font-black uppercase tracking-[0.14em] text-[#6B5546]';
 
-export function FormularioPerfil({ cliente }: { cliente: { nombre_negocio: string; tipo_negocio: string; telefono: string | null } }) {
+export function FormularioPerfil({ cliente }: { cliente: { nombre_contacto: string | null; nombre_negocio: string; tipo_negocio: string; telefono: string | null } }) {
   const router = useRouter();
   const [estado, setEstado] = useState<string | null>(null);
   return <form className="grid gap-4 md:grid-cols-2" onSubmit={async (e) => {
@@ -19,7 +19,8 @@ export function FormularioPerfil({ cliente }: { cliente: { nombre_negocio: strin
       setEstado('Datos guardados.'); router.refresh();
     } catch { setEstado('No pudimos guardar tus datos. Revisa la conexión y vuelve a intentarlo.'); }
   }}>
-    <label className={`${ETIQUETA} md:col-span-2`}>Nombre del negocio<input name="nombre_negocio" required defaultValue={cliente.nombre_negocio} className={CAMPO} /></label>
+    <label className={ETIQUETA}>Tu nombre<input name="nombre_contacto" required minLength={2} defaultValue={cliente.nombre_contacto ?? ''} autoComplete="name" className={CAMPO} /></label>
+    <label className={ETIQUETA}>Nombre del negocio<input name="nombre_negocio" required defaultValue={cliente.nombre_negocio} autoComplete="organization" className={CAMPO} /></label>
     <label className={ETIQUETA}>Tipo de negocio<select name="tipo_negocio" defaultValue={cliente.tipo_negocio} className={CAMPO}><option value="tiendita">Tiendita</option><option value="cafe">Café / fonda</option><option value="emprendedor">Reventa</option></select></label>
     <label className={ETIQUETA}>Teléfono<input name="telefono" type="tel" required minLength={8} defaultValue={cliente.telefono ?? ''} className={CAMPO} /></label>
     <button className="b2b-boton md:col-span-2" type="submit">Guardar datos</button>{estado && <p role="status" className="md:col-span-2">{estado}</p>}

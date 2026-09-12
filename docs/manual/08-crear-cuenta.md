@@ -6,12 +6,12 @@ La página `/crear-cuenta` registra clientes mayoristas y deja preparados sus da
 
 ## Estructura
 
-1. **Datos esenciales:** nombre del negocio, tipo, correo y contraseña.
+1. **Datos esenciales:** nombre de la persona, nombre del negocio, tipo, correo y contraseña.
 2. **Datos opcionales:** teléfono y dirección se despliegan sólo si la persona quiere completarlos en ese momento; también se pueden agregar desde el panel.
 
 ## Funcionamiento
 
-El formulario valida los tres conceptos obligatorios antes de enviar información a `/api/crear-cuenta`: negocio, correo y contraseña (con su confirmación visual). Después del registro inicia sesión mediante Supabase y dirige al cliente a `/dashboard`. Si la URL contiene un pedido y su token, también se envían para vincular esa compra.
+El formulario valida cuatro conceptos obligatorios antes de enviar información a `/api/crear-cuenta`: persona, negocio, correo y contraseña (con su confirmación visual). El nombre personal y el comercial se guardan por separado; el primero personaliza la cuenta y el segundo identifica al establecimiento. Después del registro inicia sesión mediante Supabase y dirige al cliente a `/dashboard`. Si la URL contiene un pedido y su token, también se envían para vincular esa compra.
 
 La respuesta se lee primero como texto y solo se interpreta como JSON cuando es válido. Esto evita que una respuesta vacía o interrumpida muestre el error técnico `Unexpected end of JSON input`. La ruta del servidor también captura fallos inesperados y siempre devuelve un mensaje JSON entendible.
 

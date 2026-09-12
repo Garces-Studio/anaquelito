@@ -37,8 +37,8 @@ export default function PestanasPanel({ pestanas }: { pestanas: PestanaPanel[] }
               onClick={() => setActiva(pestana.id)}
               className={`inline-flex shrink-0 items-center gap-2 rounded-full px-5 py-3 text-[11px] font-black uppercase tracking-[0.14em] transition-all duration-300 ${
                 esActiva
-                  ? 'bg-[#2B1B12] text-white shadow-[0_10px_26px_rgba(43,27,18,0.2)]'
-                  : 'text-[#6B5546] hover:bg-[#FFEFDD] hover:text-[#2B1B12]'
+                  ? 'bg-[linear-gradient(135deg,#7621B0,#C52E78)] text-white shadow-[0_10px_26px_rgba(118,33,176,0.24)]'
+                  : 'text-[#6B5546] hover:bg-[#F4EAF8] hover:text-[#7621B0]'
               }`}
             >
               <Icono size={15} />
