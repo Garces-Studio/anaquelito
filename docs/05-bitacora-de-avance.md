@@ -6,6 +6,7 @@
 - El Dashboard saluda a la persona, mantiene visible el establecimiento como contexto y estrena una portada ciruela/coral/teal alineada con Anaquelito; también se renovaron el bloque de estado y la selección de pestañas.
 - Se decidió conservar el inicio de sesión por correo y contraseña, sin nombre de usuario adicional, para evitar duplicados y mantener sencilla la recuperación.
 - El footer perdió el CTA grande “Tu siguiente surtido empieza aquí / Dale más movimiento a tu anaquel”, redujo su altura y conserva movimiento ambiental accesible en sus luces.
+- Se elevó 20 px adicionales el conjunto del carrusel principal y su etiqueta, para conservarlos como una unidad dentro del halo circular.
 
 ## 2026-09-11 — Refinamiento visual y accesible del carrusel del Home
 

@@ -2,7 +2,7 @@
 
 /* Home de marca: movimiento, color y una narrativa distinta del catálogo. */
 .home-vivo { overflow: clip; background: #fff6ec; color: #2b1b12; font-family: var(--font-principal), sans-serif; }
-.home-hero { --color-escena: #ff5a5f; --elevacion-carrusel: clamp(70px, 9svh, 86px); position: relative; min-height: 100svh; overflow: hidden; isolation: isolate; background: var(--color-escena); transition: background-color 650ms cubic-bezier(.4,0,.2,1); }
+.home-hero { --color-escena: #ff5a5f; --elevacion-carrusel: clamp(88px, 11svh, 106px); position: relative; min-height: 100svh; overflow: hidden; isolation: isolate; background: var(--color-escena); transition: background-color 650ms cubic-bezier(.4,0,.2,1); }
 .home-hero .portada-grid { min-height: 100svh; }
 .home-hero .portada-col-carrusel { height: 100svh; }
 .home-hero::after { content: ''; position: absolute; inset: auto -12vw -35vh 35vw; height: 75vh; border-radius: 50%; background: var(--color-escena); filter: blur(110px); opacity: .62; z-index: 3; transition: background-color 650ms ease; }
